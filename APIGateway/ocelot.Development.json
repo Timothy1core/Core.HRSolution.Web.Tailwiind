@@ -1,0 +1,46 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/{service}/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7099
+        }
+      ],
+      "UpstreamPathTemplate": "/app/{service}/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ]
+
+    },
+    {
+      "DownstreamPathTemplate": "/api/{service}/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7219
+        }
+      ],      "UpstreamPathTemplate": "/recruitment/{service}/{everything}",
+
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ]
+
+    },
+    {
+      "DownstreamPathTemplate": "/api/{service}/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7156
+        }
+      ],
+      "UpstreamPathTemplate": "/assessment/{service}/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ]
+
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:5000"
+  }
+}

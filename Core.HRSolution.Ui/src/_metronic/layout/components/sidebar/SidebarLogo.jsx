@@ -1,0 +1,110 @@
+import { Link } from 'react-router-dom';
+import clsx from 'clsx';
+import { toAbsoluteUrl } from '@/_metronic/utils';
+import { KTIcon} from '@/_metronic/helpers';
+import { useLayout } from '../../core';
+import { useEffect, useRef } from 'react';
+import { ToggleComponent } from '../../../assets/ts/components';
+
+// Define SidebarLogo component
+const SidebarLogo = (props) => {
+  const { config } = useLayout();
+  const toggleRef = useRef(null);
+
+  const appSidebarDefaultMinimizeDesktopEnabled =
+    config?.app?.sidebar?.default?.minimize?.desktop?.enabled;
+  const appSidebarDefaultCollapseDesktopEnabled =
+    config?.app?.sidebar?.default?.collapse?.desktop?.enabled;
+  const toggleType = appSidebarDefaultCollapseDesktopEnabled
+    ? 'collapse'
+    : appSidebarDefaultMinimizeDesktopEnabled
+    ? 'minimize'
+    : '';
+  const toggleState = appSidebarDefaultMinimizeDesktopEnabled ? 'active' : '';
+  const appSidebarDefaultMinimizeDefault = config.app?.sidebar?.default?.minimize?.desktop?.default;
+
+  useEffect(() => {
+    setTimeout(() => {
+      const toggleObj = ToggleComponent.getInstance(toggleRef.current);
+
+      if (toggleObj === null) {
+        return;
+      }
+
+      // Add a class to prevent sidebar hover effect after toggle click
+      toggleObj.on('kt.toggle.change', function () {
+        // Set animation state
+        if (props.sidebarRef.current) {
+          props.sidebarRef.current.classList.add('animating');
+        }
+
+        // Wait till animation finishes
+        setTimeout(function () {
+          // Remove animation state
+          if (props.sidebarRef.current) {
+            props.sidebarRef.current.classList.remove('animating');
+          }
+        }, 300);
+      });
+    }, 600);
+  }, [toggleRef, props.sidebarRef]);
+
+  return (
+    <div className="app-sidebar-logo px-6" id="kt_app_sidebar_logo">
+      <Link to="/dashboard">
+        {config.layoutType === 'dark-sidebar' ? (
+          <img
+            alt="Logo"
+            src={toAbsoluteUrl('core_logos/core-icon.png')}
+            className="h-30px app-sidebar-logo-default"
+          />
+        ) : (
+          <>
+            <img
+              alt="Logo"
+              src={toAbsoluteUrl('core_logos/core-icon.png')}
+              className="h-40px app-sidebar-logo-default theme-light-show"
+            />
+            <img
+              alt="Logo"
+              src={toAbsoluteUrl('core_logos/core-icon.png')}
+              className="h-40px app-sidebar-logo-default theme-dark-show"
+            />
+            <span className="fs-3 ps-2 text-white fw-bold app-sidebar-logo-default">COREAGILE</span> <span className="fs-3 text-white app-sidebar-logo-default">SYSTEM</span>
+
+          </>
+          
+        )}
+
+        <img
+          alt="Logo"
+          src={toAbsoluteUrl('core_logos/core-icon.png')}
+          className="h-35px app-sidebar-logo-minimize"
+        /> 
+      </Link>
+
+      {(appSidebarDefaultMinimizeDesktopEnabled || appSidebarDefaultCollapseDesktopEnabled) && (
+        <div
+          ref={toggleRef}
+          id="kt_app_sidebar_toggle"
+          className={clsx(
+            'app-sidebar-toggle btn btn-icon btn-shadow btn-sm btn-color-muted btn-active-color-danger h-30px w-30px position-absolute top-50 start-100 translate-middle rotate',
+            { active: appSidebarDefaultMinimizeDefault }
+          )}
+          data-kt-toggle="true"
+          data-kt-toggle-state={toggleState}
+          data-kt-toggle-target="body"
+          data-kt-toggle-name={`app-sidebar-${toggleType}`}
+        >
+          
+          <KTIcon iconName="black-left-line" className="fs-3 rotate-180 ms-1" />
+        </div>
+      )}
+
+
+      
+    </div>
+  );
+};
+
+export { SidebarLogo };

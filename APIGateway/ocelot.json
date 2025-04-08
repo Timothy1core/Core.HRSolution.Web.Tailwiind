@@ -1,0 +1,47 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/services/authentication/api/{service}/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.254.4",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/app/{service}/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/services/recruitment/api/{service}/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.254.4",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/recruitment/{service}/{everything}",
+
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ]
+
+    },
+    {
+      "DownstreamPathTemplate": "/services/assessment/api/{service}/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.254.4",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/assessment/{service}/{everything}",
+
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ]
+
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://172.16.254.4"
+  }
+}
