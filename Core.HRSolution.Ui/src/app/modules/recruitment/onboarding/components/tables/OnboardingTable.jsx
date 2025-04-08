@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { KTIcon } from '@/_metronic/helpers';
 import { listCandidate } from '../../core/requests/_request';
-import TableWithPagination from '../../../../system.setup/core/helpers/Table Layout/TableWithPagination';
+import TableWithPagination from '../../../../../../app/helpers/table/TableWithPagination';
+
 import {
   enableLoadingRequest,
   disableLoadingRequest,

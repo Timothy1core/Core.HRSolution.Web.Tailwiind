@@ -42,10 +42,6 @@ public class TalentAcquisitionForm
 	public DateTime CreatedDate { get; set; }
 
 	public int? TafBatchId { get; set; }
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 	public virtual Department Department { get; set; }
 
 	public virtual DepartmentIndividual HiringManagerNavigation { get; set; }

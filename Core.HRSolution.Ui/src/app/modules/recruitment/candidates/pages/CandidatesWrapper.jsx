@@ -9,7 +9,6 @@ const CandidatePage = () => {
 
   return(
   <>
-    <ToolbarWrapper title="Candidate Dashhboard" subtitle="Recruitment" />
     <Content>
       <CandidateTable className='mb-5 mb-xl-8' />
     </Content>

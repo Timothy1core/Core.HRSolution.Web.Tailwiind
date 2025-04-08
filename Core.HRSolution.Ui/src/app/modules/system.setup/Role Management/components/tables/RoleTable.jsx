@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { listRole, removeRole } from '../../core/requests/_request';
 import { format } from 'date-fns';
 import Swal from 'sweetalert2';
-import TableWithPagination from '../../../core/helpers/Table Layout/TableWithPagination';
+import TableWithPagination from '../../../../../../app/helpers/table/TableWithPagination';
 import { CreateEditRole } from '../modals/create-or-edit-role/CreateEditRole';
 import ActionComponent from '../../../../../helpers/action_component';
 import { KTIcon } from '@/_metronic/helpers';

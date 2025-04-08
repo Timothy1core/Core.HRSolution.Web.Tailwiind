@@ -3,7 +3,7 @@ import { KTIcon } from '@/_metronic/helpers';
 import { listApi, removeApi } from '../../core/requests/_request';
 // import { Modal } from 'bootstrap';
 import {format} from 'date-fns';
-import TableWithPagination from '../../../core/helpers/Table Layout/TableWithPagination';
+import TableWithPagination from '../../../../../../app/helpers/table/TableWithPagination';
 import { CreateEditApi } from '../modals/create-or-edit-api/CreateEditApi';
 // import { CreateAppModal } from '../../../../../../_metronic/partials';
 import Swal from 'sweetalert2';

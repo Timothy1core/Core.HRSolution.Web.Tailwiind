@@ -3,7 +3,8 @@ import { KTIcon } from '@/_metronic/helpers';
 import { listAssessment, removeAssessment } from '../../core/requests/_request';
 // import { Modal } from 'bootstrap';
 import {format} from 'date-fns';
-import TableWithPagination from '../../../../system.setup/core/helpers/Table Layout/TableWithPagination';
+import TableWithPagination from '@/app/helpers/table/TableWithPagination';
+
 // import { CreateAppModal } from '../../../../../../_metronic/partials';
 // import { CreateAssessment } from '../modals/create-question-to-db/CreateAssessment';
 import {

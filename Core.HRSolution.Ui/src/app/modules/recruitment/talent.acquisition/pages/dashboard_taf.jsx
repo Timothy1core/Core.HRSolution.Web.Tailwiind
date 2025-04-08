@@ -20,7 +20,8 @@ import {
   enableLoadingRequest,
   disableLoadingRequest,
 } from '../../../../helpers/loading_request';
-import TableWithPagination from '../../../system.setup/core/helpers/Table Layout/TableWithPagination';
+import TableWithPagination from '../../../../../app/helpers/table/TableWithPagination';
+
 
 
 

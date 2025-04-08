@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { KTIcon } from '@/_metronic/helpers';
 import { listMenu, removeMenu, updateMenuHiddenStatus } from '../../core/requests/_request';
-import TableWithPagination from '../../../core/helpers/Table Layout/TableWithPagination';
+import TableWithPagination from '../../../../../../app/helpers/table/TableWithPagination';
 import {CreateEditMenu} from '../modals/create-or-edit-menu/CreateEditMenu';
 import Swal from 'sweetalert2';
 import  ActionComponent  from "../../../../../helpers/action_component";

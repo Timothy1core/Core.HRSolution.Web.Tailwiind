@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { KTIcon } from '@/_metronic/helpers';
 import { listCandidate, SelectFilterDropdown } from '../../core/requests/_request';
-import TableWithPagination from '../../../../system.setup/core/helpers/Table Layout/TableWithPagination';
+import TableWithPagination from '../../../../../helpers/table/TableWithPagination';
 import {
   enableLoadingRequest,
   disableLoadingRequest,
@@ -225,18 +225,19 @@ const CandidateTable = ({ className }) => {
     { Header: 'Stage', accessor: 'stageName', sortable: true, },
     { Header: 'Source', accessor: 'sourceName', sortable: true, },
   
-    { Header: 'Actions', accessor: 'id', className: 'text-end', Cell: row => (
+    { Header: 'Actions', accessor: 'id', className: 'text-right text-blue-600', Cell: row => (
       <div className='d-flex justify-content-end flex-shrink-0'>
         <ActionComponent
             buttonPermission={'recruitment.retrieve.candidate.info'}
             actionButton={ 
-        <a
+        <button class="btn btn-icon btn-outline btn-primary btn-xs"
           href={`viewcandidate?id=${row.id}`}
-          className='btn btn-icon btn-bg-light btn-active-color-danger btn-sm me-1'
+          // className='btn btn-icon btn-bg-light btn-active-color-danger btn-sm me-1'
           data-id={row.id}
         >
-          <KTIcon iconName='eye' className='fs-3' />
-        </a>
+          {/* <KTIcon iconName='eye' className='text-md' /> */}
+          <i class="ki-outline ki-eye"></i>
+        </button>
         }/>
     </div>
       )
@@ -263,8 +264,13 @@ const CandidateTable = ({ className }) => {
   // }, []);
 
   return (
-    <div className={`card ${className}`}>
-              <div className='card-header flex-nowrap border-0 pt-5'>
+    <div className={`card min-w-full ${className}`}>
+      <div class="card-header">
+        <h4 class="card-title">
+        Candidate Dashboard
+        </h4>
+      </div>
+              {/* <div className='card-header flex-nowrap border-0 pt-5'>
                 <div className='card-title m-0'>
                   <input
                     type='text'
@@ -410,9 +416,9 @@ const CandidateTable = ({ className }) => {
                   </div>
                 </div>
                 
-              </div>
+              </div> */}
               {/* {selectedQualification == 0 && */}
-              <div className='card-header border-0'>
+              {/* <div className='card-header border-0'>
               
                 <div className="d-flex flex-wrap w-100">
                   {applicationProcessData.map((process) => (
@@ -426,10 +432,10 @@ const CandidateTable = ({ className }) => {
                     </a>
                   ))}
                 </div> 
-              </div>
+              </div> */}
               {/* } */}
 
-      <div className='card-body py-3'>
+      {/* <div className='card-body py-3'> */}
         <TableWithPagination 
         data={filteredData} 
         columns={columns} 
@@ -439,7 +445,7 @@ const CandidateTable = ({ className }) => {
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
         />
-      </div>
+      {/* </div> */}
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { KTIcon } from '@/_metronic/helpers';
 import { listApiPermission, removeApiPermission } from '../../core/requests/_request';
-import TableWithPagination from '../../../core/helpers/Table Layout/TableWithPagination';
+import TableWithPagination from '../../../../../../app/helpers/table/TableWithPagination';
 import {CreateEditPermission} from '../modals/create-or-edit-permission/CreateEditPermission'
 import Swal from 'sweetalert2';
 import {

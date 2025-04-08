@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { KTIcon } from '@/_metronic/helpers';
 import { listSectionMenu, removeSectionMenu } from '../../core/requests/_request';
 import { format } from 'date-fns';
-import TableWithPagination from '../../../core/helpers/Table Layout/TableWithPagination';
+import TableWithPagination from '../../../../../../app/helpers/table/TableWithPagination';
 import { CreateEditSectionMenu } from '../modals/create-or-edit-section-menu/CreateEditSectionMenu';
 import Swal from 'sweetalert2';
 import {
