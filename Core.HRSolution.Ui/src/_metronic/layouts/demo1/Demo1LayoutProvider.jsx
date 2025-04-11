@@ -69,6 +69,7 @@ const Demo1LayoutProvider = ({ children }) => {
           parentItem.children = menu.subMenus.map((sub) => ({
             title: sub.menuName,
             path: sub.menuPath !== '#' ? sub.menuPath : undefined,
+            hidden: sub.isParent === false && sub.isSubParent === false,
           }))
         }
   

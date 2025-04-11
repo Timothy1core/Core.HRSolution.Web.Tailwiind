@@ -129,28 +129,26 @@ const AssessmentTable = ({ className }) => {
         )
      },
     { Header: 'Actions', accessor: 'id', className: 'text-end', Cell: row => (
-      <div className='d-flex justify-content-end flex-shrink-0'>
+      <div className='flex gap-2 justify-end flex-shrink-0'>
         <ActionComponent
             buttonPermission={'system.update.assessment'}
             actionButton={ 
-        <a
+        <button className="btn btn-icon btn-outline btn-primary btn-xs"
           href={`editAssessment?id=${row.id}`}
-          className='btn btn-icon btn-bg-light btn-active-color-danger btn-sm me-1'
           data-id={row.id}
         >
           <KTIcon iconName='pencil' className='fs-3' />
-        </a>
+        </button>
         }/>
         <ActionComponent
             buttonPermission={'system.remove.assessment'}
             actionButton={ 
-        <a
+        <button className="btn btn-icon btn-outline btn-primary btn-xs"
           href='#'
-          className='btn btn-icon btn-bg-light btn-active-color-danger btn-sm'
           onClick={() => handleDeleteAssessment(row.id)}
         >
           <KTIcon iconName='trash' className='fs-3' />
-        </a>
+        </button>
         }/>
     </div>
       )
@@ -165,8 +163,8 @@ const AssessmentTable = ({ className }) => {
 
   return (
     <div className={`card ${className}`}>
-      <div className='card-header border-0 pt-5'>
-      <h3 className='card-title align-items-start flex-column'>
+      <div className='card-header'>
+      <h3 className='card-title'>
       <ActionComponent
             buttonPermission={'system.create.assessment'}
             actionButton={ 
@@ -177,7 +175,7 @@ const AssessmentTable = ({ className }) => {
             // data-bs-target='#create-assessment'
             // data-edit='false'
           >
-            <KTIcon iconName='plus' className='fs-3' />
+            <KTIcon iconName='plus' />
             Add New Assessment
           </a>
             }/>
@@ -186,13 +184,18 @@ const AssessmentTable = ({ className }) => {
         </h3>
         <div className="card-toolbar">
           <div className='d-flex'>
-            <input
+            {/* <input
               type='text'
               className='form-control form-control-sm me-2'
               placeholder='Search'
               value={searchTerm}
               onChange={handleSearch}
-            />
+            /> */}
+
+            <label className="input input-sm">
+              <KTIcon iconName='magnifier' />
+              <input type="text" placeholder="Search assessment" value={searchTerm} onChange={handleSearch} />
+            </label>
             {/* <button href='#' className='btn btn-sm btn-light-danger' onClick={handleSearch}>
               Search
             </button> */}
@@ -201,7 +204,7 @@ const AssessmentTable = ({ className }) => {
       </div>
       
 
-      <div className='card-body py-3'>
+
         <TableWithPagination 
         data={filteredData} 
         columns={columns} 
@@ -211,10 +214,6 @@ const AssessmentTable = ({ className }) => {
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
         />
-      </div>
-      {/* <CreateEditAssessment /> */}
-      {/* <CreateAssessment /> */}
-      {/* <DeleteAssessment /> */}
     </div>
   );
 };

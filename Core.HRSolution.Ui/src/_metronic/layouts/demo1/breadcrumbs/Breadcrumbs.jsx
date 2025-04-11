@@ -12,7 +12,9 @@ const Breadcrumbs = () => {
     getMenuConfig
   } = useMenus();
   const menuConfig = getMenuConfig('primary');
-  const items = useMenuBreadcrumbs(pathname, menuConfig);
+  const cleanedPathname = pathname.replace(/\/\d+$/, '/:id');
+  const items = useMenuBreadcrumbs(cleanedPathname, menuConfig);
+  console.log(items, cleanedPathname, menuConfig)
   const renderItems = items => {
     return items.map((item, index) => {
       const last = index === items.length - 1;
@@ -31,4 +33,4 @@ const Breadcrumbs = () => {
   };
   return render();
 };
-export { Breadcrumbs };
+export { Breadcrumbs }; 

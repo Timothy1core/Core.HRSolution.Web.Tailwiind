@@ -9,7 +9,6 @@ const AssessmentManagementPage = () => {
 
   return(
   <>
-    <ToolbarWrapper title="Assessment Management" subtitle="Recruitment" />
     <Content>
       <AssessmentTable className='mb-5 mb-xl-8' />
     </Content>

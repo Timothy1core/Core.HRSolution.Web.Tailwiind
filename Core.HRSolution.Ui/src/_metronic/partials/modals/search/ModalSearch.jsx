@@ -298,6 +298,7 @@ const ModalSearch = forwardRef(({
           </Tabs>
         </DialogBody>
       </DialogContent>
+      a
     </Dialog>;
 });
 export { ModalSearch };

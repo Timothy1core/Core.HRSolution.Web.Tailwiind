@@ -51,7 +51,7 @@ const SidebarMenuItemWithSub  = ({
         <span className='menu-arrow'></span>
       </span>
       <div className={clsx('menu-sub menu-sub-accordion', { 'menu-active-bg': isActive || isMenuOpen, show: isMenuOpen })}>
-        {children}
+        {(children.isParent == false && children.isSubParent == false) ? null : children}
       </div>
     </div>
   )

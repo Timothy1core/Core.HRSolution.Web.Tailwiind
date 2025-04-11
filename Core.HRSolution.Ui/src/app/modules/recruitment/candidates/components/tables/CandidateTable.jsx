@@ -230,13 +230,13 @@ const CandidateTable = ({ className }) => {
         <ActionComponent
             buttonPermission={'recruitment.retrieve.candidate.info'}
             actionButton={ 
-        <button class="btn btn-icon btn-outline btn-primary btn-xs"
+        <button className="btn btn-icon btn-outline btn-primary btn-xs"
           href={`viewcandidate?id=${row.id}`}
           // className='btn btn-icon btn-bg-light btn-active-color-danger btn-sm me-1'
           data-id={row.id}
         >
           {/* <KTIcon iconName='eye' className='text-md' /> */}
-          <i class="ki-outline ki-eye"></i>
+          <i className="ki-outline ki-eye"></i>
         </button>
         }/>
     </div>
@@ -265,8 +265,8 @@ const CandidateTable = ({ className }) => {
 
   return (
     <div className={`card min-w-full ${className}`}>
-      <div class="card-header">
-        <h4 class="card-title">
+      <div className="card-header">
+        <h4 className="card-title">
         Candidate Dashboard
         </h4>
       </div>
@@ -384,15 +384,15 @@ const CandidateTable = ({ className }) => {
 
                       <div className='mb-5'>
                         <label className='form-label fw-bold'>Qualification:</label>
-                        <div class="form-check form-check-custom form-check-solid form-check-danger form-check-sm mb-1">
-                          <input class="form-check-input" type="radio" name='1' value="0" checked={selectedQualification == 0} id="flexRadioLg2" onChange={(e) => setSelectedQualification(e.target.value)}/>
-                          <label class="form-check-label me-2" for="flexRadioLg2">
+                        <div className="form-check form-check-custom form-check-solid form-check-danger form-check-sm mb-1">
+                          <input className="form-check-input" type="radio" name='1' value="0" checked={selectedQualification == 0} id="flexRadioLg2" onChange={(e) => setSelectedQualification(e.target.value)}/>
+                          <label className="form-check-label me-2" for="flexRadioLg2">
                               Qualified
                           </label>
                         </div>
-                        <div class="form-check form-check-custom form-check-solid form-check-danger form-check-sm">
-                            <input class="form-check-input" type="radio" name='1' checked={selectedQualification == 1} value="1" id="flexRadioLg1" onChange={(e) => setSelectedQualification(e.target.value)}/>
-                            <label class="form-check-label me-2" for="flexRadioLg1">
+                        <div className="form-check form-check-custom form-check-solid form-check-danger form-check-sm">
+                            <input className="form-check-input" type="radio" name='1' checked={selectedQualification == 1} value="1" id="flexRadioLg1" onChange={(e) => setSelectedQualification(e.target.value)}/>
+                            <label className="form-check-label me-2" for="flexRadioLg1">
                                 Disqualified
                             </label>
                         </div>
@@ -433,7 +433,7 @@ const CandidateTable = ({ className }) => {
                   ))}
                 </div> 
               </div> */}
-              {/* } */}
+              {/* }
 
       {/* <div className='card-body py-3'> */}
         <TableWithPagination 

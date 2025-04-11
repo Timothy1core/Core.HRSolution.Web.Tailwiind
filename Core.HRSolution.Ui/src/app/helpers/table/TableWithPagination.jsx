@@ -56,7 +56,7 @@ const TableWithPagination = ({
     <div className="table-with-pagination">
       <div className="card-table">
         <div data-datatable="true" data-datatable-page-size="5">
-          <div class="scrollable-x-auto border-b">
+          <div className="scrollable-x-auto border-b">
             <table className="table-auto table table-border">
               <thead className='uppercase font-bold cursor-pointer'>
                 <tr>

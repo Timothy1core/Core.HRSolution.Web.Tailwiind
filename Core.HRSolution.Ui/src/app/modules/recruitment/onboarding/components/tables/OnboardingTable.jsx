@@ -156,19 +156,19 @@ const OnboardingTable = ({ className }) => {
 
   return (
     <div className={`card ${className}`}>
-              <div className='card-header flex-nowrap border-0 pt-5'>
-                <div className='card-title m-0'>
-                  <input
+              <div className='card-header'>
+                <div className='card-title'>
+                  {/* <input
                     type='text'
                     className='form-control form-control-sm me-2'
                     placeholder='Search'
                     value={searchTerm}
                     onChange={handleSearch}
-                  />
+                  /> */}
                 </div>
         
                 <div className='card-toolbar m-0'>
-                  <button
+                  {/* <button
                     type='button'
                     className='btn btn-light-danger btn-sm btn-active-light-danger'
                     data-kt-menu-trigger='click'
@@ -176,20 +176,24 @@ const OnboardingTable = ({ className }) => {
                     data-kt-menu-flip='top-end'
                   >
                     <KTIcon iconName='filter' className='fs-3 text-danger' />Filter
-                  </button>
-                  <a
+                  </button> */}
+                  {/* <a
                     href="#"
                     className='btn btn-icon btn-light-danger btn-active-light-danger btn-sm mx-1'
                     // onClick={handleResetFilters}
                   >
                     <KTIcon iconName='arrows-circle' className='fs-3' />
-                  </a>
+                  </a> */}
+                  <label className="input input-sm">
+                    <KTIcon iconName='magnifier' />
+                    <input type="text" placeholder="Search assessment" value={searchTerm} onChange={handleSearch} />
+                  </label>                  
                 </div>
                 
               </div>
 
 
-      <div className='card-body py-3'>
+
         <TableWithPagination 
         data={filteredData} 
         columns={columns} 
@@ -201,7 +205,6 @@ const OnboardingTable = ({ className }) => {
         />
       
       {/* <JobOfferModal show={ShowJobOfferModal} handleClose={handleCloseJobOfferModal} jobOfferId={jobOfferId}/> */}
-      </div>
     </div>
   );
 };

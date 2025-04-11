@@ -241,9 +241,9 @@ const MenuTable = ({ className }) => {
         <ActionComponent
             buttonPermission={'system.setup.hide.user.menu'}
             actionButton={
-          <div class="form-check form-switch form-check-custom form-check-solid">
+          <div className="form-check form-switch form-check-custom form-check-solid">
               <input 
-              class="form-check-input" 
+              className="form-check-input" 
               type="checkbox" 
               value={row.isHidden} 
               id={`switch-${row.id}`} 

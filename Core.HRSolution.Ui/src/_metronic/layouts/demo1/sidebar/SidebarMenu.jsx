@@ -17,6 +17,7 @@ const SidebarMenu = () => {
   const accordionBorderLeft = ['before:start-[20px]', 'before:start-[32px]', 'before:start-[32px]', 'before:start-[32px]', 'before:start-[32px]'];
   const buildMenu = items => {
     return items.map((item, index) => {
+      if (item.hidden) return null; // 👈 skip rendering
       if (item.heading) {
         return buildMenuHeading(item, index);
       } else if (item.disabled) {
@@ -72,7 +73,9 @@ const SidebarMenu = () => {
       </MenuItem>;
   };
   const buildMenuItemChildren = (items, index, level = 0) => {
+    
     return items.map((item, index) => {
+      if (item.hidden) return null;
       if (item.disabled) {
         return buildMenuItemChildDisabled(item, index, level);
       } else {
@@ -94,7 +97,7 @@ const SidebarMenu = () => {
                 <span className="hidden menu-item-show:!flex">{item.collapseTitle}</span>
                 <span className="flex menu-item-show:hidden">{item.expandTitle}</span>
               </MenuTitle> : <MenuTitle className="text-2sm font-normal me-1 text-gray-800 menu-item-active:text-primary menu-item-active:font-medium menu-link-hover:!text-primary">
-                {item.title}
+                {item.isParent ? '1': '2'}
               </MenuTitle>}
 
             {buildMenuArrow()}

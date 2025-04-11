@@ -20,7 +20,7 @@ namespace Recruitment.Service.API.Controllers
 		private readonly IFileService _fileService = fileService;
 
 		[Authorize]
-		[Permission("department.create")]
+		//[Permission("department.create")]
 		[HttpPost("create_department")]
 		public async Task<IActionResult> CreateDepartment([FromForm] DepartmentRequestDto companyRequest)
 		{
@@ -32,7 +32,7 @@ namespace Recruitment.Service.API.Controllers
 		}
 
 		[Authorize]
-		[Permission("department.retrieve.list")]
+		//[Permission("department.retrieve.list")]
 		[HttpGet("retrieve_dashboard_department")]
 		public async Task<IActionResult> RetrieveDashboardDepartment([FromQuery] int groupId, [FromQuery] int serviceId, [FromQuery] int statusId)
 		{
@@ -43,7 +43,7 @@ namespace Recruitment.Service.API.Controllers
 		}
 
 		[Authorize]
-		[Permission("department.retrieve.info")]
+		//[Permission("department.retrieve.info")]
 		[HttpGet("retrieve_department_profile/{id}")]
 		public async Task<IActionResult> RetrieveDepartment(int id)
 		{
@@ -55,7 +55,7 @@ namespace Recruitment.Service.API.Controllers
 
 
 		[Authorize]
-		[Permission("department.update")]
+		//[Permission("department.update")]
 		[HttpPut("update_department/{id}")]
 		public async Task<IActionResult> UpdateDepartment(int id,[FromForm] DepartmentRequestDto companyRequest)
 		{
@@ -65,7 +65,7 @@ namespace Recruitment.Service.API.Controllers
 		}
 
 		[Authorize]
-		[Permission("department.individual.create")]
+		//[Permission("department.individual.create")]
 		[HttpPost("create_department_individual")]
 		public async Task<IActionResult> CreateDepartmentIndividual([FromForm] int companyId, [FromForm] List<DepartmentIndividualDto> individuals)
 		{
@@ -77,7 +77,7 @@ namespace Recruitment.Service.API.Controllers
 
 
 		[Authorize]
-		[Permission("department.individual.retrieve")]
+		//[Permission("department.individual.retrieve")]
 		[HttpGet("retrieve_department_individuals/{companyId}")]
 		public async Task<IActionResult> RetrieveDepartmentIndividuals(int companyId)
 		{
@@ -88,7 +88,7 @@ namespace Recruitment.Service.API.Controllers
 		}
 
 		[Authorize]
-		[Permission("department.individual.update")]
+		//[Permission("department.individual.update")]
 		[HttpPut("update_department_individual/{id}")]
 		public async Task<IActionResult> UpdateDepartmentIndividual(int id, [FromForm] DepartmentIndividualDto individuals)
 		{
