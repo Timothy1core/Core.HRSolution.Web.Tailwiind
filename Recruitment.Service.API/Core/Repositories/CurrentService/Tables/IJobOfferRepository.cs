@@ -6,7 +6,8 @@ namespace Recruitment.Service.API.Core.Repositories.CurrentService.Tables;
 public interface IJobOfferRepository
 {
 	Task SaveJobOfferInformation(JobOfferInformation jobOfferInformation);
-	Task<List<JobOfferDashboardDto>> RetrieveCandidateForJobOfferList(int status);
+	Task<List<JobOfferDashboardDto>> RetrieveCandidateForJobOfferList();
+	Task<List<JobOfferStatusDto>> RetrieveJobOfferStatusList();
 	Task<JobOfferDto> RetrieveJobOfferInfo(int jobOfferId);
 	Task UpdateJobOffer(JobOfferInformation jobOfferInformationDto);
 	Task JobOfferApproved(JobOfferInformation jobOfferInformationDto);

@@ -162,11 +162,11 @@ const DocumentWriteUpPage = () => {
         <div style="margin: 0px 10px 0px 10px; padding: 0px 10px 0px 10px; border-top: solid #bc2026 1px">
             <h3 style="margin: 10px 0px 0px 0px;"><b>ONE COREDEV IT INC.</b></h3>
 
-            <div style="display: flex; justify-content: space-between">
+            <div style="display: flex; justify: space-between">
                 <span><b style="color: #bc2026">Address: </b> <b>V Corporate Centre, 125 L.P Leviste Street,</b></span>
                 <span style="text-align:end;"><b style="color: #bc2026;">Email: </b> <b>info@onecoredevit.com</b></span>
             </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 5px">
+            <div style="display: flex; justify: space-between; margin-bottom: 5px">
                 <span><b>Salcedo, Village, Makati, 1227 Metro Manila, Philippines</b></span>
                 <span style="text-align:end;"><b style="color: #bc2026;">Office Number: </b><b>+ 632 8404-0164</b> </span>
             </div>
@@ -282,7 +282,7 @@ const handlePrint = () => {
     <>
       <div id="kt_app_toolbar" className="app-toolbar py-3 py-lg-6">
         <div id="kt_app_toolbar_container" className="app-container container-fluid d-flex flex-stack">
-          <div className="page-title d-flex flex-column justify-content-center flex-wrap me-3">
+          <div className="page-title d-flex flex-column justify-center flex-wrap me-3">
             <a href={`viewcandidate?id=${candidateId}`} className='btn btn-sm btn-light-danger'>
               <KTIcon iconName='entrance-right' className='fs-2' />
               Go Back
@@ -348,11 +348,11 @@ const handlePrint = () => {
             <div className='col-10'>
               <div className="card p-5"  >
                 <h3 className="card-title mb-8">Write Up Document</h3>
-                <div className='d-flex justify-content-between'>
+                <div className='d-flex justify-between'>
                   <p className='mb-0'>Candidate Name:</p>
                   <p className='mb-0'>Department:</p>
                 </div>
-                <div className='d-flex justify-content-between'>
+                <div className='d-flex justify-between'>
                   <p>Position:</p>
                 </div>
                 <div className="separator border border-dark my-2"></div>

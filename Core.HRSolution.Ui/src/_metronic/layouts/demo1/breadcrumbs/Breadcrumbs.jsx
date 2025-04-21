@@ -14,7 +14,6 @@ const Breadcrumbs = () => {
   const menuConfig = getMenuConfig('primary');
   const cleanedPathname = pathname.replace(/\/\d+$/, '/:id');
   const items = useMenuBreadcrumbs(cleanedPathname, menuConfig);
-  console.log(items, cleanedPathname, menuConfig)
   const renderItems = items => {
     return items.map((item, index) => {
       const last = index === items.length - 1;

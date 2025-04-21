@@ -3,6 +3,7 @@ using HRSolutionDbLibrary.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Recruitment.Service.API.Core.Models.CurrentService.Dtos.Assessment;
 using Recruitment.Service.API.Core.Models.CurrentService.Dtos.JobOffer;
+using Recruitment.Service.API.Core.Models.CurrentService.Dtos.JobProfile;
 using Recruitment.Service.API.Core.Repositories.CurrentService.Tables;
 
 namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables;
@@ -16,15 +17,13 @@ public class JobOfferRepository(CurrentServiceDbContext context) : IJobOfferRepo
 
 
 
-	public async Task<List<JobOfferDashboardDto>> RetrieveCandidateForJobOfferList(int status)
+	public async Task<List<JobOfferDashboardDto>> RetrieveCandidateForJobOfferList()
 	{
 		var candidatesForJobOffer = await context.JobOfferInformations
 			.Include(x => x.Candidate)
 			.ThenInclude(i => i.Job)
 			.Include(i => i.JobOfferStatus)
 		.ToListAsync();
-
-		candidatesForJobOffer = status == 0 ? candidatesForJobOffer.ToList() : candidatesForJobOffer.Where(x => x.JobOfferStatusId == status).ToList();
 
 		var candidatesForJobOfferDtos = candidatesForJobOffer.Select(s => new JobOfferDashboardDto()
 		{
@@ -43,6 +42,20 @@ public class JobOfferRepository(CurrentServiceDbContext context) : IJobOfferRepo
 		})
 			.ToList();
 		return candidatesForJobOfferDtos;
+
+	}
+
+	public async Task<List<JobOfferStatusDto>> RetrieveJobOfferStatusList()
+	{
+		var statuses = await context.JobOfferStatuses
+			.Where(w => w.IsActive == true )
+
+			.Select(s => new JobOfferStatusDto()
+			{
+				Id = s.Id,
+				Status = s.Status
+			}).ToListAsync();
+		return statuses;
 
 	}
 

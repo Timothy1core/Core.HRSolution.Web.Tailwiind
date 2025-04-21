@@ -95,7 +95,7 @@ export function HeaderWrapper() {
 
         <div
           id='kt_app_header_wrapper'
-          className='d-flex align-items-stretch justify-content-between flex-lg-grow-1'
+          className='d-flex align-items-stretch justify-between flex-lg-grow-1'
         >
           {config.app.header.default?.content === 'menu' &&
             config.app.header.default.menu?.display && (

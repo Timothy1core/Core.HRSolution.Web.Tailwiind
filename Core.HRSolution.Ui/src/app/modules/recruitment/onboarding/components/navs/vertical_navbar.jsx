@@ -253,7 +253,7 @@ const VerticalNavBar = ({
                 <div className="card p-8">
                           <ul className="nav nav-pills flex-column">
                               <li className="nav-item my-1">
-                                  <a className="btn btn-sm nav-link active btn-secondary d-flex align-items-center justify-content-between" data-bs-toggle="tab" href="#tab_job_offer">
+                                  <a className="btn btn-sm nav-link active btn-secondary d-flex align-items-center justify-between" data-bs-toggle="tab" href="#tab_job_offer">
                                     <div>
                                       <div className="text-start">Job Offer</div>
                                       <div className="text-start fs-7 text-gray-700">Due Date [date]</div>
@@ -262,7 +262,7 @@ const VerticalNavBar = ({
                                   </a>
                               </li>
                               <li className="nav-item my-1">
-                                  <a className="btn btn-sm nav-link btn-secondary d-flex justify-content-between align-items-center" data-bs-toggle="tab" href="#tab_core_info">
+                                  <a className="btn btn-sm nav-link btn-secondary d-flex justify-between align-items-center" data-bs-toggle="tab" href="#tab_core_info">
                                     <div>
                                       <div className="text-start">Core Information Sheet</div>
                                       <div className="text-start fs-7 text-gray-700">Due Date [date]</div>
@@ -277,7 +277,7 @@ const VerticalNavBar = ({
                                   </a>
                               </li>
                               <li className="nav-item my-1">
-                                  <a className="btn btn-sm nav-link btn-secondary d-flex justify-content-between align-items-center" data-bs-toggle="tab" href="#tab_pre_requisite">
+                                  <a className="btn btn-sm nav-link btn-secondary d-flex justify-between align-items-center" data-bs-toggle="tab" href="#tab_pre_requisite">
                                     <div>
                                       <div className="text-start">Pre-Requisite Requirements</div>
                                       <div className="text-start fs-7 text-gray-700">Due Date [date]</div>
@@ -290,7 +290,7 @@ const VerticalNavBar = ({
                                   </a>
                               </li>
                               <li className="nav-item my-1">
-                                  <a className="btn btn-sm nav-link btn-secondary d-flex justify-content-between align-items-center" data-bs-toggle="tab" href="#tab_general_req">
+                                  <a className="btn btn-sm nav-link btn-secondary d-flex justify-between align-items-center" data-bs-toggle="tab" href="#tab_general_req">
                                     <div>
                                       <div className="text-start">General Requirements</div>
                                       <div className="text-start fs-7 text-gray-700">Due Date [date]</div>
@@ -303,7 +303,7 @@ const VerticalNavBar = ({
                                   </a>
                               </li>
                               <li className="nav-item my-1">
-                                  <a className="btn btn-sm nav-link btn-secondary d-flex justify-content-between align-items-center" data-bs-toggle="tab" href="#tab_wfh_eligibility">
+                                  <a className="btn btn-sm nav-link btn-secondary d-flex justify-between align-items-center" data-bs-toggle="tab" href="#tab_wfh_eligibility">
                                     <div>
                                       <div className="text-start">WFH Eligibility</div>
                                       <div className="text-start fs-7 text-gray-700">Due Date [date]</div>

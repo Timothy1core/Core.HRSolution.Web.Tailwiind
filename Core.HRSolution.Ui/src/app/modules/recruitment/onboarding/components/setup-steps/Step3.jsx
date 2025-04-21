@@ -146,7 +146,7 @@ const FileUploadBox = ({ label, name, setFieldValue, value, documentGroup, error
     //         </button>
     //       </div>
 
-    //       <div className="mb-3 d-flex gap-2 align-items-center justify-content-center">
+    //       <div className="mb-3 d-flex gap-2 align-items-center justify-center">
     //         <Button variant="dark" size="sm" onClick={() => setShowSignaturePad(true)}>Draw Signature</Button>
     //       </div>
 
@@ -177,7 +177,7 @@ const FileUploadBox = ({ label, name, setFieldValue, value, documentGroup, error
     //       />
     //       <div className="upload-area">
     //         {value?.file ? (
-    //           <div className="d-flex flex-column border border-2 p-2 justify-content-center ">
+    //           <div className="d-flex flex-column border border-2 p-2 justify-center ">
     //             <div className='bd-highlight text-end'>
     //               <Button variant='danger' type="button" onClick={handleClearFile} className="btn-icon btn-icon-lg size-5 bg-danger text-white" >
     //                 <KTIcon iconName='cross' className='fs-1' />
@@ -281,7 +281,7 @@ const Step3Div = ({ handleNext, handleBack, id,onboardingDocuments }) => {
       //       {docMap.idPicture ? 
       //       <>
       //         <h3 className='text-dark'>ID Picture</h3>
-      //         <div className="d-flex border border-2 p-2 justify-content-between my-5">
+      //         <div className="d-flex border border-2 p-2 justify-between my-5">
       //           <div>
       //             <h3>File name: {docMap.idPicture.file.name}</h3>
       //           </div>
@@ -301,12 +301,12 @@ const Step3Div = ({ handleNext, handleBack, id,onboardingDocuments }) => {
       //         <div className="separator border-secondary my-7 w-50"></div>
       //       </div>
             
-      //       <div className='d-flex flex-column align-items-center justify-content-center'>
+      //       <div className='d-flex flex-column align-items-center justify-center'>
             
       //       {docMap.signatureSpecimen ? 
       //       <>
       //         <h3 className='text-dark'>Signature Specimen</h3>
-      //         <div className="d-flex border border-2 p-2 justify-content-between my-5">
+      //         <div className="d-flex border border-2 p-2 justify-between my-5">
       //           <div>
       //             <h3>File name: {docMap.signatureSpecimen.file.name}</h3>
       //           </div>
@@ -325,7 +325,7 @@ const Step3Div = ({ handleNext, handleBack, id,onboardingDocuments }) => {
             
               
       //       </div>
-      //       <div className="d-flex bd-highlight  gap-5 justify-content-between py-2 mt-5">
+      //       <div className="d-flex bd-highlight  gap-5 justify-between py-2 mt-5">
       //         {/* <Button type="button"  onClick={() => handleBack()} className="btn btn-secondary mt-5" >
       //           Back
       //         </Button>

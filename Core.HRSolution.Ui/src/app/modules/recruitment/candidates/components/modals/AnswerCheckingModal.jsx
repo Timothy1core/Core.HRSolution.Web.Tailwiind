@@ -89,7 +89,7 @@ const AnswerCheckingModal = ({ show, handleClose, candidateId, assessmentId }) =
                 </div>
               )} */}
         <div>
-          <div className='d-flex align-items-center justify-content-between py-5 px-8 border-bottom'>
+          <div className='d-flex align-items-center justify-between py-5 px-8 border-bottom'>
             <div className='d-flex align-items-center '>
               <h5 className='fw-bold m-0 me-5'>Answers Need Manual Checking</h5>
               {/* <div className='btn btn-icon btn-sm btn-light-danger'>
@@ -125,14 +125,14 @@ const AnswerCheckingModal = ({ show, handleClose, candidateId, assessmentId }) =
                   </div>}
                 {data.type == 3 && 
                 // <ReactPlayer url= />  
-                <div className="d-flex mb-2  w-100 justify-content-center">
+                <div className="d-flex mb-2  w-100 justify-center">
                   <iframe className="w-100 rounded border"
                   style={{ maxWidth: "600px", height: "350px" }} src={`${ApiGateWayUrl()}/assessment/assessmentauth/candidate_video_answer/${data.answerId}`}></iframe>
                 </div>
                 
                 }
                   
-                <div className='d-flex justify-content-center'>
+                <div className='d-flex justify-center'>
                   <div className=" btn-group border border-1 border-dark" role="group" aria-label="Basic radio toggle button group">
                     <input
                       type="radio"
@@ -164,7 +164,7 @@ const AnswerCheckingModal = ({ show, handleClose, candidateId, assessmentId }) =
           {/*begin::Body*/}
 
           {/* Footer */}
-          <div className='d-flex align-items-center justify-content-center py-5 ps-8 pe-5 border-top'>
+          <div className='d-flex align-items-center justify-center py-5 ps-8 pe-5 border-top'>
             <div className='d-flex align-items-center me-3'>
               {/* <button data-bs-dismiss='modal' onClick={handleClose} type='button' className='btn btn-secondary me-4 px-6'>Cancel</button>
               <button

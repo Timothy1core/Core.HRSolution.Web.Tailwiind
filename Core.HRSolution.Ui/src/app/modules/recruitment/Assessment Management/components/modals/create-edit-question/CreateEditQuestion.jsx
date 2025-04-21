@@ -195,7 +195,7 @@ const CreateEditQuestion = ({ onCreateQuestion, selectedQuestion, questions, isC
     // <div className="modal fade" id="create-question" aria-hidden="true">
     //   <div className="modal-dialog mw-650px">
     //     <div className="modal-content">
-    //       <div className="modal-header pb-0 border-0 justify-content-end">
+    //       <div className="modal-header pb-0 border-0 justify-end">
     //         <div className="btn btn-sm btn-icon btn-active-color-danger" data-bs-dismiss="modal" onClick={handleHideModal}>
     //           <KTIcon iconName="cross" className="fs-1" />
     //         </div>

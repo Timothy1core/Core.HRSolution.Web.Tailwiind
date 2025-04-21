@@ -48,10 +48,10 @@ const Step1Div = ({handleNext}) => {
 
         <div className="separator border-2 my-8 border-danger"></div>
 
-        <div className="d-flex justify-content-between mt-5 bg-light-danger p-5 rounded">
-          <div className="d-flex align-items-center justify-content-center flex-column mb-3">
+        <div className="d-flex justify-between mt-5 bg-light-danger p-5 rounded">
+          <div className="d-flex align-items-center justify-center flex-column mb-3">
 
-            <div className="rounded-circle bg-danger text-white d-flex align-items-center justify-content-center mb-2" style={{ width: '40px', height: '40px' }}>
+            <div className="rounded-circle bg-danger text-white d-flex align-items-center justify-center mb-2" style={{ width: '40px', height: '40px' }}>
               <span className="fs-4 fw-bolder">1</span>
             </div>
 
@@ -59,9 +59,9 @@ const Step1Div = ({handleNext}) => {
 
             <span className="fs-5 ">Get candidate details</span>
           </div>
-          <div className="d-flex align-items-center justify-content-center flex-column mb-3">
+          <div className="d-flex align-items-center justify-center flex-column mb-3">
 
-            <div className="rounded-circle bg-danger text-white d-flex align-items-center justify-content-center mb-2" style={{ width: '40px', height: '40px' }}>
+            <div className="rounded-circle bg-danger text-white d-flex align-items-center justify-center mb-2" style={{ width: '40px', height: '40px' }}>
               <span className="fs-4 fw-bolder">2</span>
             </div>
 
@@ -70,8 +70,8 @@ const Step1Div = ({handleNext}) => {
             <span className="fs-5 ">Test audio and video</span>
 
           </div>
-          <div className="d-flex align-items-center justify-content-center flex-column mb-3">
-            <div className="rounded-circle bg-danger text-white d-flex align-items-center justify-content-center mb-2" style={{ width: '40px', height: '40px' }}>
+          <div className="d-flex align-items-center justify-center flex-column mb-3">
+            <div className="rounded-circle bg-danger text-white d-flex align-items-center justify-center mb-2" style={{ width: '40px', height: '40px' }}>
               <span className="fs-4 fw-bolder">3</span>
             </div>
 
@@ -113,7 +113,7 @@ const Step1Div = ({handleNext}) => {
           {formik.touched.terms && formik.errors.terms ? (
                   <div className='text-danger mb-2'>{formik.errors.terms}</div>
                 ) : null}
-          <div className="d-flex justify-content-center">
+          <div className="d-flex justify-center">
             <button
               className="btn btn-danger rounded-pill w-75 "
               type="submit"

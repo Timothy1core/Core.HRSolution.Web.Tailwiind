@@ -390,7 +390,7 @@ const ViewCandidatePage = () => {
     {!loading && 
       <div id="kt_app_toolbar" className="app-toolbar py-3 py-lg-6">
         <div id="kt_app_toolbar_container" className="app-container container-fluid d-flex flex-stack">
-          <div className="page-title d-flex flex-column justify-content-center flex-wrap me-3">
+          <div className="page-title d-flex flex-column justify-center flex-wrap me-3">
               <a href='candidates' className='btn btn-sm btn-light-danger'>
               <KTIcon iconName='entrance-right' className='fs-2' />
                 Go Back
@@ -409,7 +409,7 @@ const ViewCandidatePage = () => {
         }}
       >
         <div className="container-fluid">
-          <div className="d-flex justify-content-between">
+          <div className="d-flex justify-between">
             <div>
               <div className="d-flex align-items-center gap-2">
                   <h1 className="card-title mb-0 fw-bold">{candidateData.firstName + " " + candidateData.lastName}</h1>
@@ -427,7 +427,7 @@ const ViewCandidatePage = () => {
                 </div>
               </div>
               </div>
-              <div className="text-end align-items-end justify-content-center">
+              <div className="text-end align-items-end justify-center">
                 {/* <ButtonToolbar aria-label="Toolbar with button groups" className='text-end'>
                   <ButtonGroup size="sm" className="me-2 py-1" aria-label="First group">
                   <ActionComponent
@@ -567,21 +567,21 @@ const ViewCandidatePage = () => {
                       </div>  
                       <div className="tab-content" id="myTabContent">
                         <div className="tab-pane fade show active" id="tab_candidate_profile" role="tabpanel">
-                          <div className='d-flex justify-content-start my-7'>
+                          <div className='d-flex justify-start my-7'>
                             <div>Position: <b>{candidateData.jobName}</b></div>
                           </div>
-                          <div className='d-flex justify-content-start my-7'>
+                          <div className='d-flex justify-start my-7'>
                           <div>Application Status: <b>{candidateData.stageName}</b></div>
                           </div>
-                          <div className='row justify-content-start my-7'>
+                          <div className='row justify-start my-7'>
                             <div className='col'>Current Employment Status: <b>{candidateData.currentEmploymentStatus}</b></div>
                             <div className='col'>Notice Period: <b>{candidateData.noticePeriod}</b></div>
                           </div>
-                          <div className='row justify-content-start my-7'>
+                          <div className='row justify-start my-7'>
                             <div className='col'>Expected Salary: <b>{new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(candidateData.currentSalary)}</b></div>
                             <div className='col'> Expected Salary: <b>{new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(candidateData.expectedSalary)}</b></div>
                           </div>
-                          <div className='d-flex justify-content-start my-2'>
+                          <div className='d-flex justify-start my-2'>
                             <div>Resume:</div>
                           </div>
                           <div className='border p-2'>
@@ -729,7 +729,7 @@ const ViewCandidatePage = () => {
                         </div>
                         {candidateData.candidateCredentials != null && candidateData.candidateCredentials.isAssessmentFinished && <div className="tab-pane fade" id="tab_candidate_review" role="tabpanel">
                          {assessments.map((data, index) => (
-                            <div className="card d-flex justify-content-between border p-5 mb-2" key={index}>
+                            <div className="card d-flex justify-between border p-5 mb-2" key={index}>
                               <div className='card-body d-flex flex-column p-0'>
                                 <div className='d-flex flex-stack mb-2'>
                                 <div className='fw-bolder'>
@@ -772,7 +772,7 @@ const ViewCandidatePage = () => {
                         }
 
                         {candidateData.candidateCredentials != null && candidateData.candidateCredentials.isAssessmentStarted && <div className="tab-pane fade" id="tab_candidate_review" role="tabpanel">
-                            <div className="d-flex justify-content-center border p-5">
+                            <div className="d-flex justify-center border p-5">
                               <div>
                                 <span className="text-sm fs-1">
                                   {/* Correct Answers {data.correctCount}/{data.totalQuestions} */}
@@ -784,7 +784,7 @@ const ViewCandidatePage = () => {
                         }
 
                         {candidateData.candidateCredentials != null && !candidateData.candidateCredentials.isAssessmentStarted  && <div className="tab-pane fade" id="tab_candidate_review" role="tabpanel">
-                            <div className="d-flex justify-content-center border p-5">
+                            <div className="d-flex justify-center border p-5">
                               <div>
                                 <span className="text-sm fs-1">
                                   {/* Correct Answers {data.correctCount}/{data.totalQuestions} */}

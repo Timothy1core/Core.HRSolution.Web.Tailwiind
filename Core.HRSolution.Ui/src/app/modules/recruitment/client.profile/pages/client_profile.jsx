@@ -52,7 +52,7 @@ const ClientProfilePage = () => {
                         </div>
 
                         <div className='flex-grow-1'>
-                            <div className='d-flex justify-content-between align-items-start flex-wrap mb-2'>
+                            <div className='d-flex justify-between align-items-start flex-wrap mb-2'>
                                 <div className='d-flex flex-column my-4'>
                                     <div className='d-flex align-items-center mb-1'>
                                         <h1 className='text-gray-800 fs-1 fw-bolder me-1'>

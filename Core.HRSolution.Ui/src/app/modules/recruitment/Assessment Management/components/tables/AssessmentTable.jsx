@@ -13,6 +13,7 @@ import {
 } from '../../../../../helpers/loading_request';
 import Swal from 'sweetalert2';
 import ActionComponent from '../../../../../helpers/action_component';
+import { Link } from 'react-router-dom';
 
 const AssessmentTable = ({ className }) => {
   const [filteredData, setFilteredData] = useState([]);
@@ -133,12 +134,12 @@ const AssessmentTable = ({ className }) => {
         <ActionComponent
             buttonPermission={'system.update.assessment'}
             actionButton={ 
-        <button className="btn btn-icon btn-outline btn-primary btn-xs"
-          href={`editAssessment?id=${row.id}`}
+              <Link className="btn btn-icon btn-outline btn-primary btn-xs"
+              to={`/recruitment/editAssessment/${row.id}`}
           data-id={row.id}
         >
           <KTIcon iconName='pencil' className='fs-3' />
-        </button>
+        </Link>
         }/>
         <ActionComponent
             buttonPermission={'system.remove.assessment'}

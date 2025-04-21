@@ -1,22 +1,15 @@
 import { Content } from '../../../../../_metronic/layout/components/content'
 import { KTIcon } from '@/_metronic/helpers';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { updateAssessment, infoAssessment, removeQuestion, listQuestionTypes } from '../core/requests/_request';
 import { CreateQuestion } from '../components/modals/create-question-to-db/CreateQuestion';
 import { EditQuestion } from '../components/modals/edit-question-to-db/EditQuestion';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { ClassicEditor, Bold, Essentials, Italic, Paragraph, List, Heading, Link, Table, TableToolbar, Indent, IndentBlock, Image,
-  ImageCaption,
-  ImageResize,
-  ImageStyle,
-  ImageToolbar,
-  ImageUpload,
-  Base64UploadAdapter,
-  FontSize  } from 'ckeditor5';
+import { ClassicEditor, Bold, Essentials, Italic, Paragraph, List, Heading, Link, Table, TableToolbar, Indent, IndentBlock, Image,FontSize  } from 'ckeditor5';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import 'ckeditor5/ckeditor5.css';
 
@@ -27,18 +20,15 @@ const assessmentSchema = Yup.object().shape({
   // answer: Yup.string().required('Required'),
 });
 
-
 const EditAssessmentPage = () => {
+
+  const { id } = useParams();
+
     const CKEditorConfig = {
+      licenseKey: 'GPL',
       plugins: [
           Essentials, Bold, Italic, Paragraph, List, Heading, Link,
           Table, TableToolbar, Indent, IndentBlock, Image,
-          ImageCaption,
-          ImageResize,
-          ImageStyle,
-          ImageToolbar,
-          ImageUpload,
-          Base64UploadAdapter,
           FontSize 
       ],
       toolbar: [
@@ -58,11 +48,31 @@ const EditAssessmentPage = () => {
     const [selectedQuestion, setSelectedQuestion] = useState(null);
     const [questions, setQuestions] = useState([]);
     const [questionTypes, setQuestionTypes] = useState([]);
-    const navigate = useNavigate();
+    const [addQuestionOpen, setModalOpen] = useState(false);
+    const [editQuestionOpen, setEditModalOpen] = useState(false);
+    // const navigate = useNavigate();
 
     const handleEditQuestion = (question) => {
       setSelectedQuestion(question); 
     };
+
+    const handleModalOpen = () => setModalOpen(true)
+    const handleModalClose = () => {
+      setModalOpen(false)
+      setSelectedQuestion(null)
+      fetchAssessmentInfo()
+    }
+
+    const handleEditModalOpen = (question) => {
+      setEditModalOpen(true)
+      setSelectedQuestion(question)
+      console.log(question)
+    }
+    const handleEditModalClose = () => {
+      setEditModalOpen(false)
+      setSelectedQuestion(null)
+      fetchAssessmentInfo()
+    }
 
     const handleDeleteQuestion = async (id) => {
       Swal.fire({
@@ -118,7 +128,7 @@ const EditAssessmentPage = () => {
           //   res = await updateApi(apiId, values.apiName); // Update if editMode is true
           // } else {
             res = await updateAssessment(
-              assessmentId,
+              id,
               values.name,
               values.instructionBody, 
               values.description,
@@ -140,24 +150,12 @@ const EditAssessmentPage = () => {
       },
     });
 
-    const location = useLocation();
-    const params = new URLSearchParams(location.search);
-    const assessmentId = params.get('id');
+    
+    // const navigate = useNavigate();
 
-    // useEffect(() => {
-    //   if (id) {
-    //     // Fetch data from API using the id 
-    //     fetchDataFromAPI(id);
-    //   }
-    // }, [id]);
-
-    // // Your fetchDataFromAPI function can handle the API call logic
-    // const fetchDataFromAPI = (id) => {
-    //   // Fetch API logic
-    // };
-    const fetchAssessmentInfo = async () => {
+    const fetchAssessmentInfo = useCallback( async () => {
       try {
-        const response = await infoAssessment(assessmentId);
+        const response = await infoAssessment(id);
         if (response.data?.assessment) {
           formik.setValues({
             name: response.data.assessment.name,
@@ -170,7 +168,7 @@ const EditAssessmentPage = () => {
       } catch (error) {
         formik.setStatus('Error fetching assessment data');
       }
-    };
+    }, [id] );
 
     const fetchQuestionTypes = async () => {
       try {
@@ -188,20 +186,20 @@ const EditAssessmentPage = () => {
     useEffect(() => {
       fetchAssessmentInfo();
       fetchQuestionTypes();
-    }, [assessmentId]);
+    }, [fetchAssessmentInfo]);
 
   return(
   <>
-    <div id="kt_app_toolbar" className="app-toolbar py-3 py-lg-6">
+    {/* <div id="kt_app_toolbar" className="app-toolbar py-3 py-lg-6">
       <div id="kt_app_toolbar_container" className="app-container container-fluid d-flex flex-stack">
-        <div className="page-title d-flex flex-column justify-content-center flex-wrap me-3">
+        <div className="page-title d-flex flex-column justify-center flex-wrap me-3">
             <a href='/recruitment/assessmentManagement' className='btn btn-sm btn-light-danger'>
             <KTIcon iconName='entrance-right' className='fs-2' />
               Back to Assessment Dashboard
             </a>
         </div>
       </div>
-    </div>
+    </div> */}
     <Content>
     <form onSubmit={formik.handleSubmit}>
               {formik.status && (
@@ -209,9 +207,17 @@ const EditAssessmentPage = () => {
                   <div className='alert-text font-weight-bold'>{formik.status}</div>
                 </div>
               )}
-      <input 
+      {/* <input 
         type="text" 
         className="form-control form-control-flush form-control-lg ps-1 fs-2" 
+        onChange={(e) => setName(e.target.value)} // Update state when input changes
+        {...formi
+        k.getFieldProps('name')}
+      /> */}
+      <label className='form-label required ms-1'>Assessment Name</label>
+      <input 
+        type="text" 
+        className="input ps-1 mb-2 w-60" 
         onChange={(e) => setName(e.target.value)} // Update state when input changes
         {...formik.getFieldProps('name')}
       />
@@ -219,117 +225,135 @@ const EditAssessmentPage = () => {
                       <div className='text-danger mt-2'>{formik.errors.assessmentName}</div>
                     )}
 
-      <div className='mb-5 mb-xl-8 px-2 py-0 '>
+      {/* <div className='mb-5 mb-xl-8 px-2 py-0 '> */}
+
         {/* <TableWithPagination data={filteredData} columns={columns} /> */}
-        <div class="row">
-            <div class="col-4 border border-dark border-right-0 py-2">
-            <label className='form-label required ms-1'>Instructions</label>
-            <CKEditor
-              editor={ClassicEditor}
-              config={CKEditorConfig}
-              data={formik.values.instructionBody}
-              onChange={(event, editor) => {
-                  formik.setFieldValue('instructionBody', editor.getData());
-              }}
-            />
-            {formik.touched.instructionBody && formik.errors.instructionBody && (
-                    <div className='text-danger mt-2'>{formik.errors.instructionBody}</div>
-                  )} 
-            <label className='form-label ms-1 mt-5'>Description</label>
-            <CKEditor
-              editor={ClassicEditor}
-              config={CKEditorConfig}
-              data={formik.values.description}
-              onChange={(event, editor) => {
-                  formik.setFieldValue('description', editor.getData());
-              }}
-            />   
-            <label className='form-label required mt-5'>Duration</label>
-                <div class="input-group mb-3">
-                <input
-                  type='number'
-                  className='form-control mb-3'
-                  placeholder='Please enter duration'
-                  {...formik.getFieldProps('duration')}
-                  ></input>
-                  <div class="input-group-append">
-                    <span class="input-group-text" id="basic-addon2">minute/s</span>
+        <div className="flex gap-2">
+                  <div className="w-32 flex-auto card p-2">
+                    <label className='form-label required ms-1'>Instructions</label>
+                      {/* <textarea
+                        className='form-control form-control mb-3'
+                        rows={5}
+                        data-kt-element='input'
+                        placeholder='Type an instruction'
+                        {...formik.getFieldProps('instructionBody')}
+                      ></textarea> */}
+                      <CKEditor
+                        editor={ClassicEditor}
+                        config={CKEditorConfig}
+                        data={formik.values.instructionBody}
+                        onChange={(event, editor) => {
+                            formik.setFieldValue('instructionBody', editor.getData());
+                        }}
+                      /> 
+                      {formik.touched.instructionBody && formik.errors.instructionBody && (
+                              <div className='text-danger text-xs'>{formik.errors.instructionBody}</div>
+                            )}  
+                      <div className="border-t mt-7 mb-5"></div>
+                      <label className='form-label'>Description</label>
+                      <CKEditor
+                        editor={ClassicEditor}
+                        config={CKEditorConfig}
+                        data={formik.values.description}
+                        onChange={(event, editor) => {
+                            formik.setFieldValue('description', editor.getData());
+                        }}
+                      />      
+                      <div className="border-t mt-7 mb-5"></div>        
+                        {/* <textarea
+                          className='form-control form-control mb-3'
+                          rows={5}
+                          data-kt-element='input'
+                          placeholder='Type a description'
+                          {...formik.getFieldProps('description')}
+                        ></textarea> */}
+                      {/* {formik.touched.description && formik.errors.description && (
+                              <div className='text-danger mt-2'>{formik.errors.description}</div>
+                            )}        */}
+                      <label className='form-label required '>Duration</label>
+                          <div className="input-group mb-3">
+                          <input
+                            type='number'
+                            className='input input-sm mb-3'
+                            placeholder='Please enter duration'
+                            {...formik.getFieldProps('duration')}
+                            ></input>
+                            <span className="btn btn-input btn-sm">
+                            minute/s
+                            </span>
+                          </div>
+                          {formik.touched.duration && formik.errors.duration && (
+                              <div className='text-danger text-xs'>{formik.errors.duration}</div>
+                            )}  
+                  </div>
+                  <div className="w-64 flex-auto card p-2">
+                      <div className="flex justify-between">
+                        {/* <label className='form-label text-start mb-0 pt-1'>Questions</label> */}
+                        <label className="form-label max-w-32">Questions</label>
+                        {/* <a 
+                          href='#'
+                          data-bs-toggle='modal'
+                          data-bs-target='#create-question'
+                          data-edit='false'
+                          className='btn btn-sm btn-light-danger p-1 mb-1 pe-2 pt-1'
+                        >
+                          
+                        </a> */}
+                        {/* <button onClick={handleSearchModalOpen} className="btn btn-icon btn-dark btn-icon-lg size-8 hover:text-primary">
+                                    <KTIcon iconName="magnifier" />
+                                  </button> */}
+        
+                        <button type="button" className="btn btn-xs btn-danger" onClick={() => handleModalOpen()} >
+                          <KTIcon iconName="plus-squared" />
+                          Add Question
+                        </button>
+                        
+                      </div>                      
+                        {questions.length == 0 ?
+                        <></>
+                        : 
+                          <>
+                          {questions.map((question, index) => (
+                            <div className='card p-2 mt-2' key={question.id}>
+                              <div className="grid grid-cols-4 gap-4" >
+                                <div className="col-span-4 grid grid-cols-subgrid gap-4">
+                                  <div className="col-start-4 text-sm text-end">
+                                    {questionTypes.find((qt) => qt.id == question.type)?.typeName || "Unknown Type"}
+                                  </div>
+                                </div>
+                                <div className="col-span-3 grid grid-cols-subgrid gap-4">
+                                  <div className="col-span-3 text-sm">
+                                    <span className='font-bold'>{index + 1}.</span> {question.body.length > 100 ? `${question.body.substring(0, 100)}...` : question.body}
+                                  </div>
+                                </div>
+                                <div className="col-span-1 grid grid-cols-subgrid gap-4">
+                                  <div className="col-start-1 text-end">
+                                    <button
+                                      onClick={() => handleEditModalOpen(question)}
+                                      type="button"
+                                      className='btn btn-sm btn-icon btn-outline btn-clear btn-light'
+                                    >
+                                      <KTIcon iconName='pencil'/>
+                                    </button>   
+                                    <button
+                                      type="button"
+                                      onClick={() => handleDeleteQuestion(question.id)}
+                                      className='btn btn-sm btn-icon btn-outline btn-clear btn-light'
+                                      data-id={question.id}
+                                    >
+                                      <KTIcon iconName='trash'/>
+                                    </button>                                
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            ))}
+                            </>
+                        }
+                        
                   </div>
                 </div>
-                {formik.touched.duration && formik.errors.duration && (
-                    <div className='text-danger mt-2'>{formik.errors.duration}</div>
-                  )}    
-            </div>
-            <div class="col-8 border border-dark py-2">
-              <div class="d-flex justify-content-between">
-                <label className='form-label text-start mb-0 pt-1'>Questions</label>
-                <a 
-                  data-bs-toggle='modal'
-                  data-bs-target='#create-question' 
-                  className='btn btn-sm btn-light-danger p-1 mb-1 pe-2 pt-1'
-                  data-assessment-id={assessmentId}
-                >
-                  <KTIcon iconName='plus' className='fs-2' />
-                  Add Question
-                </a>
-              </div>                      
-                <div>
-                    {questions.map((question, index) => (
-                        <div key={question.id} className=" form-control mb-2 p-2">
-                            <table className="table mb-0">
-                            <thead>
-                              {/* Add a new header or text row */}
-                              <tr>
-                                <th colSpan="3" className="text-end p-0 text-muted fs-7">
-                                  {questionTypes.find((qt) => qt.id == question.type)?.typeName || "Unknown Type"} 
-                                </th>
-                              </tr>
-                            </thead>
-                              <tbody>
-                                <tr>
-                                  <td style={{ width: '1%' }} className="align-middle align-items-center ps-1">
-                                    <div className="d-flex align-items-center">
-                                      {/* <input type="checkbox" id={`checkbox-${question.id}`} className="me-2" /> */}
-                                      <span className='fs-5'>{index + 1}.</span>
-                                    </div>
-                                  </td>
-                                  <td className="align-middle align-items-center " >
-                                    <span className='fs-5'>
-                                      {question.body.length > 100 ? `${question.body.substring(0, 100)}...` : question.body}
-                                    </span>
-                                  </td>
-                                  <td className='align-middle align-items-center text-end'>
-                                    <div className='d-flex justify-content-end flex-shrink-0'>
-                                        <a
-                                          href='#'
-                                          onClick={() => handleEditQuestion(question)}
-                                          className='btn btn-sm me-1 p-0 btn-active-color-danger'
-                                          data-bs-toggle='modal'
-                                          data-bs-target='#edit-question'
-                                        >
-                                          <KTIcon iconName='pencil' className='fs-5' />
-                                        </a>
-                                        <a
-                                          href='#'
-                                          className='btn btn-sm p-0 btn-active-color-danger'
-                                          // data-bs-toggle='modal'
-                                          // data-bs-target='#delete-api'
-                                          // data-id={question.id}
-                                          onClick={() => handleDeleteQuestion(question.id)}
-                                        >
-                                          <KTIcon iconName='trash' className='fs-5' />
-                                        </a>
-                                    </div>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </div>
-        <div class="d-flex justify-content-end mt-5">
+        <div className="d-flex justify-end mt-5">
           <button
             type='submit'
             className='btn btn-danger'
@@ -344,12 +368,18 @@ const EditAssessmentPage = () => {
                   )}      
           </button>
         </div>   
-      </div>
+      {/* </div> */}
     {/* </div> */}
     </form>
     </Content>
-    <CreateQuestion onModalClose={fetchAssessmentInfo} />
-    <EditQuestion onModalClose={fetchAssessmentInfo} selectedQuestion={selectedQuestion}/>
+    <CreateQuestion 
+    assessmentId={id}
+      open={addQuestionOpen}
+      onOpenChange={handleModalClose}  />
+    <EditQuestion 
+      open={editQuestionOpen}
+      onOpenChange={handleEditModalClose}
+      selectedQuestion={selectedQuestion}/>
   </>
   )
   

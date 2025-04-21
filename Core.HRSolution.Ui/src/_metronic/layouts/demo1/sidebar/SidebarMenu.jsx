@@ -38,7 +38,7 @@ const SidebarMenu = () => {
             <MenuIcon className={clsx('items-start text-gray-500 dark:text-gray-400', iconWidth)}>
               {item.icon && <KeenIcon icon={item.icon} className={iconSize} />}
             </MenuIcon>
-            <MenuTitle className="text-sm font-medium text-gray-800 menu-item-active:text-primary menu-link-hover:!text-primary">
+            <MenuTitle className="text-sm font-medium text-gray-800 menu-item-active:text-danger menu-link-hover:!text-danger">
               {item.title}
             </MenuTitle>
             {buildMenuArrow()}
@@ -50,10 +50,10 @@ const SidebarMenu = () => {
     } else {
       return <MenuItem key={index}>
           <MenuLink path={item.path} className={clsx('border border-transparent menu-item-active:bg-secondary-active dark:menu-item-active:bg-coal-300 dark:menu-item-active:border-gray-100 menu-item-active:rounded-lg hover:bg-secondary-active dark:hover:bg-coal-300 dark:hover:border-gray-100 hover:rounded-lg', accordionLinkGap[0], linkPy, linkPl, linkPr)}>
-            <MenuIcon className={clsx('items-start text-gray-600 dark:text-gray-500 menu-item-active:text-primary menu-link-hover:!text-primary', iconWidth)}>
+            <MenuIcon className={clsx('items-start text-gray-600 dark:text-gray-500 menu-item-active:text-danger menu-link-hover:!text-danger', iconWidth)}>
               {item.icon && <KeenIcon icon={item.icon} className={iconSize} />}
             </MenuIcon>
-            <MenuTitle className="text-sm font-medium text-gray-800 menu-item-active:text-primary menu-link-hover:!text-primary">
+            <MenuTitle className="text-sm font-medium text-gray-800 menu-item-active:text-danger menu-link-hover:!text-danger">
               {item.title}
             </MenuTitle>
           </MenuLink>
@@ -96,7 +96,7 @@ const SidebarMenu = () => {
             {item.collapse ? <MenuTitle className="text-2sm font-normal text-gray-600 dark:text-gray-500">
                 <span className="hidden menu-item-show:!flex">{item.collapseTitle}</span>
                 <span className="flex menu-item-show:hidden">{item.expandTitle}</span>
-              </MenuTitle> : <MenuTitle className="text-2sm font-normal me-1 text-gray-800 menu-item-active:text-primary menu-item-active:font-medium menu-link-hover:!text-primary">
+              </MenuTitle> : <MenuTitle className="text-2sm font-normal me-1 text-gray-800 menu-item-active:text-danger menu-item-active:font-medium menu-link-hover:!text-danger">
                 {item.isParent ? '1': '2'}
               </MenuTitle>}
 
@@ -110,7 +110,7 @@ const SidebarMenu = () => {
       return <MenuItem key={index}>
           <MenuLink path={item.path} className={clsx('border border-transparent items-center grow menu-item-active:bg-secondary-active dark:menu-item-active:bg-coal-300 dark:menu-item-active:border-gray-100 menu-item-active:rounded-lg hover:bg-secondary-active dark:hover:bg-coal-300 dark:hover:border-gray-100 hover:rounded-lg', accordionLinkGap[level], accordionLinkPl, linkPr, subLinkPy)}>
             {buildMenuBullet()}
-            <MenuTitle className="text-2sm font-normal text-gray-800 menu-item-active:text-primary menu-item-active:font-semibold menu-link-hover:!text-primary">
+            <MenuTitle className="text-2sm font-normal text-gray-800 menu-item-active:text-danger menu-item-active:font-semibold menu-link-hover:!text-danger">
               {item.title}
             </MenuTitle>
           </MenuLink>
@@ -140,7 +140,7 @@ const SidebarMenu = () => {
       </MenuArrow>;
   };
   const buildMenuBullet = () => {
-    return <MenuBullet className="flex w-[6px] -start-[3px] rtl:start-0 relative before:absolute before:top-0 before:size-[6px] before:rounded-full rtl:before:translate-x-1/2 before:-translate-y-1/2 menu-item-active:before:bg-primary menu-item-hover:before:bg-primary"></MenuBullet>;
+    return <MenuBullet className="flex w-[6px] -start-[3px] rtl:start-0 relative before:absolute before:top-0 before:size-[6px] before:rounded-full rtl:before:translate-x-1/2 before:-translate-y-1/2 menu-item-active:before:bg-danger menu-item-hover:before:bg-danger"></MenuBullet>;
   };
   const buildMenuSoon = () => {
     return <MenuBadge className={rightOffset}>

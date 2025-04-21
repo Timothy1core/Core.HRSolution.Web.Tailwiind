@@ -154,7 +154,7 @@ const DashboardTafPage = () => {
                       <label className='form-label fs-7 fw-bold'>Reason:</label>
                       <SelectStatusComponent className="form-select form-select-white form-select-sm" />
                     </div>
-                    <div className='d-flex justify-content-end'>
+                    <div className='d-flex justify-end'>
                       <button
                         type='button'
                         className='btn btn-light btn-sm btn-active-light-primary fw-bold me-2 px-6'

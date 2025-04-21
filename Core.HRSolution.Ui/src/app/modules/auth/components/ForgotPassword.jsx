@@ -91,7 +91,7 @@ export function ForgotPassword() {
         )}
       </div>
 
-      <div className='d-flex flex-wrap justify-content-center pb-lg-0'>
+      <div className='d-flex flex-wrap justify-center pb-lg-0'>
         <button type='submit' id='kt_password_reset_submit' className='btn btn-danger me-4'>
           <span className='indicator-label'>Submit</span>
           {loading && (

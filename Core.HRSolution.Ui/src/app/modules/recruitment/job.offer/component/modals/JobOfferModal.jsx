@@ -137,7 +137,7 @@ const JobOfferModal = ({ show, handleClose, jobOfferId }) => {
   return (
     // <Modal className='modal-sticky modal-lg' show={show} onHide={handleClose} animation={false}>
     //   <div className='modal-content'>
-    //     <div className='d-flex align-items-center justify-content-between py-5 px-8 border-bottom'>
+    //     <div className='d-flex align-items-center justify-between py-5 px-8 border-bottom'>
     //       <h5 className='fw-bold m-0'>Job Offer Data Entry</h5>
     //       <div className='btn btn-icon btn-sm btn-light-danger' onClick={handleClose}>
     //         <KTIcon className='fs-1' iconName='cross' />

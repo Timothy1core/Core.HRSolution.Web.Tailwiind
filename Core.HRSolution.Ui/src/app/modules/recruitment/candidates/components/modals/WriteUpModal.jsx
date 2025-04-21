@@ -143,7 +143,7 @@ const WriteUpModal = ({ show, handleClose, WriteUp, candidateId, hasWriteUp, han
     //             </div>
     //           )}
     //     <div>
-    //       <div className='d-flex align-items-center justify-content-between py-5 px-8 border-bottom'>
+    //       <div className='d-flex align-items-center justify-between py-5 px-8 border-bottom'>
     //         <div className='d-flex align-items-center '>
     //           <h5 className='fw-bold m-0 me-5'>Compose Write up</h5>
     //           {/* <div className='btn btn-icon btn-sm btn-light-danger'>
@@ -269,7 +269,7 @@ const WriteUpModal = ({ show, handleClose, WriteUp, candidateId, hasWriteUp, han
     //       </div>
 
     //       {/* Footer */}
-    //       <div className='d-flex align-items-center justify-content-center py-5 ps-8 pe-5 border-top'>
+    //       <div className='d-flex align-items-center justify-center py-5 ps-8 pe-5 border-top'>
     //         <div className='d-flex align-items-center me-3'>
     //           <button data-bs-dismiss='modal' onClick={handleClose} type='button' className='btn btn-secondary me-4 px-6'>Cancel</button>
     //           <button

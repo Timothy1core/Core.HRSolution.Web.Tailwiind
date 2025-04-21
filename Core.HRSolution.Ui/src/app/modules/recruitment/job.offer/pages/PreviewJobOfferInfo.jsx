@@ -81,13 +81,13 @@ const PreviewJobOfferInfoPage = () => {
   <>
       <div id="kt_app_toolbar" className="app-toolbar py-3 py-lg-6">
         <div id="kt_app_toolbar_container" className="app-container container-fluid d-flex flex-stack">
-          <div className="page-title d-flex flex-column justify-content-center flex-wrap me-3">
+          <div className="page-title d-flex flex-column justify-center flex-wrap me-3">
               <a href='joboffer' className='btn btn-sm btn-light-danger'>
               <KTIcon iconName='entrance-right' className='fs-2' />
                 Go Back
               </a>
           </div>
-          <div className="page-title d-flex flex-column justify-content-center flex-wrap">
+          <div className="page-title d-flex flex-column justify-center flex-wrap">
               <a 
                 onClick={() => handleSendJobOffer()} className='btn btn-sm btn-light-primary'>
                 Send Offer

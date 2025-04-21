@@ -34,7 +34,7 @@ const Step2Div = ({handleNext}) => {
                       {/* Timeline icon */}
                       <div className="timeline-icon border-2 border-danger">
                         <div
-                          className="rounded-circle  bg-light-danger d-flex align-items-center justify-content-center"
+                          className="rounded-circle  bg-light-danger d-flex align-items-center justify-center"
                           style={{ width: "25px", height: "25px" }}
                         >
                           <span className="fs-5 fw-bolder">{index + 1}</span>

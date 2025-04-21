@@ -110,7 +110,7 @@ const OnboardingInformation = () => {
       <div className="p-2 flex-fill bd-highlight" key={currentStep}>
         <div className="d-flex bd-highlight gap-2">
           <div
-            className={`rounded d-flex align-items-center justify-content-center ${
+            className={`rounded d-flex align-items-center justify-center ${
               isCompleted
                 ? 'bg-light-danger'
                 : isActive
@@ -150,13 +150,13 @@ const OnboardingInformation = () => {
   return (
     <div
       id="kt_app_content_container"
-      className="app-container container-xxl d-flex justify-content-center align-items-center"
+      className="app-container container-xxl d-flex justify-center align-items-center"
     >
       <div className="card w-100">
         <h3 className="m-3">Onboarding Information Form</h3>
 
         {!data.onboardingInfo?.isAcknowledged && (
-          <div className="d-flex bd-highlight card-header gap-5 justify-content-center py-2">
+          <div className="d-flex bd-highlight card-header gap-5 justify-center py-2">
             {stepsConfig.map((stepItem, index) => renderStepHeader(index, stepItem.label))}
           </div>
         )}

@@ -18,7 +18,7 @@ const CreateJobProfilePage = () => {
         <Content>
             <div className="card mb-5">
                 <div className="card-body">
-                  <ul className="nav nav-tabs nav-pills d-flex flex-wrap justify-content-center align-items-stretch border-0 fs-6 row">
+                  <ul className="nav nav-tabs nav-pills d-flex flex-wrap justify-center align-items-stretch border-0 fs-6 row">
                       <li className="nav-item col-12 col-md-3 col-lg-3">
                           <a className="nav-link active btn btn-flex btn-active-light btn-secondary w-100 h-100" data-bs-toggle="tab" href="#jp-job-details">
                               <span className="d-flex flex-column ms-2 w-100">

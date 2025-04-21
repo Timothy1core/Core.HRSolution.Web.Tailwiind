@@ -49,7 +49,7 @@ function DataClientDashboardComponent({ searchValue, groupId,serviceId, statusId
   if (!filteredData.length) {
     return (
       <div className="card card-flush h-md-100">
-        <div className="card-body d-flex flex-column justify-content-between mt-9">
+        <div className="card-body d-flex flex-column justify-between mt-9">
           <div className="fs-2hx fw-bold text-gray-800 text-center mb-13">
             <h2 className="text-gray-700 text-uppercase">No Data Available!</h2>
             <i className="fa-duotone fa-face-sad-tear fs-5tx"></i>

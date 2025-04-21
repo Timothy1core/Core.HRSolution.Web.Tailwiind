@@ -25,152 +25,133 @@ const assessmentSchema = Yup.object().shape({
 
 const CreateAssessmentPage = () => {
 
+  const [loading, setLoading] = useState(false)
+  const [questions, setQuestions] = useState([])
+  const [selectedQuestion, setSelectedQuestion] = useState(null)
+  const navigate = useNavigate()
+  const [questionTypes, setQuestionTypes] = useState([])
+  const [addQuestionOpen, setModalOpen] = useState(false)
+  const [modalType, setModalType] = useState('')
+
   const CKEditorConfig = {
     licenseKey: 'GPL',
-        plugins: [
-            Essentials, Bold, Italic, Paragraph, List, Heading, Link,
-            Table, TableToolbar, Indent, IndentBlock,FontSize 
-        ],
+    plugins: [
+      Essentials, Bold, Italic, Paragraph, List, Heading, Link,
+      Table, TableToolbar, Indent, IndentBlock, FontSize
+    ],
     toolbar: [
       'undo', 'redo', '|',
       'heading', '|',
       'bulletedList', 'numberedList', '|',
       'bold', 'italic', '|',
       'insertTable', '|', 'indent', 'outdent'
-  ],
+    ],
     table: {
-        contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
+      contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
     },
     viewportTopOffset: 60
-  };
+  }
 
-    // const [name, setName] = useState('Name'); // Create a state variable for 'Name'
-    const [loading, setLoading] = useState(false);
-    const [questions, setQuestions] = useState([]);
-    const [selectedQuestion, setSelectedQuestion] = useState(null);
-    const navigate = useNavigate();
-    const [questionTypes, setQuestionTypes] = useState([]);
-    const [addQuestionOpen, setModalOpen] = useState(false);
-      const handleModalOpen = () => setModalOpen(true);
-      const handleModalClose = () => {
-        setModalOpen(false);
-      };
+  const handleModalOpen = () => setModalOpen(true)
+  const handleModalClose = () => {
+    setModalOpen(false)
+    setSelectedQuestion(null)
+  }
 
-    const handleAddQuestion = (newQuestions) => {
-      if (selectedQuestion){
-        setQuestions((prevQuestions) => {
-          if (selectedQuestion) {
-            // If editing, update the specific question
-            return prevQuestions.map((q) =>
-              q.id === selectedQuestion.id ? { ...q, ...newQuestions } : q
-            );
-          }
-          return [...prevQuestions];
-        });
-        setSelectedQuestion(null);
+  const handleAddQuestion = (newQuestion) => {
+    if (selectedQuestion) {
+      setQuestions(prevQuestions =>
+        prevQuestions.map(q =>
+          q.id === selectedQuestion.id ? { ...q, ...newQuestion } : q
+        )
+      )
+      setSelectedQuestion(null)
+    } else {
+      setQuestions(prev => [...prev, newQuestion])
+    }
+  }
+
+  const handleEditQuestion = (question) => {
+    setSelectedQuestion(question)
+    setModalType('Edit')
+    handleModalOpen()
+  }
+
+  const handleToAddQuestion = () => {
+    setModalType('Creating')
+    handleModalOpen()
+  }
+
+  const handleDeleteQuestion = (id) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to delete this question?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setQuestions(prev => prev.filter(q => q.id !== id))
+        Swal.fire('Deleted!', 'The question has been deleted.', 'success')
       }
-      else {
-        setQuestions((prevQuestions) => [
-          ...prevQuestions,  // Spread the existing questions
-          newQuestions,   // Add the new questions
-        ]);
-      } 
-    };
+    })
+  }
 
-
-
-    const handleEditQuestion = (question) => {
-      setSelectedQuestion(question); 
-    };
-
-    const handleDeleteQuestion = (id) => {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: 'Do you want to delete this question?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Yes, delete it!',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          setQuestions((prevQuestions) =>
-            prevQuestions.filter((question) => question.id !== id)
-          );
-          Swal.fire('Deleted!', 'The question has been deleted.', 'success');
-        }
-      });
-    };
-
-    const formik = useFormik({
-      initialValues: { 
-        name: 'Name',
-        instructionBody: '',
-        description:'',
-        duration: ''
-       },
-      validationSchema: assessmentSchema,
-      validateOnChange: false,
-      validateOnBlur: true,
-      onSubmit: async (values, { setStatus, setSubmitting }) => {
-        setLoading(true);
-        try {
-          let res;
-          // if (editMode) {
-          //   res = await updateApi(apiId, values.apiName); // Update if editMode is true
-          // } else {
-            res = await createAssessment(
-              values.name, values.duration, 
-              values.instructionBody, 
-              values.description, 
-              questions); // Create if editMode is false
-          // }
-          
-          if (res.data.success) {
-            Swal.fire('Created', 'Assessment Created Successfully!', 'success');
-            navigate('/recruitment/assessmentManagement');
-            formik.resetForm();
-          }
-        } catch (error) {
-          console.log(error.response.data.title)
-          console.error(error.response.data.title);
-          setStatus(error.response.data.title ||error.message || 'An error occurred');
-        } finally {
-          setSubmitting(false);
-          setLoading(false);
-        }
-      },
-    });
-
-    const fetchQuestionTypes = async () => {
+  const formik = useFormik({
+    initialValues: {
+      name: 'Assessment Name',
+      instructionBody: '',
+      description: '',
+      duration: ''
+    },
+    validationSchema: assessmentSchema,
+    validateOnChange: false,
+    validateOnBlur: true,
+    onSubmit: async (values, { setStatus, setSubmitting }) => {
+      setLoading(true)
       try {
-        const response = await listQuestionTypes();
-        if (response.data?.questionTypes) {
-          setQuestionTypes(response.data.questionTypes);
-          
+        const res = await createAssessment(
+          values.name,
+          values.duration,
+          values.instructionBody,
+          values.description,
+          questions
+        )
+        if (res.data.success) {
+          Swal.fire('Created', 'Assessment Created Successfully!', 'success')
+          navigate('/recruitment/assessmentManagement')
+          formik.resetForm()
         }
       } catch (error) {
-        console.error("Error fetching question types:", error);
-        formik.setStatus("Error fetching question types");
+        console.error(error)
+        setStatus(error?.response?.data?.title || error.message || 'An error occurred')
+      } finally {
+        setSubmitting(false)
+        setLoading(false)
       }
-    };
-    
-    useEffect(() => {
-      fetchQuestionTypes();
-    }, []);
+    }
+  })
+
+  const fetchQuestionTypes = async () => {
+    try {
+      const response = await listQuestionTypes()
+      if (response.data?.questionTypes) {
+        setQuestionTypes(response.data.questionTypes)
+      }
+    } catch (error) {
+      console.error("Error fetching question types:", error)
+      formik.setStatus("Error fetching question types")
+    }
+  }
+
+  useEffect(() => {
+    fetchQuestionTypes()
+  }, [])
 
   return(
   <>
-    <div id="kt_app_toolbar" className="app-toolbar py-3 py-lg-6">
-      <div id="kt_app_toolbar_container" className="app-container container-fluid d-flex flex-stack">
-        <div className="page-title d-flex flex-column justify-content-center flex-wrap me-3">
-            <button href='/recruitment/assessmentManagement' className='btn btn-sm btn-danger'>
-            <KTIcon iconName='entrance-right' className='fs-2' />
-              Back to Assessment Dashboard
-            </button>
-        </div>
-      </div>
-    </div>
     <Content>
     <form onSubmit={formik.handleSubmit}>
               {formik.status && (
@@ -178,9 +159,10 @@ const CreateAssessmentPage = () => {
                   <div className='text-danger font-bold'>{formik.status}</div>
                 </div>
               )}
+      <label className='form-label required ms-1'>Assessment Name</label>
       <input 
         type="text" 
-        className="form-control form-control-flush form-control-lg ps-1 fs-2" 
+        className="input ps-1 mb-2 w-60" 
         onChange={(e) => setName(e.target.value)} // Update state when input changes
         {...formik.getFieldProps('name')}
       />
@@ -265,7 +247,7 @@ const CreateAssessmentPage = () => {
                             <KTIcon iconName="magnifier" />
                           </button> */}
 
-                <button className="btn btn-xs btn-danger" onClick={handleModalOpen}>
+                <button type='button' className="btn btn-xs btn-danger" onClick={handleToAddQuestion}>
                   <KTIcon iconName="plus-squared" />
                   Add Question
                 </button>
@@ -274,21 +256,22 @@ const CreateAssessmentPage = () => {
                 {questions.length == 0 ?
                 <></>
                 : 
-                <div className='card p-2 mt-2'>
+                <>
+                {/* // <div className='card p-2 mt-2'> */}
                 {questions.map((question, index) => (
-                  <div class="grid grid-cols-4 gap-4" key={question.id}>
-                    <div class="col-span-4 grid grid-cols-subgrid gap-4">
-                      <div class="col-start-4 text-sm text-end">
+                  <div className="grid grid-cols-4 gap-4" key={question.id}>
+                    <div className="col-span-4 grid grid-cols-subgrid gap-4">
+                      <div className="col-start-4 text-sm text-end">
                         {questionTypes.find((qt) => qt.id == question.type)?.typeName || "Unknown Type"}
                       </div>
                     </div>
-                    <div class="col-span-3 grid grid-cols-subgrid gap-4">
-                      <div class="col-start-1 text-sm">
+                    <div className="col-span-3 grid grid-cols-subgrid gap-4">
+                      <div className="col-span-3 text-sm">
                         <span className='font-bold'>{index + 1}.</span> {question.body.length > 100 ? `${question.body.substring(0, 100)}...` : question.body}
                       </div>
                     </div>
-                    <div class="col-span-1 grid grid-cols-subgrid gap-4">
-                      <div class="col-start-1 text-end">
+                    <div className="col-span-1 grid grid-cols-subgrid gap-4">
+                      <div className="col-start-1 text-end">
                         <button
                           onClick={() => handleEditQuestion(question)}
                           type="button"
@@ -308,7 +291,9 @@ const CreateAssessmentPage = () => {
                     </div>
                   </div>
                   ))}
-                </div>
+
+                {/* </div> */}
+                </>
                 }
                 
           </div>
@@ -337,7 +322,7 @@ const CreateAssessmentPage = () => {
       onCreateQuestion={handleAddQuestion}
       selectedQuestion={selectedQuestion}
       questions={questions}
-      isCreating={true}
+      isCreating={modalType}
       open={addQuestionOpen}
       onOpenChange={handleModalClose}
     />

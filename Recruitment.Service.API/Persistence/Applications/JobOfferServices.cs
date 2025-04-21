@@ -13,6 +13,7 @@ using Recruitment.Service.API.Core.UnitOfWork;
 using Spire.Doc;
 using System.Linq.Dynamic.Core;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Recruitment.Service.API.Persistence.Applications
 {
@@ -80,8 +81,14 @@ namespace Recruitment.Service.API.Persistence.Applications
 			try
 			{
 				var candidates =
-					await _uoWForCurrentService.JobOfferRepository.RetrieveCandidateForJobOfferList(status);
+					await _uoWForCurrentService.JobOfferRepository.RetrieveCandidateForJobOfferList();
+				var statuses = await _uoWForCurrentService.JobOfferRepository.RetrieveJobOfferStatusList();
+				Dictionary<int, string> applicationStatusMap;
 
+				applicationStatusMap = statuses.ToDictionary(
+				status => status.Id,
+				status => status.Status
+				);
 
 				var totalRows = candidates.Count;
 
@@ -91,13 +98,28 @@ namespace Recruitment.Service.API.Persistence.Applications
 					candidates = candidates.Where(x =>
 						(x.CandidateName?.ToLower().Contains(search.ToLower()) ?? false)).ToList();
 				}
+				var statusCounts = applicationStatusMap
+				.Select(ap => new
+				{
+					statusId = ap.Key,
+					Status = ap.Value, 
+					CandidateCount = candidates.Count(c => c.JobOfferStatusId == ap.Key)
+				})
+				.ToList();
+				if (status > 0)
+				{
+					candidates = candidates.Where(x => x.JobOfferStatusId == status).ToList();
 
+				}
+				
 				var totalRowsAfterFiltering = candidates.Count;
 
 				// Apply sorting
 				candidates = candidates.AsQueryable()
 					.OrderBy(sortColumnName + " " + sortDirection)
 					.ToList();
+
+				
 
 				// Apply pagination
 				if (length != -1)
@@ -112,6 +134,7 @@ namespace Recruitment.Service.API.Persistence.Applications
 					draw,
 					recordsTotal = totalRows,
 					recordsFiltered = totalRowsAfterFiltering,
+					statusList = statusCounts
 				})
 				{
 					StatusCode = 200

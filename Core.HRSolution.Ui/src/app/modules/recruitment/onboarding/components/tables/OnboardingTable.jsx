@@ -64,7 +64,7 @@ const OnboardingTable = ({ className }) => {
     // { Header: 'Status', accessor: 'onboardingStatusName', sortable: true, },
      
     { Header: 'Actions', accessor: 'id', className: 'text-end', Cell: row => (
-      <div className='d-flex justify-content-end flex-shrink-0'>
+      <div className='d-flex justify-end flex-shrink-0'>
         {/* <ActionComponent
             buttonPermission={'recruitment.retrieve.candidate.info'}
             actionButton={  */}

@@ -33,7 +33,7 @@ const Pagination = ({
       <select
           value={pageSize}
           onChange={handlePageSizeChange}
-          className="form-select form-select-sm form-select-solid"
+          className="form-select form-select-sm"
           style={{ width: 'auto' }}
         >
           <option value={10}>10</option>

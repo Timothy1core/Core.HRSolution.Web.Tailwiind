@@ -101,7 +101,7 @@ const SendEmailModal = ({ show, handleClose, candidateEmail }) => {
     //   animation={false}
     // >
     //   <div className='modal-content'>
-    //     <div className='d-flex align-items-center justify-content-between py-5 px-8 border-bottom'>
+    //     <div className='d-flex align-items-center justify-between py-5 px-8 border-bottom'>
     //       <h5 className='fw-bold m-0 me-5'>Compose Email</h5>
     //       <div className='btn btn-icon btn-sm btn-light-danger ms-2' onClick={handleModalClose}>
     //         <KTIcon className='fs-1' iconName='cross' />
@@ -135,7 +135,7 @@ const SendEmailModal = ({ show, handleClose, candidateEmail }) => {
     //     </div>
 
     //     {/* Footer */}
-    //     <div className='d-flex align-items-center justify-content-center py-5 ps-8 pe-5 border-top'>
+    //     <div className='d-flex align-items-center justify-center py-5 ps-8 pe-5 border-top'>
     //       <button onClick={handleModalClose} type='button' className='btn btn-secondary me-4 px-6'>
     //         Cancel
     //       </button>

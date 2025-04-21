@@ -50,6 +50,61 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
             return candidates;
 
         }
+		public async Task<List<CandidateDto>> RetrieveCandidateDashboardList(
+	    int departmentGroupId, int departmentId, int jobId, int sourceId, bool isDisqualified)
+		{
+			var query = context.Candidates
+				.AsNoTracking()
+				.Where(x => x.IsActive && x.IsDisqualified == isDisqualified);
+
+			if (departmentGroupId != 0)
+			{
+				query = query.Where(x => x.Job.Department.DepartmentGroupId == departmentGroupId);
+			}
+
+			if (departmentId != 0)
+			{
+				query = query.Where(x => x.Job.DepartmentId == departmentId);
+			}
+
+			if (jobId != 0)
+			{
+				query = query.Where(x => x.JobId == jobId);
+			}
+
+			if (sourceId != 0)
+			{
+				query = query.Where(x => x.SourceId == sourceId);
+			}
+
+			var candidates = await query
+				.Select(s => new CandidateDto
+				{
+					Id = s.Id,
+					FirstName = s.FirstName,
+					LastName = s.LastName,
+					Email = s.Email,
+					PhoneNumber = s.PhoneNumber,
+					NoticePeriod = s.NoticePeriod,
+					ExpectedSalary = s.ExpectedSalary,
+					CurrentSalary = s.CurrentSalary,
+					ApplicationStatusId = s.ApplicationStatusId,
+					JobId = s.JobId,
+					JobName = s.Job.Position,
+					IsDisqualified = s.IsDisqualified,
+					SourceId = s.SourceId,
+					ClientCompanyId = s.Job.DepartmentId,
+					ClientGroupId = s.Job.Department.DepartmentGroupId,
+					SourceName = s.Source.SourceName,
+					StageName = s.Job.JobApplicationProcesses
+						.Where(p => p.ApplicationProcessId == s.ApplicationStatusId)
+						.Select(p => p.ApplicationProcess.ProcessName)
+						.FirstOrDefault()
+				})
+				.ToListAsync();
+
+			return candidates;
+		}
 
 		public async Task<List<PipelineDto>> RetrievePipelineList()
 		{

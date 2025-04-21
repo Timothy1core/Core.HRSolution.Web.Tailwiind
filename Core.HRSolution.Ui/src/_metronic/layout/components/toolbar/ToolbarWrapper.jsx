@@ -4,7 +4,7 @@ const ToolbarWrapper = ({title, subtitle}) => {
   return (
     <div id="kt_app_toolbar" className="app-toolbar py-3 py-lg-6">
       <div id="kt_app_toolbar_container" className="app-container container-fluid d-flex flex-stack">
-        <div className="page-title d-flex flex-column justify-content-center flex-wrap me-3">
+        <div className="page-title d-flex flex-column justify-center flex-wrap me-3">
             <span className='card-label fw-bold fs-3'>{title}</span>
             <span className='text-muted mt-1 fw-semibold fs-7'>{subtitle}</span>
         </div>
@@ -13,7 +13,7 @@ const ToolbarWrapper = ({title, subtitle}) => {
 
     // <div id="kt_app_toolbar" className="app-toolbar py-3 py-lg-6">
     //   <div id="kt_app_toolbar_container" className="app-container container-fluid d-flex flex-stack">
-    //     <div className="page-title d-flex flex-column justify-content-center flex-wrap me-3">
+    //     <div className="page-title d-flex flex-column justify-center flex-wrap me-3">
     //         <span className='card-label fw-bold fs-3 text-uppercase'>{title}</span>
     //         <ul className="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
     //             <li className="breadcrumb-item text-muted text-uppercase">

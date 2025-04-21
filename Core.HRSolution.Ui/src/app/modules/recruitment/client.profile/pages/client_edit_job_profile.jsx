@@ -56,7 +56,7 @@ const EditJobProfilePage = () => {
             <Content>
                 <div className="card mb-5">
                     <div className="card-body">
-                        <ul className="nav nav-tabs nav-pills d-flex flex-wrap justify-content-center align-items-stretch border-0 fs-6 row">
+                        <ul className="nav nav-tabs nav-pills d-flex flex-wrap justify-center align-items-stretch border-0 fs-6 row">
                             {[
                                 {
                                     id: 'jp-job-details',

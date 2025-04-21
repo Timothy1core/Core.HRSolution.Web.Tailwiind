@@ -123,7 +123,7 @@ const FileUploadBox = ({ label, name, setFieldValue, value = [], documentGroup }
     //         </div>
     //         {value.map(({ file }, index) => (
     //           <div key={index} className="mb-3">
-    //             <div className="d-flex justify-content-between align-items-start">
+    //             <div className="d-flex justify-between align-items-start">
     //               <div>
     //                 <h5>{file.name}</h5>
     //                 <p className="text-muted mb-2">Size: {(file.size / (1024 * 1024)).toFixed(2)} MB</p>
@@ -419,7 +419,7 @@ const Step4Div = ({handleNext, handleBack, id, wfhInformations, onboardingDocume
           {docMap.screenshots ? 
             <>
               <h3 className='text-dark'>Screenshots of Pin Location, Speed Test and photo of the workstation you plan to set-up for your remote work arrangement</h3>
-              <div className="d-flex border border-2 p-2 justify-content-between my-5">
+              <div className="d-flex border border-2 p-2 justify-between my-5">
                 <div>
                 {docMap.screenshots.map((screenshot, index) => (
                   <div key={index} className="mb-2">
@@ -499,7 +499,7 @@ const Step4Div = ({handleNext, handleBack, id, wfhInformations, onboardingDocume
             </div>
 
           </div>
-          <div className="d-flex bd-highlight gap-5 justify-content-between py-2 mt-5">
+          <div className="d-flex bd-highlight gap-5 justify-between py-2 mt-5">
             <button type="button"  onClick={() => handleBack()} className="btn btn-secondary" >
               Back
             </button>

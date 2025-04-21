@@ -667,8 +667,8 @@ const DashboardPage = () => {
             }
       <HeaderWrapper>
         {/* assessment header */}
-        <div className="container d-flex justify-content-between align-items-center">
-          <div className="page-title d-flex flex-column justify-content-center text-start flex-wrap w-50">
+        <div className="container d-flex justify-between align-items-center">
+          <div className="page-title d-flex flex-column justify-center text-start flex-wrap w-50">
             {/* {isAssessment && */}
             <span className="card-label fw-bold fs-3">{currentUser?.loggedCandidate?.jobName} Exam</span>
             {/* } */}
@@ -679,7 +679,7 @@ const DashboardPage = () => {
           {isAssessment && isStart &&  !isAssessmentFinish &&
           <div className="w-50 w-sm-100">
             
-            <div className="d-flex w-100 align-items-center justify-content-center justify-content-md-center justify-content-sm-center justify-content-lg-end mb-2">
+            <div className="d-flex w-100 align-items-center justify-center justify-md-center justify-sm-center justify-lg-end mb-2">
               <KTIcon iconName="timer" iconType="outline" className="fs-2 me-1 text-dark" />
               {/* Render Countdown Timer */}
               <div>{formatTime(timeLeft)}</div>
@@ -697,7 +697,7 @@ const DashboardPage = () => {
                 ></div>
               </div>
             </div>
-            <div className="d-flex w-100 align-items-center justify-content-center justify-content-md-center justify-content-sm-center justify-content-lg-end">
+            <div className="d-flex w-100 align-items-center justify-center justify-md-center justify-sm-center justify-lg-end">
               <KTIcon iconName='note-2' iconType='outline' className='fs-2 me-1 text-dark' />
               <div>{answeredQuestions.length}/{assessments.questions.length}</div>
               <div className="progress w-50 ms-3" style={{ backgroundColor: "#e9e9e9",height: "10px" }}>
@@ -716,7 +716,7 @@ const DashboardPage = () => {
           }
           {!isAssessment && !isStart &&
          <div className="w-50 w-sm-100"> 
-            <div className="d-flex w-100 align-items-center justify-content-center justify-content-md-center justify-content-sm-center justify-content-lg-end">
+            <div className="d-flex w-100 align-items-center justify-center justify-md-center justify-sm-center justify-lg-end">
               <span>Assessment Setup &nbsp;</span>
               {/* <KTIcon iconName='note-2' iconType='outline' className='fs-2 me-1 text-dark' /> */}
               <div>{currentStep-1}/4</div>
@@ -846,7 +846,7 @@ const DashboardPage = () => {
                 </div>
               </div>
             </div>
-            <div className="container d-flex justify-content-between">
+            <div className="container d-flex justify-between">
               <span></span>
               <span>
               <button

@@ -106,14 +106,13 @@ namespace Recruitment.Service.API.Persistence.Applications
 			JsonResult result;
 			try
 			{
-				var candidates = await _uoWForCurrentService.CandidateRepository.RetrieveCandidateList();
+				var isDisqualified = qualification == 1;
+				var candidates = await _uoWForCurrentService.CandidateRepository.RetrieveCandidateDashboardList(clientGroup, client, job, source, isDisqualified);
 
 				Dictionary<int, string> applicationProcessMap = null;
 
 				if (job > 0)
 				{
-					candidates = candidates.Where(x => x.JobId == job).ToList();
-
 					var profile = await _uoWForCurrentService.JobProfileRepository
 						.SelectJobProfileApplicationProcess(job);
 
@@ -132,26 +131,6 @@ namespace Recruitment.Service.API.Persistence.Applications
 						process => process.ProcessName
 					);
 				}
-				
-				// Apply filters before calculating processCounts
-				if (client > 0)
-				{
-					candidates = candidates.Where(x => x.ClientCompanyId == client).ToList();
-				}
-
-				if (clientGroup > 0)
-				{
-					candidates = candidates.Where(x => x.ClientGroupId == clientGroup).ToList();
-				}
-
-				if (source > 0)
-				{
-					candidates = candidates.Where(x => x.SourceId == source).ToList();
-				}
-
-				candidates = qualification == 0
-					? candidates.Where(x => !x.IsDisqualified).ToList()
-					: candidates.Where(x => x.IsDisqualified).ToList();
 
 				// Calculate processCounts from fully filtered candidates
 				var processCounts = applicationProcessMap?

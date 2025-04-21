@@ -138,7 +138,7 @@ const PermissionTable = ({ className }) => {
     { Header: 'Api Permission Name', accessor: 'permissionName',sortable: true, },
     { Header: 'Role', accessor: 'role',sortable: true, },
     { Header: 'Actions', accessor: 'id', className: 'text-end',sortable: false, Cell: row => (
-      <div className='d-flex justify-content-end flex-shrink-0'>
+      <div className='d-flex justify-end flex-shrink-0'>
         <ActionComponent
             buttonPermission={'system.setup.retrieve.permission.info'}
             actionButton={ 

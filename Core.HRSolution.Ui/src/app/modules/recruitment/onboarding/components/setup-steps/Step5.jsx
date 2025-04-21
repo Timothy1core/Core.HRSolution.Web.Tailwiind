@@ -51,7 +51,7 @@ const Step5Div = ({ handleBack, id }) => {
   return (
     // <Container className="my-5">
       <form onSubmit={formik.handleSubmit}>
-        <div className="row mt-5 justify-content-center">
+        <div className="row mt-5 justify-center">
           <div className="col-9">
             <h5 className="text-danger">Reminders</h5>
             <p className="mb-4 text-muted fs-7">
@@ -60,7 +60,7 @@ const Step5Div = ({ handleBack, id }) => {
           </div>
         </div>
 
-        <div className="row mt-5 justify-content-center">
+        <div className="row mt-5 justify-center">
           <div className="col-9">
             {[
               {
@@ -94,7 +94,7 @@ const Step5Div = ({ handleBack, id }) => {
           </div>
         </div>
 
-        <div className="d-flex justify-content-between mt-5">
+        <div className="d-flex justify-between mt-5">
           <button type="button" className="btn btn-light" onClick={handleBack}>
             Back
           </button>

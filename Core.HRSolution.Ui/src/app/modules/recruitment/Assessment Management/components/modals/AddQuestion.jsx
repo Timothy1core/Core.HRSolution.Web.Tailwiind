@@ -27,16 +27,10 @@ const AddQuestion = forwardRef(({
   onCreateQuestion,
   questions
 }, ref) => {
+  const [viewportHeight] = useViewport();
   const [scrollableHeight, setScrollableHeight] = useState(0);
-    const [viewportHeight] = useViewport();
-    
-    const offset = 200;
-    useEffect(() => {
-      setScrollableHeight(viewportHeight - offset);
-    }, [viewportHeight]);
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [Creating, setCreating] = useState(isCreating);
   const [choices, setChoices] = useState([]);
   const [newChoice, setNewChoice] = useState('');
   const [isEditing, setIsEditing] = useState(false);
@@ -46,29 +40,44 @@ const AddQuestion = forwardRef(({
 
   const CKEditorConfig = {
     licenseKey: 'GPL',
-        plugins: [
-            Essentials, Bold, Italic, Paragraph, List, Heading, Link,
-            Table, TableToolbar, Indent, IndentBlock,FontSize 
-        ],
-    toolbar: [
-      'undo', 'redo', '|',
-      'heading', '|',
-      'bulletedList', 'numberedList', '|',
-      'bold', 'italic', '|',
-      'insertTable', '|', 'indent', 'outdent'
-  ],
+    plugins: [Essentials, Bold, Italic, Paragraph, List, Heading, Link, Table, TableToolbar, Indent, IndentBlock, FontSize],
+    toolbar: ['undo', 'redo', '|', 'heading', '|', 'bulletedList', 'numberedList', '|', 'bold', 'italic', '|', 'insertTable', '|', 'indent', 'outdent'],
     table: {
-        contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
+      contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
     },
     viewportTopOffset: 60
   };
 
+  useEffect(() => {
+    setScrollableHeight(viewportHeight - 200);
+  }, [viewportHeight]);
+
+  useEffect(() => {
+    const fetchQuestionTypes = async () => {
+      try {
+        const response = await listQuestionTypes();
+        if (response.data?.questionTypes) {
+          setQuestionTypes(response.data.questionTypes);
+        }
+      } catch (error) {
+        console.error("Error fetching question types:", error);
+        formik.setStatus("Error fetching question types");
+      }
+    };
+    fetchQuestionTypes();
+  }, []);
+
   const handleHideModal = () => {
     formik.resetForm();
-    setCreating(true);
-    onOpenChange()
+    setChoices([]);
+    setNewChoice('');
+    setIsEditing(false);
+    setEditingIndex(null);
+    setIsAddingChoice(false);
+    setEditMode(false);
+    onOpenChange();
   };
-  
+
   const handleEditChoice = (index) => {
     setNewChoice(choices[index]);
     setIsAddingChoice(true);
@@ -76,9 +85,7 @@ const AddQuestion = forwardRef(({
     setEditingIndex(index);
   };
 
-  const handleAddChoiceButton = () => {
-    setIsAddingChoice(true);
-  };
+  const handleAddChoiceButton = () => setIsAddingChoice(true);
 
   const handleSaveChoice = () => {
     if (newChoice.trim()) {
@@ -86,12 +93,12 @@ const AddQuestion = forwardRef(({
         const updatedChoices = [...choices];
         updatedChoices[editingIndex] = newChoice;
         setChoices(updatedChoices);
-        setIsEditing(false);
-        setEditingIndex(null);
       } else {
         setChoices([...choices, newChoice]);
       }
       setNewChoice('');
+      setIsEditing(false);
+      setEditingIndex(null);
       setIsAddingChoice(false);
     }
   };
@@ -99,22 +106,18 @@ const AddQuestion = forwardRef(({
   const handleDeleteChoice = (index) => {
     setChoices(choices.filter((_, i) => i !== index));
   };
+  const handleChoiceInputChange = (event) => {
+    setNewChoice(event.target.value);
+  };
 
   const handleCancelChoice = () => {
     setNewChoice('');
     setIsAddingChoice(false);
     setIsEditing(false);
-    
   };
 
-  const handleChoiceInputChange = (event) => {
-    setNewChoice(event.target.value);
-  };
-
-
-
-    const formik = useFormik({
-    initialValues: { 
+  const formik = useFormik({
+    initialValues: {
       questionType: '',
       questionBody: '',
       marks: '',
@@ -135,65 +138,36 @@ const AddQuestion = forwardRef(({
           type: values.questionType,
           choices: values.questionType === "1" ? choices.map(choice => ({ choiceBody: choice })) : null,
           answers: [{ answerBody: values.answer }],
-          videoDurations:[{ VideoDurationMinute: values.videoDuration }],
+          videoDurations: [{ VideoDurationMinute: values.videoDuration }],
           required: values.required,
         };
 
-        onCreateQuestion(newQuestion); // Call the parent method to create a new question
-        setChoices([]);
+        onCreateQuestion(newQuestion);
       } catch (error) {
         console.error(error);
       } finally {
         setSubmitting(false);
         setLoading(false);
-        handleHideModal();
+        onOpenChange();
         formik.resetForm();
-        // Swal.fire(`${editMode ? 'Updated' : 'Created'}`, `Question has been ${editMode ? 'Updated' : 'Created'} Successfully!`, 'success');
       }
-    },
+    }
   });
 
-    useState(() => {
-    const fetchQuestionTypes = async () => {
-      try {
-        const response = await listQuestionTypes();
-        if (response.data?.questionTypes) {
-          setQuestionTypes(response.data.questionTypes);
-        }
-      } catch (error) {
-        console.error("Error fetching question types:", error);
-        formik.setStatus("Error fetching question types");
-      }
-    };
-    fetchQuestionTypes();
-    }, []);
-
-      useEffect(() => {
-
-    const handleModalShown = () => {
-      if (selectedQuestion) {
-        formik.setValues({
-          questionType: selectedQuestion.type || '',
-          questionBody: selectedQuestion.body || '',
-          marks: selectedQuestion.marks || '',
-          answer: selectedQuestion.answers?.[0]?.answerBody || '',
-          required: selectedQuestion.required || false,
-          videoDuration: selectedQuestion.videoDurations?.[0]?.VideoDurationMinute || 0,
-        });
-
-        if (selectedQuestion.choices) {
-          setChoices(selectedQuestion.choices.map(choice => choice.choiceBody) || []);
-        }
-      }
-      setCreating(Creating);
-    };
-
-
-
-    return () => {
-    handleModalShown()
-    };
-  }, [selectedQuestion]);
+  useEffect(() => {
+    if (selectedQuestion && isCreating == 'Edit') {
+      setEditMode(true);
+      formik.setValues({
+        questionType: selectedQuestion.type || '',
+        questionBody: selectedQuestion.body || '',
+        marks: selectedQuestion.marks || '',
+        answer: selectedQuestion.answers?.[0]?.answerBody || '',
+        required: selectedQuestion.required || false,
+        videoDuration: selectedQuestion.videoDurations?.[0]?.VideoDurationMinute || 0,
+      });
+      setChoices(selectedQuestion.choices?.map(choice => choice.choiceBody) || []);
+    }
+  }, [open, selectedQuestion]);
 
   return <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[600px] top-[2%] translate-y-0  " ref={ref}>
@@ -201,6 +175,8 @@ const AddQuestion = forwardRef(({
         <DialogTitle as="h3" className="text-base font-semibold text-gray-900">
         {editMode ? 'Edit' : 'Create'} Question
         </DialogTitle>
+        <DialogDescription>
+        </DialogDescription>
         </DialogHeader>
         <form onSubmit={formik.handleSubmit} className='' >
         <DialogBody className=" p-5 items-center scrollable-y-auto min-h-9/10" style={{

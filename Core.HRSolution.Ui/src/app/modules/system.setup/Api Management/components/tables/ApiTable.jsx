@@ -147,7 +147,7 @@ const ApiTable = ({ className }) => {
         )
      },
     { Header: 'Actions', accessor: 'id', className: 'text-end', Cell: row => (
-      <div className='d-flex justify-content-end flex-shrink-0'>
+      <div className='d-flex justify-end flex-shrink-0'>
         <ActionComponent
             buttonPermission={'system.setup.update.api'}
             actionButton={ 

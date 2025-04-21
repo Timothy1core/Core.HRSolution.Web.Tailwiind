@@ -70,10 +70,10 @@ module.exports = {
                 inverse: '#ffffff'
               },
               danger: {
-                default: '#ed1f24',
-                active: '#ed1f24',
-                light: '#f49494',
-                clarity: 'rgba(228, 40, 85, 0.20)',
+                default: '#ED1F24',
+                active: '#ED393C',
+                light: '#FFEEF3',
+                clarity: 'rgba(237, 31, 36, 0.20)',
                 inverse: '#ffffff'
               },
               warning: {
@@ -135,10 +135,10 @@ module.exports = {
                 inverse: '#ffffff'
               },
               danger: {
-                default: '#ed1f24',
-                active: '#ed1f24',
-                light: '#f49494',
-                clarity: 'rgba(228, 40, 85, 0.20)',
+                default: '#ED1F24',
+                active: '#ED393C',
+                light: '#FFEEF3',
+                clarity: 'rgba(237, 31, 36, 0.20)',
                 inverse: '#ffffff'
               },
               warning: {
@@ -178,7 +178,7 @@ module.exports = {
             light: '0px 3px 4px 0px rgba(0, 0, 0, 0.03)',
             primary: '0px 4px 12px 0px rgba(40, 132, 239, 0.35)',
             success: '0px 4px 12px 0px rgba(53, 189, 100, 0.35)',
-            danger: '0px 4px 12px 0px rgba(241, 65, 108, 0.35)',
+            danger: '0px 4px 12px 0px rgba(237, 31, 36, 0.35)',
             info: '0px 4px 12px 0px rgba(114, 57, 234, 0.35)',
             warning: '0px 4px 12px 0px rgba(246, 192, 0, 0.35)',
             dark: '0px 4px 12px 0px rgba(37, 47, 74, 0.35)'

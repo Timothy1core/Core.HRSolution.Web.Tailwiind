@@ -113,7 +113,7 @@ const RoleTable = ({ className }) => {
       className: 'text-end',
       sortable: false,
       Cell: (row) => (
-        <div className='d-flex justify-content-end flex-shrink-0'>
+        <div className='d-flex justify-end flex-shrink-0'>
           <ActionComponent
             buttonPermission={'system.setup.retrieve.role.info'}
             actionButton={ 

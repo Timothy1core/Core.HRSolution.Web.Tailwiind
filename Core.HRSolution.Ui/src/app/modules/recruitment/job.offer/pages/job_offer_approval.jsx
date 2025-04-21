@@ -104,7 +104,7 @@ const JobOfferApproval = () => {
     return (
         <div
             id="kt_app_content_container"
-            className="app-container container-xxl d-flex justify-content-center align-items-center"
+            className="app-container container-xxl d-flex justify-center align-items-center"
         >
             <div className='card w-100 mb-5 mb-xl-8'>
                     <div className='card-header flex-nowrap'>
@@ -157,8 +157,8 @@ const JobOfferApproval = () => {
             
                         <div className="row g-5 mb-11 mt-6">
                          {/* <div className="col-sm-12"> */}
-                            <div className='w-25 justify-content-center flex-column'>
-                           <div className="mb-1 flex-column justify-content-center">
+                            <div className='w-25 justify-center flex-column'>
+                           <div className="mb-1 flex-column justify-center">
                              {declineReason ? (<div className="fw-bold fs-6 text-danger">Declined: {declineReason}</div> ) : signature ? (
                                <>
                                <img 
@@ -173,7 +173,7 @@ const JobOfferApproval = () => {
                              ) : (
                             //    <SignaturePadModal onSave={handleSaveSignature} />
                             <>
-                            <div className='d-flex justify-content-center align-items-center flex-column'> 
+                            <div className='d-flex justify-center align-items-center flex-column'> 
                                 <div>
                                     {/* <Button 
                                         data-kt-menu-trigger="click" 

@@ -69,7 +69,7 @@ const ClientTAF = () => {
     return (
         <div
             id="kt_app_content_container"
-            className="app-container container-xxl d-flex justify-content-center align-items-center"
+            className="app-container container-xxl d-flex justify-center align-items-center"
         >
             <div className="card w-100">
                 <div className="card-body py-10">

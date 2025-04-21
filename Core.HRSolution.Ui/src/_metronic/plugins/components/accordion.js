@@ -12,7 +12,7 @@ export default plugin(({addComponents}) => {
 			'flex-grow': '1',
 			'align-items': 'center',
 			'text-align': 'start',
-			'justify-content': 'space-between',
+			'justify-content-content': 'space-between',
 		},
 		'.accordion-content': {
 			'transition': 'height 300ms ease',

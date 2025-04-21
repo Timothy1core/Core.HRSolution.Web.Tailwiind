@@ -100,7 +100,7 @@ const FileUploadBox = ({ label, name, setFieldValue, value, documentGroup }) => 
           />
           <div className="upload-area">
             {value?.file ? (
-              <div className="d-flex border border-2 p-2 justify-content-between">
+              <div className="d-flex border border-2 p-2 justify-between">
                 <div>
                   <h3>File name: {value.file.name}</h3>
                   <h4>Size: {(value.file.size / (1024 * 1024)).toFixed(2)} MB</h4>
@@ -206,7 +206,7 @@ const FileUploadStep = ({ id, onboardingDocuments }) => {
     //         {docMap.nbiClearance ? 
     //         <>
     //           <h3 className='text-dark'>Updated and original NBI clearance/ Police/ Barangay Clearance</h3>
-    //           <div className="d-flex border border-2 p-2 justify-content-between my-5">
+    //           <div className="d-flex border border-2 p-2 justify-between my-5">
     //             <div>
     //               <h3>File name: {docMap.nbiClearance.file.name}</h3>
     //             </div>
@@ -225,7 +225,7 @@ const FileUploadStep = ({ id, onboardingDocuments }) => {
     //         {docMap.birthCertificate ? 
     //         <>
     //           <h3 className='text-dark'>PSA/ NSO Birth Certificate</h3>
-    //           <div className="d-flex border border-2 p-2 justify-content-between my-5">
+    //           <div className="d-flex border border-2 p-2 justify-between my-5">
     //             <div>
     //               <h3>File name: {docMap.birthCertificate.file.name}</h3>
     //             </div>
@@ -244,7 +244,7 @@ const FileUploadStep = ({ id, onboardingDocuments }) => {
     //         {docMap.medicalExam ? 
     //         <>
     //           <h3 className='text-dark'>Pre-Employment Medical Exam</h3>
-    //           <div className="d-flex border border-2 p-2 justify-content-between my-5">
+    //           <div className="d-flex border border-2 p-2 justify-between my-5">
     //             <div>
     //               <h3>File name: {docMap.medicalExam.file.name}</h3>
     //             </div>
@@ -267,7 +267,7 @@ const FileUploadStep = ({ id, onboardingDocuments }) => {
     //         {docMap.pagibig ? 
     //         <>
     //           <h3 className='text-dark'>PagIBIG / MID</h3>
-    //           <div className="d-flex border border-2 p-2 justify-content-between my-5">
+    //           <div className="d-flex border border-2 p-2 justify-between my-5">
     //             <div>
     //               <h3>File name: {docMap.pagibig.file.name}</h3>
     //             </div>
@@ -286,7 +286,7 @@ const FileUploadStep = ({ id, onboardingDocuments }) => {
     //         {docMap.philhealth ? 
     //         <>
     //           <h3 className='text-dark'>Philhealth</h3>
-    //           <div className="d-flex border border-2 p-2 justify-content-between my-5">
+    //           <div className="d-flex border border-2 p-2 justify-between my-5">
     //             <div>
     //               <h3>File name: {docMap.philhealth.file.name}</h3>
     //             </div>
@@ -305,7 +305,7 @@ const FileUploadStep = ({ id, onboardingDocuments }) => {
     //         {docMap.tin ? 
     //         <>
     //           <h3 className='text-dark'>Tax Identification Number (TIN)</h3>
-    //           <div className="d-flex border border-2 p-2 justify-content-between my-5">
+    //           <div className="d-flex border border-2 p-2 justify-between my-5">
     //             <div>
     //               <h3>File name: {docMap.tin.file.name}</h3>
     //             </div>
@@ -324,7 +324,7 @@ const FileUploadStep = ({ id, onboardingDocuments }) => {
     //         {docMap.sss ? 
     //         <>
     //           <h3 className='text-dark'>Social Security System (SSS)</h3>
-    //           <div className="d-flex border border-2 p-2 justify-content-between my-5">
+    //           <div className="d-flex border border-2 p-2 justify-between my-5">
     //             <div>
     //               <h3>File name: {docMap.sss.file.name}</h3>
     //             </div>
@@ -343,7 +343,7 @@ const FileUploadStep = ({ id, onboardingDocuments }) => {
     //         {docMap.diploma ? 
     //         <>
     //           <h3 className='text-dark'>Diploma/ Transcript of Records/ Any proof of educational attainment</h3>
-    //           <div className="d-flex border border-2 p-2 justify-content-between my-5">
+    //           <div className="d-flex border border-2 p-2 justify-between my-5">
     //             <div>
     //               <h3>File name: {docMap.diploma.file.name}</h3>
     //             </div>
@@ -362,7 +362,7 @@ const FileUploadStep = ({ id, onboardingDocuments }) => {
     //         {docMap.marriageCert ? 
     //         <>
     //           <h3 className='text-dark'>PSA/ NSO Marriage Certificate (if married)</h3>
-    //           <div className="d-flex border border-2 p-2 justify-content-between my-5">
+    //           <div className="d-flex border border-2 p-2 justify-between my-5">
     //             <div>
     //               <h3>File name: {docMap.marriageCert.file.name}</h3>
     //             </div>
@@ -381,7 +381,7 @@ const FileUploadStep = ({ id, onboardingDocuments }) => {
     //         {docMap.dependentCert ? 
     //         <>
     //           <h3 className='text-dark'>Dependent/s PSA/ NSO Birth Certificate</h3>
-    //           <div className="d-flex border border-2 p-2 justify-content-between my-5">
+    //           <div className="d-flex border border-2 p-2 justify-between my-5">
     //             <div>
     //               <h3>File name: {docMap.dependentCert.file.name}</h3>
     //             </div>
@@ -400,7 +400,7 @@ const FileUploadStep = ({ id, onboardingDocuments }) => {
     //         {docMap.employmentCert ? 
     //         <>
     //           <h3 className='text-dark'>Certificate of Employment / Signed resignation letter / Clearance</h3>
-    //           <div className="d-flex border border-2 p-2 justify-content-between my-5">
+    //           <div className="d-flex border border-2 p-2 justify-between my-5">
     //             <div>
     //               <h3>File name: {docMap.employmentCert.file.name}</h3>
     //             </div>
@@ -419,7 +419,7 @@ const FileUploadStep = ({ id, onboardingDocuments }) => {
     //         {docMap.form2316 ? 
     //         <>
     //           <h3 className='text-dark'>Current Year’s 2316</h3>
-    //           <div className="d-flex border border-2 p-2 justify-content-between my-5">
+    //           <div className="d-flex border border-2 p-2 justify-between my-5">
     //             <div>
     //               <h3>File name: {docMap.form2316.file.name}</h3>
     //             </div>
@@ -435,7 +435,7 @@ const FileUploadStep = ({ id, onboardingDocuments }) => {
     //         />
     //         }
             
-    //         <div className="d-flex bd-highlight gap-5 justify-content-end py-2 mt-5">
+    //         <div className="d-flex bd-highlight gap-5 justify-end py-2 mt-5">
     //           {/* <Button type="submit" className="btn btn-danger mt-5" disabled={isSubmitting}>
     //             {isSubmitting ? 'Submitting...' : 'Submit'}
     //           </Button> */}

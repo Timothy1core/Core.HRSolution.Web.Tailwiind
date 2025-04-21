@@ -69,7 +69,7 @@ email
         }}
       >
         <div className="container-fluid">
-          <div className="d-flex gap-3 align-items-center justify-content-between">
+          <div className="d-flex gap-3 align-items-center justify-between">
             {candidateId && (
               <div className='d-flex gap-4'>
               <img src={`${ApiGateWayUrl()}/recruitment/onboarding/candidate_document/${candidateId}/idPicture`} alt="Document" className='border rounded' style={{ width: '100%', maxWidth: '120px', aspectRatio: '1 / 1', objectFit: 'cover' }} />
@@ -86,7 +86,7 @@ email
             <div>
               
             </div>
-            <div className="text-end align-items-end justify-content-end">
+            <div className="text-end align-items-end justify-end">
             {/* <ButtonToolbar aria-label="Toolbar with button groups" className='text-end'>
               <ButtonGroup size="sm" className="me-2 py-1" aria-label="First group">
                 <Dropdown>

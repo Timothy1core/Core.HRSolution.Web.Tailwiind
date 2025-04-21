@@ -60,7 +60,7 @@ const componentMap = {
   
   '/recruitment/assessmentmanagement' : <AssessmentManagementWrapper />,
   '/recruitment/createassessment' : <CreateAssessment />,
-  '/recruitment/editassessment' : <EditAssessment />,
+  '/recruitment/editassessment/:id' : <EditAssessment />,
 
 
   '/recruitment/createtalentacquisition' : <CreateTalentAcquisitionWrapper />,

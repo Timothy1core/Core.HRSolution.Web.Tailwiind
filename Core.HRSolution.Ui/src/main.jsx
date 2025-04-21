@@ -7,6 +7,7 @@ import {AuthProvider, setupAxios} from './app/modules/auth'
 import { ProvidersWrapper } from './_metronic/providers';
 import React from 'react';
 import {AuthInit} from '@/app/modules/auth';
+import { LoadingProvider } from './app/helpers/loading/loading_provider';
 /**
  * Inject interceptors for axios.
  *
@@ -19,7 +20,9 @@ root.render(
     <AuthProvider>
       <AuthInit>
         <ProvidersWrapper>
-          <App />
+          <LoadingProvider>
+            <App />
+          </LoadingProvider>
         </ProvidersWrapper>
       </AuthInit>
     </AuthProvider>

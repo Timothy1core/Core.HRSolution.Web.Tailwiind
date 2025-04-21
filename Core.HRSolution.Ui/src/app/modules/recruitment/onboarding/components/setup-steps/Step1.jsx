@@ -667,7 +667,7 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
             )}
             </div>
           </div>
-          <div className="d-flex bd-highlight  gap-5 justify-content-end py-2 mt-5">
+          <div className="d-flex bd-highlight  gap-5 justify-end py-2 mt-5">
             
             <button type="submit" className="btn btn-danger" disabled={loading || formik.isSubmitting}>
               {loading ? 'Saving...' : 'Continue'}
