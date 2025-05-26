@@ -1,0 +1,81 @@
+
+.funnel-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.labels-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: right;
+}
+
+.label-arrow {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.label-text {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.arrow {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #d9534f;
+}
+
+.funnel-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.funnel-step {
+  width: 60%;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bolder;
+  /* background: linear-gradient(to bottom, #d9534f, #c9302c); */
+  /* color: white; */
+}
+
+.step-0 { width: 35%; background: #fce3e2; color: black; }
+.step-1 { width: 30%; background: #c65f5f; color: white;}
+.step-2 { width: 25%; background: #b24444; color: white;}
+.step-3 { width: 20%; background: #bf3c32; color: white;}
+.step-4 { width: 15%; background: #af0404; color: white;}
+.step-5 { width: 10%; background: #b2b4b6; color: dark;}
+
+.count {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.stage {
+    font-size: 1.5rem;
+    width: 40%;
+    /* background: #8b1a22; */
+}
+
+.rate {
+  font-size: 1.5rem;
+  /* margin-top: 5px; */
+  width: 40%;
+}
+
+.note {
+  font-size: 0.9rem;
+  font-style: italic;
+  /* margin-top: 5px; */
+}
