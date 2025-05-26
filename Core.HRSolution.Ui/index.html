@@ -1,21 +1,65 @@
-<!doctype html>
-<html class="h-full" lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8" />
-		<link rel="icon" href="/media/app/favicon.ico" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta charSet="utf-8" />
-		<meta name="description" content="" />
-		<meta name="keywords" content="keenthemes,react,material,kit,application,dashboard,admin,template" />
-		<meta name="author" content="Metronic - Tailwind React Template" />
-    <style type="text/css">
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Metronic React Demo 1" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
+  <title>AGILE HR SOLUTION</title>
+  <link rel="shortcut icon" href="core_logos/core-icon.svg" />
+  <link rel="stylesheet" id="layout-styles-anchor" href="/splash-screen.css" />
+  <link href="https://cdn.onecoredevit.com/fonts/fontawesome6/css/all.min.css" rel="stylesheet" type="text/css">
+</head>
+<style>
+  .ck-powered-by{
+    display: none;
+  }
+  canvas {
+  touch-action: none; /* Prevent touch scrolling */
+}
+</style>
+<body id="kt_body" class="page-loading">
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <!--begin::Theme mode setup on page load-->
+  <script>
+    let themeMode = 'system'
+
+    if (localStorage.getItem('kt_theme_mode_value')) {
+      themeMode = localStorage.getItem('kt_theme_mode_value')
+    }
+
+    if (themeMode === 'system') {
+      themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    document.documentElement.setAttribute('data-bs-theme', themeMode)
+  </script>
+  <!--end::Theme mode setup on page load-->
+
+  <div class="" id="root"></div>
+
+  <!--begin::Loading markup-->
+  <div id="splash-screen" class="splash-screen">
+    <img src="core_logos/core-logo-gray-text.png" class="dark-logo" width="6%" alt="OneCoreDev dark logo" />
+    <img src="core_logos/core-logo-gray-text.png" class="light-logo" width="6%"  alt="OneCoreDev light logo" />
+    <div class="loader-wrapper">
+      <span class="loader"></span>
+      <span class="loading-text">Loading...</span>
+    </div>
+  </div>
+  <!--end::Loading markup-->
+
+  <!--begin: Request loading-->
  
-    </style>
-		<link rel="preconnect" href="https://fonts.gstatic.com" />
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />    
-  </head>
-  <body class="antialiased flex h-full text-base text-gray-700" style="overflow:visible !important; margin-right:0 !important; position:static !important;">
-    <div class="flex grow" id="root"></div> 
-    <script type="module" src="/src/main.jsx"></script>
-  </body>  
+  <!--end: Request loading-->
+
+  <div id="root-modals"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
 </html>
+<script>
+  
+</script>

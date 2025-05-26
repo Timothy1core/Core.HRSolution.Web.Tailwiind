@@ -1,6 +1,6 @@
 import { Content } from '../../../../../_metronic/layout/components/content'
 import React, { useState, useEffect } from 'react';
-import { getEmailContent, sendJobOffer} from '../core/requests/_request';
+import { getEmailContent, sendJobOffer, updateJobOfferStatus } from '../core/requests/_request';
 import { useLocation } from 'react-router-dom';
 import {
   enableLoadingRequest,
@@ -8,8 +8,10 @@ import {
 } from '../../../../helpers/loading_request';
 import Swal from 'sweetalert2';
 import dayjs from "dayjs";
-import { KTIcon } from '@/_metronic/helpers';
+import {  Button } from 'react-bootstrap';
+import { KTIcon } from '../../../../../_metronic/helpers';
 import { JobOfferAcceptancePreview } from './job_offer_acceptance_preview';
+import { useNavigate } from 'react-router-dom';
 const PreviewJobOfferInfoPage = () => {
     const location = useLocation();
     const [candidateId, setCandidateId] = useState([]);
@@ -17,13 +19,14 @@ const PreviewJobOfferInfoPage = () => {
     const [loading, setLoading] = useState(false);
     const [signature, setSignature] = useState(null);
     const [declineReason, setDeclineReason] = useState(null);
+    const navigate = useNavigate();
     
     const handleSendJobOffer = async () => {
             try {
                 const response = await sendJobOffer(candidateId);
-                console.log(response.data)
                 if (response.data.value.success) {
                     Swal.fire('Sent', 'Job Offer Sent Successfully!', 'success');
+                    const res = await updateJobOfferStatus(candidateId, 3);
                 }    
             } catch (error) {
                 Swal.fire({
@@ -81,13 +84,13 @@ const PreviewJobOfferInfoPage = () => {
   <>
       <div id="kt_app_toolbar" className="app-toolbar py-3 py-lg-6">
         <div id="kt_app_toolbar_container" className="app-container container-fluid d-flex flex-stack">
-          <div className="page-title d-flex flex-column justify-center flex-wrap me-3">
+          <div className="page-title d-flex flex-column justify-content-center flex-wrap me-3">
               <a href='joboffer' className='btn btn-sm btn-light-danger'>
               <KTIcon iconName='entrance-right' className='fs-2' />
                 Go Back
               </a>
           </div>
-          <div className="page-title d-flex flex-column justify-center flex-wrap">
+          <div className="page-title d-flex flex-column justify-content-center flex-wrap">
               <a 
                 onClick={() => handleSendJobOffer()} className='btn btn-sm btn-light-primary'>
                 Send Offer

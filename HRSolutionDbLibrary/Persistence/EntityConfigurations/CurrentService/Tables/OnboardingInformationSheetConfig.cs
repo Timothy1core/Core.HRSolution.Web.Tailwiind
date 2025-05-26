@@ -99,11 +99,15 @@ namespace HRSolutionDbLibrary.Persistence.EntityConfigurations.CurrentService.Ta
 				.IsRequired()
 				.HasMaxLength(50)
 				.HasColumnName("TINIdNo");
-
+			builder.Property(e => e.CreatedDate).HasColumnType("datetime");
 			builder.HasOne(d => d.Candidate).WithOne(p => p.OnboardingInformationSheet)
 				.HasForeignKey<OnboardingInformationSheet>(d => d.CandidateId)
 				.OnDelete(DeleteBehavior.ClientSetNull)
 				.HasConstraintName("FK_OnboardingInformationSheets_Candidates");
+			builder.HasOne(d => d.OnboardingStatus).WithMany(p => p.OnboardingInformationSheet)
+				.HasForeignKey(d => d.OnboardingStatusId)
+				.OnDelete(DeleteBehavior.ClientSetNull)
+				.HasConstraintName("FK_OnboardingInformationSheets_OnboardingStatuses");
 		}
 	}
 }

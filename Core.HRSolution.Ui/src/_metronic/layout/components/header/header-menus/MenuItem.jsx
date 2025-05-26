@@ -1,8 +1,7 @@
 import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
-import { checkIsActive, KTIcon } from '@/_metronic/helpers';
-
+import { checkIsActive, KTIcon } from '../../../../helpers';
 
 // PropTypes for validation (optional but recommended)
 import PropTypes from 'prop-types';

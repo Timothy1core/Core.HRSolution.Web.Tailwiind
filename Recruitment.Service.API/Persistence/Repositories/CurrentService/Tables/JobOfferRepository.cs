@@ -1,9 +1,9 @@
-﻿using HRSolutionDbLibrary.Core.Entities.Tables;
+﻿using EncryptionLibrary;
+using HRSolutionDbLibrary.Core.Entities.Tables;
 using HRSolutionDbLibrary.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Recruitment.Service.API.Core.Models.CurrentService.Dtos.Assessment;
 using Recruitment.Service.API.Core.Models.CurrentService.Dtos.JobOffer;
-using Recruitment.Service.API.Core.Models.CurrentService.Dtos.JobProfile;
 using Recruitment.Service.API.Core.Repositories.CurrentService.Tables;
 
 namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables;
@@ -14,8 +14,6 @@ public class JobOfferRepository(CurrentServiceDbContext context) : IJobOfferRepo
 	{
 		await context.JobOfferInformations.AddAsync(jobOfferInformation);
 	}
-
-
 
 	public async Task<List<JobOfferDashboardDto>> RetrieveCandidateForJobOfferList()
 	{
@@ -48,7 +46,7 @@ public class JobOfferRepository(CurrentServiceDbContext context) : IJobOfferRepo
 	public async Task<List<JobOfferStatusDto>> RetrieveJobOfferStatusList()
 	{
 		var statuses = await context.JobOfferStatuses
-			.Where(w => w.IsActive == true )
+			.Where(w => w.IsActive == true)
 
 			.Select(s => new JobOfferStatusDto()
 			{
@@ -58,23 +56,22 @@ public class JobOfferRepository(CurrentServiceDbContext context) : IJobOfferRepo
 		return statuses;
 
 	}
-
 	public async Task<JobOfferDto> RetrieveJobOfferInfo(int candidateId)
 	{
 		var jobOfferInfo = await context.JobOfferInformations
 			.Include(x => x.Candidate)
 			.ThenInclude(i => i.Job)
 			.Include(i => i.JobOfferStatus)
-			.Where(w=>w.CandidateId == candidateId)
+			.Where(w => w.CandidateId == candidateId)
 			.Select(s => new JobOfferDto
 			{
 				// Id = s.Id,
 				TotalRenderingPeriod = s.TotalRenderingPeriod,
 				TargetStartDate = s.TargetStartDate,
-				ProbitionarySalary = s.ProbitionarySalary,
-				ProbitionaryDeminimis = s.ProbitionaryDeminimis,
-				RegularDeminimis = s.RegularDeminimis,
-				RegularSalary = s.RegularSalary,
+				ProbitionarySalary = EncryptionServices.Decrypt(s.ProbitionarySalary),
+				ProbitionaryDeminimis = EncryptionServices.Decrypt(s.ProbitionaryDeminimis),
+				RegularDeminimis = EncryptionServices.Decrypt(s.RegularDeminimis),
+				RegularSalary = EncryptionServices.Decrypt(s.RegularSalary),
 				CandidateId = s.CandidateId,
 				JobOfferStatus = s.JobOfferStatus.Status,
 				JobOfferStatusId = s.JobOfferStatus.Id,
@@ -91,6 +88,41 @@ public class JobOfferRepository(CurrentServiceDbContext context) : IJobOfferRepo
 				ApproverSignature = s.ApproverSignature,
 				ApprovedDate = s.ApprovedDate,
 				ApproverNotes = s.ApproverNotes,
+				AcceptedDate = s.AcceptedDate
+			})
+			.FirstOrDefaultAsync();
+		return jobOfferInfo!;
+	}
+
+	public async Task<JobOfferDto> RetrieveJobOfferAcceptedDate(int candidateId)
+	{
+		var jobOfferInfo = await context.JobOfferInformations
+			.Include(x => x.Candidate)
+			.ThenInclude(i => i.Job)
+			.Include(i => i.JobOfferStatus)
+			.Where(w => w.CandidateId == candidateId)
+			.Select(s => new JobOfferDto
+			{
+				// Id = s.Id,
+				TotalRenderingPeriod = s.TotalRenderingPeriod,
+				TargetStartDate = s.TargetStartDate,
+				CandidateId = s.CandidateId,
+				JobOfferStatus = s.JobOfferStatus.Status,
+				JobOfferStatusId = s.JobOfferStatus.Id,
+				CandidateName = s.Candidate.FirstName + " " + s.Candidate.LastName,
+				CandidateEmail = s.Candidate.Email,
+				CandidateSignature = s.CandidateSignature,
+				CandidateNotes = s.CandidateNotes,
+				Position = s.Candidate.Job.Position,
+				ClientId = s.Candidate.Job.DepartmentId,
+				CurrentSalary = s.Candidate.CurrentSalary,
+				ExpectedSalary = s.Candidate.ExpectedSalary,
+				ApproverId = s.ApproverId,
+				IsApproved = s.IsApproved,
+				ApproverSignature = s.ApproverSignature,
+				ApprovedDate = s.ApprovedDate,
+				ApproverNotes = s.ApproverNotes,
+				AcceptedDate = s.AcceptedDate
 			})
 			.FirstOrDefaultAsync();
 		return jobOfferInfo!;
@@ -109,6 +141,7 @@ public class JobOfferRepository(CurrentServiceDbContext context) : IJobOfferRepo
 			jobOfferInformation.ProbitionaryDeminimis = jobOfferInformationDto.ProbitionaryDeminimis;
 			jobOfferInformation.RegularSalary = jobOfferInformationDto.RegularSalary;
 			jobOfferInformation.RegularDeminimis = jobOfferInformationDto.RegularDeminimis;
+			jobOfferInformation.JobOfferStatusId = jobOfferInformationDto.JobOfferStatusId;
 		}
 	}
 
@@ -166,6 +199,7 @@ public class JobOfferRepository(CurrentServiceDbContext context) : IJobOfferRepo
 		if (jobOfferInformation != null)
 		{
 			jobOfferInformation.JobOfferStatusId = jobOfferInformationDto.JobOfferStatusId;
+			jobOfferInformation.OfferSentDate = jobOfferInformationDto.OfferSentDate;
 		}
 	}
 }

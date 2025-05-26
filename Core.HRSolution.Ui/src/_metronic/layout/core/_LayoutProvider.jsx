@@ -9,7 +9,7 @@ import {
   getEmptyHTMLAttributes,
   LayoutSetup,
 } from './_LayoutSetup'
-// import { WithChildren } from '../../helpers'
+import { WithChildren } from '../../helpers'
 
 // Create context with default values for the layout
 const LayoutContext = createContext({

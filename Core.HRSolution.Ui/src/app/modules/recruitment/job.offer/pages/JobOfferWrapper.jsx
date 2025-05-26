@@ -9,8 +9,9 @@ const JobOfferPage = () => {
 
   return(
   <>
+    <ToolbarWrapper title="Job Offer Dashboard" subtitle="Recruitment" />
     <Content>
-      <JobOfferTable className='mb-5 mb-xl-8' />
+      <JobOfferTable/>
     </Content>
   </>
   )

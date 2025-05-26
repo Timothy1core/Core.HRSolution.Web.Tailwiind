@@ -1,8 +1,6 @@
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
-import { KTIcon } from '@/_metronic/helpers';
-import { toAbsoluteUrl } from '@/_metronic/utils';
-
+import { KTIcon, toAbsoluteUrl } from '../../../helpers';
 import { LayoutSetup, useLayout } from '../../core';
 import { Header } from './Header';
 import { Navbar } from './Navbar';
@@ -95,7 +93,7 @@ export function HeaderWrapper() {
 
         <div
           id='kt_app_header_wrapper'
-          className='d-flex align-items-stretch justify-between flex-lg-grow-1'
+          className='d-flex align-items-stretch justify-content-between flex-lg-grow-1'
         >
           {config.app.header.default?.content === 'menu' &&
             config.app.header.default.menu?.display && (

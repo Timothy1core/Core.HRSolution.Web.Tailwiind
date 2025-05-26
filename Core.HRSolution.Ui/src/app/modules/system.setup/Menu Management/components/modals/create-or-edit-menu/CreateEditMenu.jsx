@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
-import { KTIcon } from '@/_metronic/helpers';
+import { KTIcon } from '../../../../../../../_metronic/helpers';
 import { useFormik } from 'formik';
 import { createMenu, infoMenu, updateMenu, listMenuDropDown } from '../../../core/requests/_request';
 import { listSectionMenu } from '../../../../Section Menu Management/core/requests/_request';
-// import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
 import Select from 'react-select'
 
 const menuSchema = Yup.object().shape({
@@ -144,9 +144,9 @@ const CreateEditMenu = ({ id, editMode, showModal, handleClose, handleCloseWithR
   }, []);
 
   return (
-    // <Modal show={showModal} onHide={handleCloseModal} centered className=' modal-lg'>
-    //   <Modal.Header closeButton><Modal.Title>{editMode ? 'Edit Menu' : 'Add Menu'}</Modal.Title></Modal.Header>
-    //   <Modal.Body>
+    <Modal show={showModal} onHide={handleCloseModal} centered className=' modal-lg'>
+      <Modal.Header closeButton><Modal.Title>{editMode ? 'Edit Menu' : 'Add Menu'}</Modal.Title></Modal.Header>
+      <Modal.Body>
             <form onSubmit={formik.handleSubmit}>
               {formik.status && (
                 <div className='mb-lg-10 alert alert-danger'>
@@ -329,8 +329,8 @@ const CreateEditMenu = ({ id, editMode, showModal, handleClose, handleCloseWithR
                 </button>
               </div>
             </form>
-            // </Modal.Body>
-            // </Modal>
+            </Modal.Body>
+            </Modal>
   );
 };
 

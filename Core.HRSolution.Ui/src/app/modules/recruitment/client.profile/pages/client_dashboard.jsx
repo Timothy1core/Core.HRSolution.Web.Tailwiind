@@ -1,7 +1,7 @@
 import { ToolbarWrapper } from '../../../../../_metronic/layout/components/toolbar';
 import { Content } from '../../../../../_metronic/layout/components/content';
 import React, { useState, useCallback } from 'react';
-import { KTIcon } from '@/_metronic/helpers';
+import { KTIcon } from '../../../../../_metronic/helpers';
 import { MyModal } from "../component/modals/create_client";
 import { DataClientDashboardComponent } from "../component/elements/client_dashboard_component";
 import {
@@ -9,7 +9,6 @@ import {
   SelectClientStatusComponent,
   SelectClientCompanyGroupComponent
 } from '../component/dropdowns/client_profile_dropdown_component';
-
 
 import  ActionComponent  from "../../../../helpers/action_component";
 
@@ -39,8 +38,8 @@ const DashboardPage = () => {
   return (
     <>
       <ToolbarWrapper
-        title="Client Dashboard"
-        subtitle="Recruitment - Client and Job Library"
+        title="Department Dashboard"
+        subtitle="Recruitment - Department and Job Library"
       />
       <Content>
         <div className="card card-custom">
@@ -77,7 +76,7 @@ const DashboardPage = () => {
                 </div>
                 
                 <ActionComponent
-                  buttonPermission={'client.company.create'}
+                  buttonPermission={'department.create'}
                   actionButton={<MyModal onSubmitSuccess={refreshData} />}
                 />
                 
@@ -98,6 +97,6 @@ const DashboardPage = () => {
   );
 };
 
-const ClientDashboardWrapper = () => <DashboardPage />;
+const DepartmentDashboardWrapper = () => <DashboardPage />;
 
-export { ClientDashboardWrapper };
+export { DepartmentDashboardWrapper };

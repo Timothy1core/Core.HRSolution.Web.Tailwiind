@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
-import { toAbsoluteUrl } from '@/_metronic/utils';
-import { KTIcon} from '@/_metronic/helpers';
+import { KTIcon, toAbsoluteUrl } from '../../../helpers';
 import { useLayout } from '../../core';
 import { useEffect, useRef } from 'react';
 import { ToggleComponent } from '../../../assets/ts/components';

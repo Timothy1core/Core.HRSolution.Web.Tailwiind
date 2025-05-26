@@ -2,7 +2,7 @@ import { lazy, Suspense, useEffect, useState } from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import TopBarProgress from 'react-topbar-progress-indicator';
 import { DashboardWrapper } from '../modules/landing-page/candidateDashboard';
-// import { getCSSVariableValue } from '../../_metronic/assets/ts/_utils';
+import { getCSSVariableValue } from '../../_metronic/assets/ts/_utils';
 
 
 
@@ -26,16 +26,16 @@ const AssessmentPrivateRoutes = () => {
 };
 
 // Suspense wrapper
-// const SuspensedView = ({ children }) => {
-//   const baseColor = getCSSVariableValue('--bs-primary');
-//   TopBarProgress.config({
-//     barColors: {
-//       '0': baseColor,
-//     },
-//     barThickness: 1,
-//     shadowBlur: 5,
-//   });
-//   return <Suspense fallback={<TopBarProgress />}>{children}</Suspense>;
-// };
+const SuspensedView = ({ children }) => {
+  const baseColor = getCSSVariableValue('--bs-primary');
+  TopBarProgress.config({
+    barColors: {
+      '0': baseColor,
+    },
+    barThickness: 1,
+    shadowBlur: 5,
+  });
+  return <Suspense fallback={<TopBarProgress />}>{children}</Suspense>;
+};
 
 export { AssessmentPrivateRoutes };

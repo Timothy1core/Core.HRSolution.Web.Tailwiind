@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {jwtDecode } from 'jwt-decode';
 import { KTIcon } from '../../_metronic/helpers';
-// import { Button } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 const ActionComponent = ({ buttonPermission, actionButton }) => {
     const [hasPermission, setHasPermission] = useState(false);
 

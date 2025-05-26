@@ -3,16 +3,15 @@ import {
   sendEmailForPendingGeneralReqDocs
 } from '../../core/requests/_request';
 import { ApiGateWayUrl} from '../../core/requests/_request';
-import { KTIcon } from '@/_metronic/helpers';
-// import { Form, Button, Alert,ButtonToolbar, ButtonGroup, Dropdown, Offcanvas  } from 'react-bootstrap';
+import { KTIcon } from "../../../../../../_metronic/helpers"
+import { Form, Button, Alert,ButtonToolbar, ButtonGroup, Dropdown, Offcanvas  } from 'react-bootstrap';
 const ProfileRow = ({
 candidateId,
 candidateName,
-email
+status,
+handleShow
 }) => {
-//   const { mode } = useThemeMode()
-//   const cardBg = mode === 'light' ? 'abstract-2.svg' :'abstract-2-dark.svg'
-
+  
   const handleSendEmailPreRequirements = async () => {
      try {
               const res = await sendEmailForPendingPreReqDocs(candidateId);
@@ -69,7 +68,7 @@ email
         }}
       >
         <div className="container-fluid">
-          <div className="d-flex gap-3 align-items-center justify-between">
+          <div className="d-flex gap-3 align-items-center justify-content-between">
             {candidateId && (
               <div className='d-flex gap-4'>
               <img src={`${ApiGateWayUrl()}/recruitment/onboarding/candidate_document/${candidateId}/idPicture`} alt="Document" className='border rounded' style={{ width: '100%', maxWidth: '120px', aspectRatio: '1 / 1', objectFit: 'cover' }} />
@@ -77,8 +76,8 @@ email
                 <div className="d-flex align-items-center gap-2 pt-4">
                     <h2 className="card-title mb-0 fw-bold">{candidateName}</h2>
                 </div>
-                <div className="d-flex align-items-center gap-2 ">
-                  <span className="fw-medium text-muted fs-6">{email}</span>
+                <div className="d-flex align-items-center gap-2 pt-2">
+                  <span className="fw-medium text-muted fs-6">{status}</span>
                 </div>
                 </div>
               </div>
@@ -86,8 +85,8 @@ email
             <div>
               
             </div>
-            <div className="text-end align-items-end justify-end">
-            {/* <ButtonToolbar aria-label="Toolbar with button groups" className='text-end'>
+            <div className="text-end align-items-end justify-content-end">
+            <ButtonToolbar aria-label="Toolbar with button groups" className='text-end'>
               <ButtonGroup size="sm" className="me-2 py-1" aria-label="First group">
                 <Dropdown>
                   <Dropdown.Toggle variant="light" type="button" className='' id="dropdown-basic" >
@@ -111,12 +110,12 @@ email
                 <Button 
                   variant='light' 
                   type="button" 
-                  //  onClick={handleShowMoveToStageDrawer}
+                   onClick={handleShow}
                 >
                   Move Candidate <KTIcon iconName='double-right' className='fs-3'/>
                 </Button>
               </ButtonGroup>    
-            </ButtonToolbar> */}
+            </ButtonToolbar>
             </div>
           </div> 
         </div>

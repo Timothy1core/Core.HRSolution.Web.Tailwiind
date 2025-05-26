@@ -1,4 +1,5 @@
-﻿using FileServiceLibrary;
+﻿using EncryptionLibrary;
+using FileServiceLibrary;
 using HRSolutionDbLibrary.Core.Entities.Tables;
 using Microsoft.AspNetCore.Mvc;
 using NETCore.Encrypt;
@@ -13,7 +14,6 @@ using Recruitment.Service.API.Core.UnitOfWork;
 using Spire.Doc;
 using System.Linq.Dynamic.Core;
 using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Recruitment.Service.API.Persistence.Applications
 {
@@ -40,10 +40,10 @@ namespace Recruitment.Service.API.Persistence.Applications
 				{
 					TotalRenderingPeriod = jobOfferRequestDto.TotalRenderingPeriod,
 					TargetStartDate = jobOfferRequestDto.TargetStartDate,
-					ProbitionarySalary = jobOfferRequestDto.ProbitionarySalary,
-					ProbitionaryDeminimis = jobOfferRequestDto.ProbitionaryDeminimis,
-					RegularSalary = jobOfferRequestDto.RegularSalary,
-					RegularDeminimis = jobOfferRequestDto.RegularDeminimis,
+					ProbitionarySalary = EncryptionServices.Encrypt(jobOfferRequestDto.ProbitionarySalary),
+					ProbitionaryDeminimis = EncryptionServices.Encrypt(jobOfferRequestDto.ProbitionaryDeminimis),
+					RegularSalary = EncryptionServices.Encrypt(jobOfferRequestDto.RegularSalary),
+					RegularDeminimis = EncryptionServices.Encrypt(jobOfferRequestDto.RegularDeminimis),
 					JobOfferStatusId = jobOfferRequestDto.JobOfferStatusId,
 					CandidateId = jobOfferRequestDto.CandidateId,
 					ApproverId = jobOfferRequestDto.ApproverId,
@@ -62,10 +62,10 @@ namespace Recruitment.Service.API.Persistence.Applications
 			}
 			catch (Exception e)
 			{
-				_logger.LogError($"Error occurred while creating client company: {e.Message}");
+				_logger.LogError($"Error occurred while creating job offer information: {e.Message}");
 
 				result = new JsonResult(new
-				{ success = false, responseText = $"Error occurred while creating client company: {e.Message}" })
+				{ success = false, responseText = $"Error occurred while creating job offer information: {e.Message}" })
 				{
 					StatusCode = 400
 				};
@@ -102,7 +102,7 @@ namespace Recruitment.Service.API.Persistence.Applications
 				.Select(ap => new
 				{
 					statusId = ap.Key,
-					Status = ap.Value, 
+					Status = ap.Value,
 					CandidateCount = candidates.Count(c => c.JobOfferStatusId == ap.Key)
 				})
 				.ToList();
@@ -111,7 +111,7 @@ namespace Recruitment.Service.API.Persistence.Applications
 					candidates = candidates.Where(x => x.JobOfferStatusId == status).ToList();
 
 				}
-				
+
 				var totalRowsAfterFiltering = candidates.Count;
 
 				// Apply sorting
@@ -119,7 +119,7 @@ namespace Recruitment.Service.API.Persistence.Applications
 					.OrderBy(sortColumnName + " " + sortDirection)
 					.ToList();
 
-				
+
 
 				// Apply pagination
 				if (length != -1)
@@ -163,9 +163,40 @@ namespace Recruitment.Service.API.Persistence.Applications
 			JsonResult result;
 			try
 			{
-
+				
 				var jobOfferInfo =
 					await _uoWForCurrentService.JobOfferRepository.RetrieveJobOfferInfo(jobOfferId);
+				var statusList = await _uoWForCurrentService.JobOfferRepository.RetrieveJobOfferStatusList();
+				result = new JsonResult(new { jobOfferInfo, statusList })
+				{
+					StatusCode = 200
+				};
+				return result;
+
+			}
+			catch (Exception e)
+			{
+				_logger.LogError($"Error occurred while retrieving jobOffer: {e.Message}");
+
+				result = new JsonResult(new
+				{ success = false, responseText = $"Error occurred while retrieving jobOffer: {e.Message}" })
+				{
+					StatusCode = 400
+				};
+				return result;
+
+			}
+		}
+
+		public async Task<JsonResult> RetrieveJobOfferInfoPublicService(string jobOfferId)
+		{
+			JsonResult result;
+			try
+			{
+				var decrypted = EncryptProvider.Base64Decrypt(jobOfferId, Encoding.Unicode);
+				var recordId = Convert.ToInt32(decrypted);
+				var jobOfferInfo =
+					await _uoWForCurrentService.JobOfferRepository.RetrieveJobOfferInfo(recordId);
 
 				result = new JsonResult(new { jobOfferInfo })
 				{
@@ -199,11 +230,12 @@ namespace Recruitment.Service.API.Persistence.Applications
 					CandidateId = jobOfferInfoId,
 					TotalRenderingPeriod = jobOfferRequestDto.TotalRenderingPeriod,
 					TargetStartDate = jobOfferRequestDto.TargetStartDate,
-					ProbitionarySalary = jobOfferRequestDto.ProbitionarySalary,
-					ProbitionaryDeminimis = jobOfferRequestDto.ProbitionaryDeminimis,
-					RegularSalary = jobOfferRequestDto.RegularSalary,
-					RegularDeminimis = jobOfferRequestDto.RegularDeminimis,
+					ProbitionarySalary = EncryptionServices.Encrypt(jobOfferRequestDto.ProbitionarySalary),
+					ProbitionaryDeminimis = EncryptionServices.Encrypt(jobOfferRequestDto.ProbitionaryDeminimis),
+					RegularSalary = EncryptionServices.Encrypt(jobOfferRequestDto.RegularSalary),
+					RegularDeminimis = EncryptionServices.Encrypt(jobOfferRequestDto.RegularDeminimis),
 					ApproverId = jobOfferRequestDto.ApproverId,
+					JobOfferStatusId = jobOfferRequestDto.JobOfferStatusId
 				};
 				await _uoWForCurrentService.JobOfferRepository.UpdateJobOffer(jobOfferInformation);
 				await _uoWForCurrentService.CommitAsync();
@@ -232,21 +264,25 @@ namespace Recruitment.Service.API.Persistence.Applications
 			}
 		}
 
-		public async Task<JsonResult> JobOfferApprovedService(int jobOfferInfoId,
+		public async Task<JsonResult> JobOfferApprovedService(string jobOfferInfoId,
 			string approverSignature)
 		{
 			JsonResult result;
 			try
 			{
+				var decrypted = EncryptProvider.Base64Decrypt(jobOfferInfoId, Encoding.Unicode);
+				var recordId = Convert.ToInt32(decrypted);
 				var jobOfferInformation = new JobOfferInformation()
 				{
-					CandidateId = jobOfferInfoId,
+					CandidateId = recordId,
 					ApproverSignature = approverSignature,
 					IsApproved = true,
 					ApprovedDate = DateTime.Now
 				};
 				await _uoWForCurrentService.JobOfferRepository.JobOfferApproved(jobOfferInformation);
 				await _uoWForCurrentService.CommitAsync();
+
+				await _applicationProcess.SendEmailSalaryPackageApprovedTemplate(recordId, 4);
 
 				result = new JsonResult(new { success = true, responseText = "Job Offer Successfully Approved" })
 				{
@@ -272,19 +308,23 @@ namespace Recruitment.Service.API.Persistence.Applications
 			}
 		}
 
-		public async Task<JsonResult> JobOfferSalaryDeclinedService(int jobOfferInfoId, string approverNotes)
+		public async Task<JsonResult> JobOfferSalaryDeclinedService(string jobOfferInfoId, string approverNotes)
 		{
 			JsonResult result;
 			try
 			{
+				var decrypted = EncryptProvider.Base64Decrypt(jobOfferInfoId, Encoding.Unicode);
+				var recordId = Convert.ToInt32(decrypted);
 				var jobOfferInformation = new JobOfferInformation()
 				{
-					CandidateId = jobOfferInfoId,
+					CandidateId = recordId,
 					IsApproved = false,
 					ApproverNotes = approverNotes,
 				};
 				await _uoWForCurrentService.JobOfferRepository.JobOfferSalaryDeclined(jobOfferInformation);
 				await _uoWForCurrentService.CommitAsync();
+
+				await _applicationProcess.SendEmailSalaryPackageDeclinedTemplate(recordId, 5);
 
 				result = new JsonResult(new { success = true, responseText = "Job Offer Successfully Declined" })
 				{
@@ -310,14 +350,16 @@ namespace Recruitment.Service.API.Persistence.Applications
 			}
 		}
 
-		public async Task<JsonResult> JobOfferAcceptedService(int jobOfferInfoId, string candidateSignature)
+		public async Task<JsonResult> JobOfferAcceptedService(string jobOfferInfoId, string candidateSignature)
 		{
 			JsonResult result;
 			try
 			{
+				var decrypted = EncryptProvider.Base64Decrypt(jobOfferInfoId, Encoding.Unicode);
+				var recordId = Convert.ToInt32(decrypted);
 				var jobOfferInformation = new JobOfferInformation()
 				{
-					CandidateId = jobOfferInfoId,
+					CandidateId = recordId,
 					CandidateSignature = candidateSignature,
 					IsCandidateAccepted = true,
 					AcceptedDate = DateTime.Now
@@ -325,7 +367,7 @@ namespace Recruitment.Service.API.Persistence.Applications
 				await _uoWForCurrentService.JobOfferRepository.JobOfferAccepted(jobOfferInformation);
 				await _uoWForCurrentService.CommitAsync();
 
-				await _applicationProcess.SendEmailOnboardingAutomation(jobOfferInfoId, 4);
+				await _applicationProcess.SendEmailOnboardingAutomation(recordId, 4);
 
 				result = new JsonResult(new { success = true, responseText = "Job Offer Successfully Accepted" })
 				{
@@ -351,14 +393,16 @@ namespace Recruitment.Service.API.Persistence.Applications
 			}
 		}
 
-		public async Task<JsonResult> JobOfferDeclinedService(int jobOfferInfoId, string candidateNotes)
+		public async Task<JsonResult> JobOfferDeclinedService(string jobOfferInfoId, string candidateNotes)
 		{
 			JsonResult result;
 			try
 			{
+				var decrypted = EncryptProvider.Base64Decrypt(jobOfferInfoId, Encoding.Unicode);
+				var recordId = Convert.ToInt32(decrypted);
 				var jobOfferInformation = new JobOfferInformation()
 				{
-					CandidateId = jobOfferInfoId,
+					CandidateId = recordId,
 					IsApproved = false,
 					CandidateNotes = candidateNotes,
 				};
@@ -399,6 +443,7 @@ namespace Recruitment.Service.API.Persistence.Applications
 				{
 					CandidateId = jobOfferInfoId,
 					JobOfferStatusId = jobOfferStatusId,
+					OfferSentDate = jobOfferStatusId == 3 ? DateTime.Now : null
 				};
 				await _uoWForCurrentService.JobOfferRepository.UpdateJobOfferStatus(jobOfferInformation);
 				await _uoWForCurrentService.CommitAsync();
@@ -486,8 +531,10 @@ namespace Recruitment.Service.API.Persistence.Applications
 				worksheet.Cells["F1"].Value = "Regular Basic Pay";
 				worksheet.Cells["G1"].Value = "Regular Non Taxable (Deminimis)";
 				worksheet.Cells["H1"].Value = "Regular Total Compensation";
+				worksheet.Cells["I1"].Value = "Probationary Deminimis";
+				worksheet.Cells["J1"].Value = "Regular Deminimis";
 
-				using (var range = worksheet.Cells[1, 1, 1, 8])
+				using (var range = worksheet.Cells[1, 1, 1, 10])
 				{
 					range.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
 					range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.FromArgb(38, 38, 38));
@@ -498,16 +545,40 @@ namespace Recruitment.Service.API.Persistence.Applications
 
 				worksheet.Cells["A2"].Value = jobOfferInfo.CandidateName;
 				worksheet.Cells["B2"].Value = jobOfferInfo.Position;
-				worksheet.Cells["C2"].Value = jobOfferInfo.ProbitionarySalary;
-				worksheet.Cells["D2"].Value = jobOfferInfo.ProbitionaryDeminimis;
-				worksheet.Cells["E2"].Value = Convert.ToInt32(jobOfferInfo.ProbitionarySalary) + Convert.ToInt32(jobOfferInfo.ProbitionaryDeminimis);
-				worksheet.Cells["E2"].Style.Numberformat.Format = "0"; ;
-				worksheet.Cells["F2"].Value = jobOfferInfo.RegularSalary;
-				worksheet.Cells["G2"].Value = jobOfferInfo.RegularDeminimis;
-				worksheet.Cells["H2"].Value = Convert.ToInt32(jobOfferInfo.RegularSalary) + Convert.ToInt32(jobOfferInfo.RegularDeminimis);
-				worksheet.Cells["H2"].Style.Numberformat.Format = "0"; ;
 
-				using (var range = worksheet.Cells[2, 1, 2, 8])
+				worksheet.Cells["C2"].Value = Convert.ToInt32(jobOfferInfo.ProbitionarySalary);
+				worksheet.Cells["C2"].Style.Numberformat.Format = "0";
+				worksheet.Cells["C2"].Style.Numberformat.Format = "₱#,##0.00";
+
+				worksheet.Cells["D2"].Value = Convert.ToInt32(jobOfferInfo.ProbitionaryDeminimis);
+				worksheet.Cells["D2"].Style.Numberformat.Format = "₱#,##0.00";
+				worksheet.Cells["D2"].Style.Numberformat.Format = "0";
+
+				worksheet.Cells["E2"].Value = Convert.ToInt32(jobOfferInfo.ProbitionarySalary) + Convert.ToInt32(jobOfferInfo.ProbitionaryDeminimis);
+				worksheet.Cells["E2"].Style.Numberformat.Format = "0";
+				worksheet.Cells["E2"].Style.Numberformat.Format = "₱#,##0.00";
+
+				worksheet.Cells["F2"].Value = Convert.ToInt32(jobOfferInfo.RegularSalary);
+				worksheet.Cells["F2"].Style.Numberformat.Format = "₱#,##0.00";
+				worksheet.Cells["F2"].Style.Numberformat.Format = "0";
+
+				worksheet.Cells["G2"].Value = Convert.ToInt32(jobOfferInfo.RegularDeminimis);
+				worksheet.Cells["G2"].Style.Numberformat.Format = "₱#,##0.00";
+				worksheet.Cells["G2"].Style.Numberformat.Format = "0";
+
+				worksheet.Cells["H2"].Value = Convert.ToInt32(jobOfferInfo.RegularSalary) + Convert.ToInt32(jobOfferInfo.RegularDeminimis);
+				worksheet.Cells["H2"].Style.Numberformat.Format = "0";
+				worksheet.Cells["H2"].Style.Numberformat.Format = "₱#,##0.00";
+
+				worksheet.Cells["I2"].Value = Convert.ToInt32(jobOfferInfo.ProbitionaryDeminimis) / 5;
+				worksheet.Cells["I2"].Style.Numberformat.Format = "0";
+				worksheet.Cells["I2"].Style.Numberformat.Format = "₱#,##0.00";
+
+				worksheet.Cells["J2"].Value = Convert.ToInt32(jobOfferInfo.RegularDeminimis) / 5;
+				worksheet.Cells["J2"].Style.Numberformat.Format = "0";
+				worksheet.Cells["J2"].Style.Numberformat.Format = "₱#,##0.00";
+
+				using (var range = worksheet.Cells[2, 1, 2, 10])
 				{
 					range.Style.Font.Bold = true;
 					range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;

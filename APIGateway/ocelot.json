@@ -27,6 +27,20 @@
 
     },
     {
+      "DownstreamPathTemplate": "/services/hris/api/{service}/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "172.16.254.4",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/hris/{service}/{everything}",
+
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ]
+
+    },
+    {
       "DownstreamPathTemplate": "/services/assessment/api/{service}/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

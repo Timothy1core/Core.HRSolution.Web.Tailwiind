@@ -180,11 +180,11 @@ const JobWorkflowComponent = ({ hasApplicationProcess, jobAssessments = [] }) =>
 
     const renderAssessments = () => (
         <form onSubmit={handleAssessmentsSubmit}>
-            <div className="row g-3 g-xl-1 d-flex flex-wrap justify-center align-items-stretch">
+            <div className="row g-3 g-xl-1 d-flex flex-wrap justify-content-center align-items-stretch">
                 {assessment.map((item, index) => (
                     <div className="col-2" key={`jobassessment-${item.id || index}`}>
                         <div className="card card-custom card-flush">
-                            <div className="card-header d-flex justify-between align-items-center p-3">
+                            <div className="card-header d-flex justify-content-between align-items-center p-3">
                                 <h3 className="card-title">
                                     <span className="card-label fw-bold text-gray-600 text-capitalize">
                                         {item.name || `Assessment ${index + 1}`}
@@ -216,7 +216,7 @@ const JobWorkflowComponent = ({ hasApplicationProcess, jobAssessments = [] }) =>
 
     const renderWorkflowSteps = () => (
         <form onSubmit={handleWorkflowSubmit}>
-            <div className="d-flex flex-wrap justify-center align-items-center gap-5">
+            <div className="d-flex flex-wrap justify-content-center align-items-center gap-5">
                 {Object.values(workflowSteps).map((step) => (
                     <WorkflowStep
                         key={step.id}

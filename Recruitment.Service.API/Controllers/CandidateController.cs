@@ -39,7 +39,7 @@ namespace Recruitment.Service.API.Controllers
 
 			var eventDetails = events.Select(e => new
 			{
-				
+
 				e.Id,
 				e.Subject,
 				e.CreatedDateTime,
@@ -52,7 +52,7 @@ namespace Recruitment.Service.API.Controllers
 				Body = e.Body?.Content, // Full email body
 				MeetingLink = e.OnlineMeeting?.JoinUrl // Microsoft Teams or other meeting link
 			});
-			
+
 			return Ok(eventDetails);
 
 		}
@@ -106,7 +106,8 @@ namespace Recruitment.Service.API.Controllers
 			}
 		}
 
-		[AllowAnonymous]
+		[Authorize]
+		[Permission("candidate.send.email")]
 		[HttpPost("send_email_to_candidate")]
 		public async Task<IActionResult> SendEmailEvent([FromForm] SendEmailRequestDto sendEmailRequestDto)
 		{
@@ -115,8 +116,8 @@ namespace Recruitment.Service.API.Controllers
 			try
 			{
 				await _graphService.SendEmailAsync(
-					sendEmailRequestDto.FromUserEmail, 
-					"jomari.mananghaya@onecoredevit.com", 
+					sendEmailRequestDto.FromUserEmail,
+					"jomari.mananghaya@onecoredevit.com",
 					sendEmailRequestDto.Subject,
 					sendEmailRequestDto.Body);
 				return Ok("Email sent successfully.");
@@ -214,7 +215,7 @@ namespace Recruitment.Service.API.Controllers
 		public async Task<IActionResult> CreateCandidateWriteUp([FromForm] CandidateWriteUpRequestDto candidateWriteUp, [FromForm] int candidateId)
 		{
 			var loggedEmployee = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-			var result = await _candidateServices.CreateCandidateWriteUpService(candidateWriteUp, candidateId,  loggedEmployee);
+			var result = await _candidateServices.CreateCandidateWriteUpService(candidateWriteUp, candidateId, loggedEmployee);
 
 			return result;
 		}
@@ -321,7 +322,7 @@ namespace Recruitment.Service.API.Controllers
 			return result;
 		}
 
-		[AllowAnonymous]
+		[Authorize]
 		[HttpGet("retrieve_candidate_filter")]
 		public async Task<IActionResult> RetrieveCandidateFilter()
 		{
@@ -338,6 +339,17 @@ namespace Recruitment.Service.API.Controllers
 		{
 
 			var result = await _candidateServices.SubmitCandidateCorrectionService(id, isCorrect);
+			return result;
+		}
+
+		[Authorize]
+		[Permission("recruitment.retrieve.candidate.assessments")]
+		[HttpGet("retrieve_candidate_assessments/{id}")]
+		public async Task<IActionResult> RetrieveCandidateAssessments(string id)
+		{
+
+			var result = await _candidateServices.RetrieveCandidateAssessmentsService(id);
+
 			return result;
 		}
 

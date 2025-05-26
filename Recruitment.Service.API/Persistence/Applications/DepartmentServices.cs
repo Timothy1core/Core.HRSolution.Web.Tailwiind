@@ -200,7 +200,8 @@ namespace Recruitment.Service.API.Persistence.Applications
 					DepartmentId = companyId,
 					Name = s.Name,
 					Email = s.Email,
-					Position = s.Position
+					Position = s.Position,
+					IsActive = true
 				}).ToList();
 				
 				await _uoWForCurrentService.DepartmentRepository.CreateDepartmentIndividual(individuals);

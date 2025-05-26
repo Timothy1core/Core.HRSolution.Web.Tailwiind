@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-// import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
 import SignaturePad from 'signature_pad';
 
 const SignaturePadModal = ({ onSave }) => {
@@ -54,23 +54,23 @@ const SignaturePadModal = ({ onSave }) => {
 
   return (
     <>
-      {/* <Button onClick={() => setShow(true)} className='btn btn-sm btn-danger'>SIGN HERE</Button>
+      <Button onClick={() => setShow(true)} className='btn btn-sm btn-danger'>SIGN HERE</Button>
       <Modal show={show} onHide={() => setShow(false)} animation={false} dialogClassName="modal-dialog-centered modal-lg">
         <Modal.Header>
           <Modal.Title>Sign Here</Modal.Title>
         </Modal.Header>
-        <Modal.Body> */}
+        <Modal.Body>
           <canvas
             ref={canvasRef}
             className="border border-gray-300 w-100"
             style={{ maxWidth: '100%', height: '250px' }}
           />
-        {/* </Modal.Body>
+        </Modal.Body>
         <Modal.Footer>
           <Button className='btn btn-secondary' onClick={clearSignature}>Clear</Button>
           <Button className='btn btn-dark' onClick={saveSignature}>Save</Button>
         </Modal.Footer>
-      </Modal> */}
+      </Modal>
     </>
   );
 };

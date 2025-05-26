@@ -60,8 +60,6 @@ public class CandidateRepository(CurrentServiceDbContext context) : ICandidateRe
                         Body = question.Body,
                         AssessmentId = question.AssessmentId,
                         Type = question.Type,
-                        Required = question.Required,
-                        Marks = question.Marks,
                         CandidateAnswers = question.CandidateAnswers.Where(assessmentAnswers => assessmentAnswers.CandidateId == parsedUserId).Select(assessmentAnswers =>
                             new CandidateAnswer()
                             {

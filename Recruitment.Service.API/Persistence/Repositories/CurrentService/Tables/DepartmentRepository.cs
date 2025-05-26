@@ -26,7 +26,7 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
 		public async Task<List<DropDownValueDto>> SelectDepartmentIndividualDropDown(int id)
 		{
 			var individuals = await context.DepartmentIndividuals
-				.Where(x => x.IsActive && x.DepartmentId==id)
+				.Where(x => x.IsActive && x.DepartmentId == id)
 				.Select(s => new DropDownValueDto()
 				{
 					Id = s.Id,
@@ -58,15 +58,15 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
 			profiles = groupId == 0 ? profiles.ToList() : profiles.Where(x => x.DepartmentGroupId == groupId).ToList();
 
 			var profileDtos = profiles.Select(s => new DepartmentProfileDashboardDto()
-				{
-					Id = s.Id,
-					Logo = s.Logo,
-					Name = s.Name,
-					Industry = s.Industry,
-					CoreService = s.CoreService.Service,
-					Status = s.DepartmentStatus.Status,
-					ComanyGroup = s.DepartmentGroup.GroupName
-				})
+			{
+				Id = s.Id,
+				Logo = s.Logo,
+				Name = s.Name,
+				Industry = s.Industry,
+				CoreService = s.CoreService.Service,
+				Status = s.DepartmentStatus.Status,
+				ComanyGroup = s.DepartmentGroup.GroupName
+			})
 				.ToList();
 
 			return profileDtos;
@@ -76,9 +76,9 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
 		public async Task<DepartmentInformationDto> RetrieveDepartmentProfileInfo(int departmentId)
 		{
 			var profile = await context.Departments
-				.Include(i=> i.DepartmentIndividuals)
-				.Include(i=> i.JobProfiles)
-				.Select(s=> new DepartmentInformationDto()
+				.Include(i => i.DepartmentIndividuals)
+				.Include(i => i.JobProfiles)
+				.Select(s => new DepartmentInformationDto()
 				{
 					Id = s.Id,
 					Logo = s.Logo,
@@ -94,17 +94,17 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
 					CoreService = s.CoreService.Service
 				})
 				.AsNoTracking()
-				.FirstOrDefaultAsync(x => x.Id== departmentId);
-				
+				.FirstOrDefaultAsync(x => x.Id == departmentId);
+
 			return profile!;
 
 		}
 
-		public async Task UpdateDepartment(int id,DepartmentRequestDto department)
+		public async Task UpdateDepartment(int id, DepartmentRequestDto department)
 		{
-			
 
-			var departmentInfo = await context.Departments.FirstOrDefaultAsync(x=> x.Id== id);
+
+			var departmentInfo = await context.Departments.FirstOrDefaultAsync(x => x.Id == id);
 
 			if (departmentInfo != null)
 			{
@@ -116,7 +116,7 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
 				departmentInfo.TimezoneOffset = department.TimezoneOffset;
 				departmentInfo.CoreServiceId = department.CoreServiceId;
 				departmentInfo.DepartmentStatusId = department.DepartmentStatusId;
-				departmentInfo.Logo = department.Logo == null? departmentInfo.Logo : department.Logo.FileName;
+				departmentInfo.Logo = department.Logo == null ? departmentInfo.Logo : department.Logo.FileName;
 
 			}
 		}
@@ -130,14 +130,14 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
 		{
 
 			var departmentIndividuals = await context.DepartmentIndividuals
-				.Where(x=> x.DepartmentId == departmentId)
+				.Where(x => x.DepartmentId == departmentId)
 				.Select(s => new DepartmentIndividualDto()
-			{
-				Id = s.Id,
-				Name = s.Name,
-				Position = s.Position,
-				Email = s.Email
-			}).ToListAsync();
+				{
+					Id = s.Id,
+					Name = s.Name,
+					Position = s.Position,
+					Email = s.Email
+				}).ToListAsync();
 
 			return departmentIndividuals;
 		}
@@ -154,6 +154,20 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
 			}
 		}
 
+		public async Task<DepartmentIndividualDto> RetrieveDepartmentIndividual(int id)
+		{
+			var individual = await context.DepartmentIndividuals
+				.Where(x => x.IsActive && x.Id == id)
+				.Select(s => new DepartmentIndividualDto()
+				{
+					Id = s.Id,
+					Name = s.Name,
+					Email = s.Email
+				})
+				.FirstOrDefaultAsync();
+
+			return individual;
+		}
 
 	}
 }

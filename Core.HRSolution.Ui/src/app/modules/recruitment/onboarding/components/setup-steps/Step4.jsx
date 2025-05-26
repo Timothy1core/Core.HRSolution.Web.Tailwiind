@@ -1,12 +1,11 @@
 import * as Yup from 'yup';
-import { toAbsoluteUrl } from '@/_metronic/utils';
-import { KTIcon} from '@/_metronic/helpers';
+import {  KTIcon, toAbsoluteUrl } from '../../../../../../_metronic/helpers';
 import { useFormik } from 'formik';
 import { useAuth } from '../../../../../modules/auth'
 import Swal from 'sweetalert2';
 import { useState, useRef } from 'react';
 import { saveWfhInformationSheet, updateWfhInformation } from '../../core/requests/_request';
-// import { Container, Form, Button } from 'react-bootstrap';
+import { Container, Form, Button } from 'react-bootstrap';
 
 const step1Schema = Yup.object().shape({
   workLocation: Yup.string().required('Required'),
@@ -97,61 +96,60 @@ const FileUploadBox = ({ label, name, setFieldValue, value = [], documentGroup }
   };
 
   return (
-    // <Form.Group className="mb-4">
-    //   {/* <Form.Label><h3 className='text-dark required'></h3></Form.Label> */}
-    //   <label className='form-label required fs-8'>{label}</label>
-    //   <div className="upload-area">
-    //     <input
-    //       type="file"
-    //       accept=".jpg,.jpeg,.png,"
-    //       ref={inputRef}
-    //       onChange={handleFileChange}
-    //       multiple
-    //       style={{ display: "none" }}
-    //     />
-    //     {value.length > 0 ? (
-    //       <div className="border border-2 p-3">
-    //         <div className="text-end">
-    //           <Button
-    //             variant='danger'
-    //             type="button"
-    //             onClick={handleClearFile}
-    //             className="btn-icon btn-icon-lg bg-danger text-white"
-    //           >
-    //             <KTIcon iconName='cross' className='fs-1' />
-    //           </Button>
-    //         </div>
-    //         {value.map(({ file }, index) => (
-    //           <div key={index} className="mb-3">
-    //             <div className="d-flex justify-between align-items-start">
-    //               <div>
-    //                 <h5>{file.name}</h5>
-    //                 <p className="text-muted mb-2">Size: {(file.size / (1024 * 1024)).toFixed(2)} MB</p>
-    //                 {renderPreview(file, filePreviews[index]?.url, index)}
-    //               </div>
-    //             </div>
-    //           </div>
-    //         ))}
+    <Form.Group className="mb-4">
+      {/* <Form.Label><h3 className='text-dark required'></h3></Form.Label> */}
+      <label className='form-label required fs-8'>{label}</label>
+      <div className="upload-area">
+        <input
+          type="file"
+          accept=".jpg,.jpeg,.png,"
+          ref={inputRef}
+          onChange={handleFileChange}
+          multiple
+          style={{ display: "none" }}
+        />
+        {value.length > 0 ? (
+          <div className="border border-2 p-3">
+            <div className="text-end">
+              <Button
+                variant='danger'
+                type="button"
+                onClick={handleClearFile}
+                className="btn-icon btn-icon-lg bg-danger text-white"
+              >
+                <KTIcon iconName='cross' className='fs-1' />
+              </Button>
+            </div>
+            {value.map(({ file }, index) => (
+              <div key={index} className="mb-3">
+                <div className="d-flex justify-content-between align-items-start">
+                  <div>
+                    <h5>{file.name}</h5>
+                    <p className="text-muted mb-2">Size: {(file.size / (1024 * 1024)).toFixed(2)} MB</p>
+                    {renderPreview(file, filePreviews[index]?.url, index)}
+                  </div>
+                </div>
+              </div>
+            ))}
 
             
-    //       </div>
-    //     ) : (
-    //       <div
-    //         className='p-7 border border-dashed border-2 text-center cursor-pointer'
-    //         onDrop={handleDrop}
-    //         onDragOver={handleDragOver}
-    //         onClick={() => inputRef.current.click()}
-    //       >
-    //         <div className="upload-icon mb-2"><KTIcon iconName="file-up" className='fs-1' /></div>
-    //         Drag & Drop or <span className="text-dark fw-bold">Choose files</span> to upload
-    //         <div className="text-muted small">JPG, JPEG, and PNG only (Max {MAX_FILE_SIZE_MB}MB per file)</div>
-    //       </div>
-    //     )}
+          </div>
+        ) : (
+          <div
+            className='p-7 border border-dashed border-2 text-center cursor-pointer'
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onClick={() => inputRef.current.click()}
+          >
+            <div className="upload-icon mb-2"><KTIcon iconName="file-up" className='fs-1' /></div>
+            Drag & Drop or <span className="text-dark fw-bold">Choose files</span> to upload
+            <div className="text-muted small">JPG, JPEG, and PNG only (Max {MAX_FILE_SIZE_MB}MB per file)</div>
+          </div>
+        )}
 
-    //     {error && <div className="text-danger mt-2">{error}</div>}
-    //   </div>
-    // </Form.Group>
-    <>1</>
+        {error && <div className="text-danger mt-2">{error}</div>}
+      </div>
+    </Form.Group>
   );
 };
 
@@ -280,7 +278,7 @@ const Step4Div = ({handleNext, handleBack, id, wfhInformations, onboardingDocume
 
   return (
     // <div className="d-flex flex-column flex-sm-row">
-      // <Container className="my-5">
+      <Container className="my-5">
         <form onSubmit={formik.handleSubmit}>
         <h5 className="text-danger">Work from Home and Hybrid Work Application</h5>
         <span className="mb-4 text-muted fs-7">The required fields are usually marked with an asterisk (*).</span>
@@ -419,7 +417,7 @@ const Step4Div = ({handleNext, handleBack, id, wfhInformations, onboardingDocume
           {docMap.screenshots ? 
             <>
               <h3 className='text-dark'>Screenshots of Pin Location, Speed Test and photo of the workstation you plan to set-up for your remote work arrangement</h3>
-              <div className="d-flex border border-2 p-2 justify-between my-5">
+              <div className="d-flex border border-2 p-2 justify-content-between my-5">
                 <div>
                 {docMap.screenshots.map((screenshot, index) => (
                   <div key={index} className="mb-2">
@@ -499,7 +497,7 @@ const Step4Div = ({handleNext, handleBack, id, wfhInformations, onboardingDocume
             </div>
 
           </div>
-          <div className="d-flex bd-highlight gap-5 justify-between py-2 mt-5">
+          <div className="d-flex bd-highlight gap-5 justify-content-between py-2 mt-5">
             <button type="button"  onClick={() => handleBack()} className="btn btn-secondary" >
               Back
             </button>
@@ -508,7 +506,7 @@ const Step4Div = ({handleNext, handleBack, id, wfhInformations, onboardingDocume
             </button>
           </div>
           </form>
-      // </Container>
+      </Container>
     /* </div> */
   );
 };

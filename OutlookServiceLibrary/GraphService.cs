@@ -287,7 +287,7 @@ namespace OutlookServiceLibrary
 
 
 
-		public async Task CreateCalendarEventAsync(string fromUserEmail, string subject, string body, DateTime startTime, DateTime endTime, string timeZone, List<string> attendeesEmails)
+		public async Task CreateCalendarEventAsync(string fromUserEmail, string subject, string body, DateTime startTimeUtc, DateTime endTimeUtc, string timeZone, List<string> attendeesEmails)
 		{
 			try
 			{
@@ -302,6 +302,11 @@ namespace OutlookServiceLibrary
 					});
 				}
 
+				// Convert from UTC to local time based on the specified timeZone
+				TimeZoneInfo tzInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
+				var localStartTime = TimeZoneInfo.ConvertTimeFromUtc(startTimeUtc, tzInfo);
+				var localEndTime = TimeZoneInfo.ConvertTimeFromUtc(endTimeUtc, tzInfo);
+
 				var newEvent = new Event
 				{
 					Subject = subject,
@@ -312,12 +317,12 @@ namespace OutlookServiceLibrary
 					},
 					Start = new DateTimeTimeZone
 					{
-						DateTime = startTime.ToString("yyyy-MM-ddTHH:mm:ss"),
+						DateTime = localStartTime.ToString("yyyy-MM-ddTHH:mm:ss"),
 						TimeZone = timeZone
 					},
 					End = new DateTimeTimeZone
 					{
-						DateTime = endTime.ToString("yyyy-MM-ddTHH:mm:ss"),
+						DateTime = localEndTime.ToString("yyyy-MM-ddTHH:mm:ss"),
 						TimeZone = timeZone
 					},
 					Location = new Location
@@ -337,6 +342,7 @@ namespace OutlookServiceLibrary
 				throw;
 			}
 		}
+
 
 		public async Task<List<Event>> GetCalendarEventsByDistroEmailAsync(string distroEmail, string attendeeEmail)
 		{

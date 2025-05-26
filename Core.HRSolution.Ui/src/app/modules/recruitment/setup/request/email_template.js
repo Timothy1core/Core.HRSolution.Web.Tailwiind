@@ -6,6 +6,7 @@ import axios from 'axios';
 // Define API endpoints
 export const  POST_CREATE_TEMPLATE = `${config.API_URL}/recruitment/emailtemplate/create`;
 export const  GET_DASHBOARD_TEMPLATE = `${config.API_URL}/recruitment/emailtemplate/dashboard`;
+export const  GET_EMAIL_ACTIONS = `${config.API_URL}/recruitment/emailtemplate/retrieve_email_action_dropdown`;
 export const  PUT_DASHBOARD_TEMPLATE = `${config.API_URL}/recruitment/emailtemplate/update`;
 export const  GET_ALL_JOBS_DROPDOWN = `${config.API_URL}/recruitment/jobprofile/retrieve_all_job_profile`;
 export const  GET_JOBS_APPLICATION_PROCESS_DROPDOWN = `${config.API_URL}/recruitment/jobprofile/retrieve_application_process_dropdown`;
@@ -22,6 +23,10 @@ export function CreateEmailTemplate(formData) {
 
 export function SelectEmailTemplate() {
   return axios.get(GET_DASHBOARD_TEMPLATE) 
+}
+
+export function SelectEmailAction() {
+  return axios.get(GET_EMAIL_ACTIONS) 
 }
 
 export function UpdateEmailTemplate(id,formData) {

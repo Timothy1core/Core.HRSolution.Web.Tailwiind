@@ -6,11 +6,11 @@
  */
 
 import { useAuth } from '../modules/auth'
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom'
 import { PrivateRoutes } from './PrivateRoutes'
 import { ErrorsPage } from '../helpers/errors/ErrorsPage'
 import { Logout, AuthPage } from '../modules/auth'
-import { App } from '../../App'
+import { App } from '../App'
 import { ApplyPublicRoutes, CarrersPageRoutes, TafPublicRoutes, CandidateAssessmentPublicRoutes, JobOfferAcceptancePublicRoutes, OnboardingRequirementsPublicRoutes, JobOfferApprovalPublicRoutes } from './PublicRoutes'
 
 //#region for Assessment
@@ -29,9 +29,9 @@ const { BASE_URL } = import.meta.env
 const AppRoutes = () => {
   const { currentUser } = useAuth()
   return (
-    // <BrowserRouter basename={BASE_URL}>
+    <BrowserRouter basename={BASE_URL}>
       <Routes>
-        <Route path="/*" element={<App />} >
+        <Route element={<App />}>
           <Route path='error/*' element={<ErrorsPage />} />
           <Route path='logout' element={<Logout />} />
           <Route path='assessmentlogout' element={<AssessmentLogout />} />
@@ -63,7 +63,7 @@ const AppRoutes = () => {
           )}
         </Route>
       </Routes>
-    // </BrowserRouter>
+    </BrowserRouter>
   )
 }
 

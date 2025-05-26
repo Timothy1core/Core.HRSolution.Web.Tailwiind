@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-// import { Modal, Button } from "react-bootstrap";
-import { KTIcon } from '@/_metronic/helpers';
+import { Modal, Button } from "react-bootstrap";
+import { KTIcon } from "../../../../../../_metronic/helpers";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { UpdateEmailAutomation } from '../../request/email_template';
@@ -91,11 +91,10 @@ function EditEmailAutomationModal({ automation, onUpdate }) {
 
   return (
     <>
-    1
-      {/* <Button className="menu-link btn btn-secondary btn-sm" onClick={() => setShow(true)}>
+      <Button className="menu-link btn btn-secondary btn-sm" onClick={() => setShow(true)}>
                 Update
-            </Button> */}
-      {/* <Modal show={show} onHide={() => setShow(false)} dialogClassName="modal-dialog-centered mw-800px">
+            </Button>
+      <Modal show={show} onHide={() => setShow(false)} dialogClassName="modal-dialog-centered mw-800px">
         <Modal.Header>
           <Modal.Title>EDIT AUTOMATION</Modal.Title>
           <button
@@ -158,7 +157,7 @@ function EditEmailAutomationModal({ automation, onUpdate }) {
             {loading ? "Updating..." : "Update"}
           </Button>
         </Modal.Footer>
-      </Modal> */}
+      </Modal>
     </>
   );
 }

@@ -7,8 +7,11 @@ namespace Recruitment.Service.API.Core.Repositories.CurrentService.Tables
 		Task SaveOnboardingInformation(OnboardingInformationSheet onboardingInformationSheet);
 		Task<OnboardingInformationSheetDto> RetrieveOnboardingInformation(int candidateId);
 		Task<List<OnboardingInformationSheetDashboardDto>> RetrieveCandidateOnboardingInfoList();
+		Task<List<OnboardingStatusDto>> RetrieveOnboardingStatusList();
 		Task UpdateOnboardingInformation(OnboardingInformationSheet onboardingInformationDto);
 		Task AcknowledgeOnboardingForm(int id, bool isAcknowledged);
+		Task UpdateOnboardingStatus(OnboardingInformationSheet onboardingInformationSheetDto);
+		Task UpdateTemporaryEmployeeId(OnboardingInformationSheet onboardingInformationSheetDto);
 		Task SaveOnboardingDocument(OnboardingDocument onboardingDocument);
 		Task<OnboardingDocumentDto> RetrieveOnboardingDocument(int candidateId, string documentType);
 		Task<List<OnboardingDocumentDto>> RetrieveAllOnboardingDocuments(int candidateId, string documentType);
@@ -16,5 +19,6 @@ namespace Recruitment.Service.API.Core.Repositories.CurrentService.Tables
 		Task<CandidatePreRequisiteDocumentsResultDto> RetrieveCandidatePreRequisiteDocumentsResult(int candidateId);
 		Task<CandidateGeneralDocumentsResultDto> RetrieveCandidateGeneralDocumentsResult(int candidateId);
 		Task UpdateOnboardingStep(int candidateId, int step);
+		Task<List<int?>> RetrieveExistingTemporaryIdList();
 	}
 }

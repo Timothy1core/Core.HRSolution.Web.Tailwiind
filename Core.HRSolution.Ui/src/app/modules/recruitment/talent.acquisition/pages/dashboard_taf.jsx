@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {Link} from 'react-router-dom'
-import { KTIcon } from '@/_metronic/helpers';
+import { KTIcon } from '../../../../../_metronic/helpers';
 import {
   SelectClientComponent,
   SelectClientCompanyGroupComponent,
@@ -20,14 +20,19 @@ import {
   enableLoadingRequest,
   disableLoadingRequest,
 } from '../../../../helpers/loading_request';
-import TableWithPagination from '../../../../../app/helpers/table/TableWithPagination';
-
+import TableWithPagination from '../../../system.setup/core/helpers/Table Layout/TableWithPagination';
 
 
 
 const DashboardTafPage = () => {
   const [tafData, setFilteredData] = useState([]);
   const [searchTerm, setSearchTerm] = useState(''); // search state
+
+  const [groupTerm, setGroupTerm] = useState(0);
+  const [departmentTerm, setDepartmentTerm] = useState(0);
+  const [reasonTerm, setReasonTerm] = useState(0);
+  const [statusTerm, setStatusTerm] = useState(0);
+
   const [tableLoading, setTableLoading]  = useState(false);
 
   const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'asc' });
@@ -61,13 +66,17 @@ const DashboardTafPage = () => {
   ];
   const fetchAssessments = (   
    searchValue = '',
+   groupId = 0,
+   departmentId = 0,
+   reasonId = 0,
+   status = 0,
    sortKey = '',
    sortDirection = 'asc',
    page = 0,
    size = 10) => {
     enableLoadingRequest()
     setTableLoading(true)
-    SelectDashboardTaf(searchValue, columns, sortKey, sortDirection, page, size)
+    SelectDashboardTaf(searchValue,groupId,departmentId,reasonId,status, columns, sortKey, sortDirection, page, size)
       .then(response => {
         setFilteredData(response.data.data); // Set initial filtered data
         setTotalRecords(response.data.recordsTotal);
@@ -84,7 +93,7 @@ const DashboardTafPage = () => {
   
   const handleSortChange = (key, direction) => {
     setSortConfig({ key, direction });
-    fetchAssessments(searchTerm, key, direction, currentPage, pageSize); // Fetch roles with updated sorting
+    fetchAssessments(searchTerm,groupTerm,departmentTerm,reasonTerm,statusTerm, key, direction, currentPage, pageSize); // Fetch roles with updated sorting
   };
 
   const handlePageSizeChange = (size) => {
@@ -98,9 +107,46 @@ const DashboardTafPage = () => {
     setCurrentPage(page);
     fetchAssessments(searchTerm, sortConfig.key, sortConfig.direction, page, pageSize);
   };
+
   useEffect(() => {
-     fetchAssessments(searchTerm, sortConfig.key, sortConfig.direction, currentPage, pageSize);
+     fetchAssessments(searchTerm,groupTerm,departmentTerm,reasonTerm,statusTerm, sortConfig.key, sortConfig.direction, currentPage, pageSize);
    }, []);
+
+   let debounceTimeout;
+ 
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+  
+    if (debounceTimeout) {
+      clearTimeout(debounceTimeout);
+    }
+  
+    debounceTimeout = setTimeout(() => {
+      fetchAssessments(value,groupTerm,departmentTerm,reasonTerm,statusTerm, sortConfig.key, sortConfig.direction,currentPage, pageSize); // Fetch roles with the current search term
+    }, 300); // 300ms debounce delay
+  };
+
+  const handleGroupTermChange = (e) => {
+    setGroupTerm(e.target.value);
+  };
+
+  const handleDepartmentTermChange = (e) => {
+    setDepartmentTerm(e.target.value);
+  };
+
+  const handleReasonTermChange = (e) => {
+    setGrousetReasonTermpTerm(e.target.value);
+  };
+
+  const handleStatusTermChange = (e) => {
+    setStatusTerm(e.target.value);
+  };
+
+  const handleApplyFiller = () => {
+    fetchAssessments(searchTerm,groupTerm,departmentTerm,reasonTerm,statusTerm, sortConfig.key, sortConfig.direction, currentPage, pageSize);
+  };
+
   return (
     <>
       <ToolbarWrapper
@@ -111,13 +157,15 @@ const DashboardTafPage = () => {
       <Content>
         <div className="card mb-5">
           <div className="card-body">
-            <div className="d-flex flex-wrap flex-stack mb-6">
+            <div className="d-flex flex-wrap flex-stack mb-0">
               <div className="d-flex align-items-center position-relative me-4">
                 <KTIcon iconName="magnifier" className="fs-3 position-absolute ms-3" />
                 <input
                   type="text"
                   className="form-control form-control-white form-control-sm w-250px ps-9"
                   placeholder="Search"
+                  value={searchTerm}
+                  onChange={handleSearch}
                 />
               </div>
               <div className="d-flex flex-wrap my-2">
@@ -139,22 +187,22 @@ const DashboardTafPage = () => {
                   <div className='px-7 py-5' data-kt-user-table-filter='form'>
                     <div className='mb-5'>
                       <label className='form-label fs-7 fw-bold'>Group:</label>
-                      <SelectClientCompanyGroupComponent className="form-select form-select-white form-select-sm" />
+                      <SelectClientCompanyGroupComponent onChange={handleGroupTermChange} className="form-select form-select-white form-select-sm" />
                     </div>
                     <div className='mb-5'>
-                      <label className='form-label fs-7 fw-bold'>Client:</label>
-                      <SelectClientComponent className="form-select form-select-white form-select-sm" />
+                      <label className='form-label fs-7 fw-bold'>Department:</label>
+                      <SelectClientComponent onChange={handleDepartmentTermChange} className="form-select form-select-white form-select-sm" />
                     </div>
 
                     <div className='mb-5'>
                       <label className='form-label fs-7 fw-bold'>Reason:</label>
-                      <SelectReasonComponent className="form-select form-select-white form-select-sm" />
+                      <SelectReasonComponent onChange={handleReasonTermChange} className="form-select form-select-white form-select-sm" />
                     </div>
                     <div className='mb-5'>
-                      <label className='form-label fs-7 fw-bold'>Reason:</label>
-                      <SelectStatusComponent className="form-select form-select-white form-select-sm" />
+                      <label className='form-label fs-7 fw-bold'>Status:</label>
+                      <SelectStatusComponent onChange={handleStatusTermChange} className="form-select form-select-white form-select-sm" />
                     </div>
-                    <div className='d-flex justify-end'>
+                    <div className='d-flex justify-content-end'>
                       <button
                         type='button'
                         className='btn btn-light btn-sm btn-active-light-primary fw-bold me-2 px-6'
@@ -168,6 +216,7 @@ const DashboardTafPage = () => {
                         className='btn btn-primary btn-sm fw-bold px-6'
                         data-kt-menu-dismiss='true'
                         data-kt-user-table-filter='filter'
+                        onClick={handleApplyFiller}
                       >
                         Apply
                       </button>

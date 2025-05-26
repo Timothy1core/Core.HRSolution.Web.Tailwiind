@@ -6,17 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HRSolutionDbLibrary.Persistence.EntityConfigurations.CurrentService.Tables
-{
+namespace HRSolutionDbLibrary.Persistence.EntityConfigurations.CurrentService.Tables;
 	public class OnboardingStatusConfig : IEntityTypeConfiguration<OnboardingStatus>
 	{
 		public void Configure(EntityTypeBuilder<OnboardingStatus> builder)
 		{
-			builder.Property(e => e.CreatedBy).HasMaxLength(50);
+		builder.Property(e => e.CreatedBy).HasMaxLength(50);
 			builder.Property(e => e.CreatedDate).HasColumnType("datetime");
-			builder.Property(e => e.StatusName)
+			builder.Property(e => e.Status)
 				.IsRequired()
 				.HasMaxLength(500);
 		}
 	}
-}
+

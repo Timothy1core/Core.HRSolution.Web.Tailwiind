@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-// import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
 import SignaturePad from 'signature_pad';
 
 const CandidateSignaturePadModal = ({ onSave, show, setShow }) => {
@@ -55,7 +55,7 @@ const CandidateSignaturePadModal = ({ onSave, show, setShow }) => {
   return (
     <>
       {/* <Button onClick={() => setShow(true)} className='btn btn-sm btn-danger'>SIGN HERE</Button> */}
-      {/* <Modal show={show} onHide={() => setShow(false)} animation={false} dialogClassName="modal-dialog-centered modal-lg">
+      <Modal show={show} onHide={() => setShow(false)} animation={false} dialogClassName="modal-dialog-centered modal-lg">
         <Modal.Header>
           <Modal.Title>Sign Here</Modal.Title>
         </Modal.Header>
@@ -70,7 +70,7 @@ const CandidateSignaturePadModal = ({ onSave, show, setShow }) => {
           <Button className='btn btn-secondary' onClick={clearSignature}>Clear</Button>
           <Button className='btn btn-dark' onClick={saveSignature}>Save</Button>
         </Modal.Footer>
-      </Modal> */}
+      </Modal>
     </>
   );
 };

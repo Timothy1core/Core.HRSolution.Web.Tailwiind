@@ -1,12 +1,14 @@
 ﻿using HRSolutionDbLibrary.Core.Entities.Tables;
 using HRSolutionDbLibrary.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
+using NETCore.Encrypt;
 using Recruitment.Service.API.Core.Models.CurrentService.Dtos.Assessment;
 using Recruitment.Service.API.Core.Models.CurrentService.Dtos.Candidate;
 using Recruitment.Service.API.Core.Models.CurrentService.Dtos.JobProfile;
 using Recruitment.Service.API.Core.Models.CurrentService.Dtos.Pipeline;
 using Recruitment.Service.API.Core.Repositories.CurrentService.Tables;
 using Spire.Doc.Fields.Shapes;
+using System.Text;
 using JobAssessmentDto = Recruitment.Service.API.Core.Models.CurrentService.Dtos.Candidate.JobAssessmentDto;
 
 namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
@@ -22,9 +24,9 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
         {
             var candidates = await context.Candidates
                 .Include(x => x.Job)
-                .ThenInclude(x=>x.JobApplicationProcesses)
+                .ThenInclude(x => x.JobApplicationProcesses)
                 .ThenInclude(c => c.ApplicationProcess)
-                .Where( x => x.IsActive == true)
+                .Where(x => x.IsActive == true)
                 .Select(s => new CandidateDto()
                 {
                     Id = s.Id,
@@ -43,15 +45,16 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
                     ClientCompanyId = s.Job.DepartmentId,
                     ClientGroupId = s.Job.Department.DepartmentGroupId,
                     SourceName = s.Source.SourceName,
-                    StageName = s.Job.JobApplicationProcesses.Where(x=>x.ApplicationProcessId == s.ApplicationStatusId).Select(x=>x.ApplicationProcess.ProcessName).FirstOrDefault()
+                    StageName = s.Job.JobApplicationProcesses.Where(x => x.ApplicationProcessId == s.ApplicationStatusId).Select(x => x.ApplicationProcess.ProcessName).FirstOrDefault()
                     // IsActive = s.IsActive
                 })
                 .ToListAsync();
             return candidates;
 
         }
+
 		public async Task<List<CandidateDto>> RetrieveCandidateDashboardList(
-	    int departmentGroupId, int departmentId, int jobId, int sourceId, bool isDisqualified)
+		int departmentGroupId, int departmentId, int jobId, int sourceId, bool isDisqualified)
 		{
 			var query = context.Candidates
 				.AsNoTracking()
@@ -142,8 +145,9 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
                 .Where(x => x.Id == candidateId)
                 .Select(s => new CandidateDto()
                 {
-                    Id = s.Id,
-                    FirstName = s.FirstName,
+					Id = s.Id,
+                    EncryptedId = EncryptProvider.Base64Encrypt(s.Id.ToString(), Encoding.Unicode),
+					FirstName = s.FirstName,
                     LastName = s.LastName,
                     Email = s.Email,
                     PhoneNumber = s.PhoneNumber,
@@ -152,7 +156,8 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
                     CurrentSalary = s.CurrentSalary,
                     JobId = s.JobId,
                     ClientId = s.Job.DepartmentId,
-                    JobName = s.Job.Position,
+					ClientName = s.Job.Department.Name,
+					JobName = s.Job.Position,
                     Resume = s.Resume,
                     SourceId = s.SourceId,
                     SourceName = s.Source.SourceName,
@@ -183,33 +188,41 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
 
         }
 
-        public async Task<List<CandidateHistoryDto>> RetrieveCandidateHistory(int candidateId)
-        {
-            var candidate = await context.CandidateHistories
-	            //.Include(i=>i.CreatedByInfo)
+		public async Task<List<CandidateHistoryDto>> RetrieveCandidateHistory(int candidateId)
+		{
+			var candidateHistories = await context.CandidateHistories
+				.AsNoTracking()
+                .Include(i => i.CreatedByInfo) // can be null
                 .Where(x => x.CandidateId == candidateId)
-                .Select(s => new CandidateHistoryDto()
-                {
-                    Id = s.Id,
-                    Name = s.Name,
-                    Type = s.Type,
-                    Description = s.Description,
-                    CreatedDate = s.CreatedDate,
-                    CreatedBy = s.CreatedBy == null ? "null" : s.CreatedBy,
-                    CandidateId = s.CandidateId,
-                    //CreatedByName = s.CreatedByInfo.FirstName + " " + s.CreatedByInfo.LastName,
-				})
-                .ToListAsync();
+				.ToListAsync();
 
-            return candidate!;
+			var candidateDtos = candidateHistories.Select(s => new CandidateHistoryDto()
+			{
+				Id = s.Id,
+				Name = s.Name,
+				Type = s.Type,
+				Description = s.Description,
+				CreatedDate = s.CreatedDate,
+				CreatedBy = s.CreatedBy ?? string.Empty,
+                CreatedByName = s.CreatedByInfo != null
+                    ? $"{s.CreatedByInfo.FirstName} {s.CreatedByInfo.LastName}"
+                    : string.Empty,
+                CandidateId = s.CandidateId,
+			}).ToList();
 
-        }
-        public async Task<List<JobAssessmentDto>> RetrieveCandidateAssessmentDetails(int jobId, int candidateId)
+			return candidateDtos!;
+		}
+		public async Task<List<JobAssessmentDto>> RetrieveCandidateAssessmentDetails(int jobId, int candidateId)
         {
             var assessmentDetails = await context.JobAssessments
                     .Where(x => x.JobId == jobId && x.AssessmentId != null)
                     .Include(x => x.Assessment)
                     .ThenInclude(x => x.AssessmentCorrections)
+				    .Include(x => x.Assessment)
+					.ThenInclude(x => x.AssessmentQuestions)
+					.ThenInclude(x => x.AssessmentAnswers)
+					.Include(i=>i.Assessment)
+                    .ThenInclude(t=>t.AssessmentQuestions)
                     .Select(a => new JobAssessmentDto()
                     {
                         Id = a.Id,
@@ -221,7 +234,12 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
                             {
                                 Id = c.Id,
                                 AssessmentId = c.AssessmentId,
-                                QuestionId = c.QuestionId,
+								QuestionBody = a.Assessment.AssessmentQuestions
+						        .Where(q => q.Id == c.QuestionId)
+						        .Select(q => q.Body)
+						        .FirstOrDefault(),
+
+								QuestionId = c.QuestionId,
                                 CandidateId = c.CandidateId,
                                 AnswerBody = c.AnswerBody,
                                 IsCorrect = c.IsCorrect,

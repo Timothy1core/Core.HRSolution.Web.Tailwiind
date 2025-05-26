@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-// import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
 import SignaturePad from 'signature_pad';
 
 const SigOptionComponentDecline = ({ onSave }) => {
@@ -22,8 +22,7 @@ const SigOptionComponentDecline = ({ onSave }) => {
 
   return (
     <>
-    1
-      {/* <Button onClick={() => setShow(true)} className='btn btn-sm btn-danger'>Decline</Button>
+      <Button onClick={() => setShow(true)} className='btn btn-sm btn-danger'>Decline</Button>
       <Modal show={show} onHide={() => setShow(false)} animation={false} dialogClassName="modal-dialog-centered modal-lg">
         <Modal.Header>
           <Modal.Title>Decline</Modal.Title>
@@ -44,7 +43,7 @@ const SigOptionComponentDecline = ({ onSave }) => {
           <Button className='btn btn-secondary' onClick={clearReason}>Clear</Button>
           <Button className='btn btn-dark' onClick={saveReason}>Save</Button>
         </Modal.Footer>
-      </Modal> */}
+      </Modal>
     </>
   );
 };

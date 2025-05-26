@@ -38,8 +38,7 @@ import { useAuth } from '../../../app/modules/auth'
 //#region COMPONENT IMPORTS
 import { HeaderWrapper } from "../components/header/HeaderWrapper";
 
-import { KTIcon } from '@/_metronic/helpers';
-import { toAbsoluteUrl } from '@/_metronic/utils';
+import { KTIcon,toAbsoluteUrl } from "../../../_metronic/helpers";
 
 import { Step1Div } from "../components/setup-steps/Step1";
 import { Step2Div } from "../components/setup-steps/Step2";
@@ -191,11 +190,11 @@ const DashboardPage = () => {
 
   const setRandomUnansweredQuestion = (questions) => {
     const unansweredQuestions = questions.filter(
-      (question) => question.assessmentAnswers.length === 0
+      (question) => question.candidateAnswers.length === 0
     );
 
     const answeredQuestionsData = questions.filter(
-      (question) => question.assessmentAnswers.length > 0
+      (question) => question.candidateAnswers.length > 0
     );
     
     setAnsweredQuestions(answeredQuestionsData)
@@ -236,7 +235,7 @@ const DashboardPage = () => {
       );
   
       captureSnapshot();
-      setRandomUnansweredQuestion(assessments.questions);
+      setRandomUnansweredQuestion(assessments.assessmentQuestions);
   
       const setCurrentAssessmentId = async () => {
         try {
@@ -595,14 +594,13 @@ const DashboardPage = () => {
         formData.append('AssessmentAnswerBody', values.answer);
         formData.append('CandidateId', candidateData.candidateId);
         formData.append('AssessmentId', assessments?.id);
-        formData.append('Marks', assessments?.questions[currentQuestionIndex].marks);
-        formData.append('Type', assessments?.questions[currentQuestionIndex].type);
+        formData.append('Type', assessments?.assessmentQuestions[currentQuestionIndex].type);
         formData.append(
           'QuestionId',
-          assessments?.questions[currentQuestionIndex].id
+          assessments?.assessmentQuestions[currentQuestionIndex].id
         );
-        if(assessments?.questions[currentQuestionIndex].type === 3){
-          formData.append('VideoFile', videoBlob, `video_q${assessments?.questions[currentQuestionIndex].id}_c${candidateData.candidateId}.webm`);
+        if(assessments?.assessmentQuestions[currentQuestionIndex].type === 3){
+          formData.append('VideoFile', videoBlob, `video_q${assessments?.assessmentQuestions[currentQuestionIndex].id}_c${candidateData.candidateId}.webm`);
         }
       
         const res = await submitAnswer(formData);
@@ -611,11 +609,11 @@ const DashboardPage = () => {
           // Create a new copy of assessments to ensure immutability
           const updatedAssessments = { ...assessments };
   
-          // Update the assessmentAnswers array for the current question
-          updatedAssessments.questions[currentQuestionIndex] = {
-            ...updatedAssessments.questions[currentQuestionIndex],
-            assessmentAnswers: [
-              ...updatedAssessments.questions[currentQuestionIndex].assessmentAnswers, // Keep previous answers
+          // Update the candidateAnswers array for the current question
+          updatedAssessments.assessmentQuestions[currentQuestionIndex] = {
+            ...updatedAssessments.assessmentQuestions[currentQuestionIndex],
+            candidateAnswers: [
+              ...updatedAssessments.assessmentQuestions[currentQuestionIndex].candidateAnswers, // Keep previous answers
               { 
                 answer: values.answer, 
                 candidateId: candidateData.candidateId 
@@ -625,7 +623,7 @@ const DashboardPage = () => {
   
           // Update the state with the modified assessments object
           setAssessments(updatedAssessments);       
-          setRandomUnansweredQuestion(updatedAssessments.questions); // Re-fetch or update UI
+          setRandomUnansweredQuestion(updatedAssessments.assessmentQuestions); // Re-fetch or update UI
           formik.setFieldValue("answer", '')
         }
 
@@ -667,8 +665,8 @@ const DashboardPage = () => {
             }
       <HeaderWrapper>
         {/* assessment header */}
-        <div className="container d-flex justify-between align-items-center">
-          <div className="page-title d-flex flex-column justify-center text-start flex-wrap w-50">
+        <div className="container d-flex justify-content-between align-items-center">
+          <div className="page-title d-flex flex-column justify-content-center text-start flex-wrap w-50">
             {/* {isAssessment && */}
             <span className="card-label fw-bold fs-3">{currentUser?.loggedCandidate?.jobName} Exam</span>
             {/* } */}
@@ -679,7 +677,7 @@ const DashboardPage = () => {
           {isAssessment && isStart &&  !isAssessmentFinish &&
           <div className="w-50 w-sm-100">
             
-            <div className="d-flex w-100 align-items-center justify-center justify-md-center justify-sm-center justify-lg-end mb-2">
+            <div className="d-flex w-100 align-items-center justify-content-center justify-content-md-center justify-content-sm-center justify-content-lg-end mb-2">
               <KTIcon iconName="timer" iconType="outline" className="fs-2 me-1 text-dark" />
               {/* Render Countdown Timer */}
               <div>{formatTime(timeLeft)}</div>
@@ -697,14 +695,14 @@ const DashboardPage = () => {
                 ></div>
               </div>
             </div>
-            <div className="d-flex w-100 align-items-center justify-center justify-md-center justify-sm-center justify-lg-end">
+            <div className="d-flex w-100 align-items-center justify-content-center justify-content-md-center justify-content-sm-center justify-content-lg-end">
               <KTIcon iconName='note-2' iconType='outline' className='fs-2 me-1 text-dark' />
-              <div>{answeredQuestions.length}/{assessments.questions.length}</div>
+              <div>{answeredQuestions.length}/{assessments.assessmentQuestions.length}</div>
               <div className="progress w-50 ms-3" style={{ backgroundColor: "#e9e9e9",height: "10px" }}>
                 <div
                   className="progress-bar bg-danger"
                   role="progressbar"
-                  style={{ width: `${((answeredQuestions.length) / assessments.questions.length) * 100}%` }}
+                  style={{ width: `${((answeredQuestions.length) / assessments.assessmentQuestions.length) * 100}%` }}
                   aria-valuenow="25"
                   aria-valuemin="0"
                   aria-valuemax="100"
@@ -716,7 +714,7 @@ const DashboardPage = () => {
           }
           {!isAssessment && !isStart &&
          <div className="w-50 w-sm-100"> 
-            <div className="d-flex w-100 align-items-center justify-center justify-md-center justify-sm-center justify-lg-end">
+            <div className="d-flex w-100 align-items-center justify-content-center justify-content-md-center justify-content-sm-center justify-content-lg-end">
               <span>Assessment Setup &nbsp;</span>
               {/* <KTIcon iconName='note-2' iconType='outline' className='fs-2 me-1 text-dark' /> */}
               <div>{currentStep-1}/4</div>
@@ -792,12 +790,12 @@ const DashboardPage = () => {
                         disabled
                         editor={ClassicEditor} 
                         config={CKEditorConfig} 
-                        data={assessments?.questions[currentQuestionIndex].body} 
+                        data={assessments?.assessmentQuestions[currentQuestionIndex].body} 
                       />
                     </div>
                     <div className="col-12 col-sm-6 mt-4 mt-sm-0">
                       <h3 className="mb-3 fs-5 fs-sm-4">Select only one answer</h3> {/* Adjust heading size */}
-                      {assessments?.questions[currentQuestionIndex].type === 1 && assessments?.questions[currentQuestionIndex]?.choices.map(
+                      {assessments?.assessmentQuestions[currentQuestionIndex].type === 1 && assessments?.assessmentQuestions[currentQuestionIndex]?.assessmentChoices.map(
                         (choice, idx) => (
                           <label
                             key={choice.id}
@@ -821,7 +819,7 @@ const DashboardPage = () => {
                         )
                       )
                       }
-                      {assessments?.questions[currentQuestionIndex].type === 2 && 
+                      {assessments?.assessmentQuestions[currentQuestionIndex].type === 2 && 
                       <div className='fv-row'>
                       <label className='form-label required'>Answer</label>
                       <input
@@ -831,11 +829,11 @@ const DashboardPage = () => {
                       />
                       </div>}
 
-                      {assessments?.questions[currentQuestionIndex].type === 3 && 
+                      {assessments?.assessmentQuestions[currentQuestionIndex].type === 3 && 
                       <div className='fv-row'>
                         <CameraRecorder
                           onVideoBlob={handleVideoBlob}
-                          maxDuration={assessments?.questions[currentQuestionIndex].videoDurations[0].videoDurationMinute * 60}
+                          maxDuration={assessments?.assessmentQuestions[currentQuestionIndex].assessmentVideoDurations[0].videoDurationMinute * 60}
                         />
                       </div>}
                       {formik.touched.answer && formik.errors.answer && (
@@ -846,7 +844,7 @@ const DashboardPage = () => {
                 </div>
               </div>
             </div>
-            <div className="container d-flex justify-between">
+            <div className="container d-flex justify-content-between">
               <span></span>
               <span>
               <button

@@ -102,5 +102,10 @@ public class EmployeeInformationConfig : IEntityTypeConfiguration<EmployeeInform
 		builder.Property(e => e.YearId)
 			.IsRequired()
 			.HasMaxLength(50);
+		builder.Property(e => e.MedicardEffectivity).HasColumnType("date");
+		builder.HasOne(d => d.Department).WithMany(p => p.EmployeeInformations)
+				.HasForeignKey(d => d.DepartmentId)
+				.OnDelete(DeleteBehavior.ClientSetNull)
+				.HasConstraintName("FK_EmployeeInformations_Department");
 	}
 }

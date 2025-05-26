@@ -23,7 +23,7 @@ namespace Recruitment.Service.API.Controllers
 		private readonly IFileService _fileService = fileService;
 
 		[Authorize]
-		// [Permission("client.company.create")]
+		[Permission("create.email.template")]
 		[HttpPost("create")]
 		public async Task<IActionResult> CreateEmailTemplate([FromForm] EmailTemplateRequestDto emailTemplateRequest)
 		{
@@ -37,7 +37,7 @@ namespace Recruitment.Service.API.Controllers
 				CreatedDate = DateTime.UtcNow.AddHours(8),
 				CreatedBy = loggedEmployee,
 				Cc = emailTemplateRequest.EmailCc,
-				EmailActionId = 3,
+				EmailActionId = emailTemplateRequest.EmailAction,
 				IsActive = true
 
 			};
@@ -47,7 +47,7 @@ namespace Recruitment.Service.API.Controllers
 		}
 
 		[Authorize]
-		// [Permission("client.company.create")]
+		[Permission("update.email.template")]
 		[HttpPut("update/{id}")]
 		public async Task<IActionResult> UpdateEmailTemplate([FromForm] EmailTemplateRequestDto emailTemplateRequest, int id)
 		{
@@ -70,7 +70,7 @@ namespace Recruitment.Service.API.Controllers
 
 
 		[Authorize]
-		// [Permission("client.job.profile.list")]
+		[Permission("email.template.list")]
 		[HttpGet("dashboard")]
 		public async Task<IActionResult> RetrieveEmailTemplateDashboard()
 		{
@@ -82,7 +82,7 @@ namespace Recruitment.Service.API.Controllers
 
 
 		[Authorize]
-		// [Permission("client.company.create")]
+		[Permission("create.email.automation")]
 		[HttpPost("create_automation")]
 		public async Task<IActionResult> CreateEmailAutomation([FromForm] EmailAutomationRequestDto emailAutomationRequest)
 		{
@@ -98,7 +98,7 @@ namespace Recruitment.Service.API.Controllers
 
 				CreatedDate = DateTime.UtcNow.AddHours(8),
 				CreatedBy = loggedEmployee,
-				
+
 				IsActive = true
 
 			};
@@ -108,7 +108,7 @@ namespace Recruitment.Service.API.Controllers
 		}
 
 		[Authorize]
-		// [Permission("client.company.create")]
+		[Permission("update.email.automation")]
 		[HttpPut("update_automation/{id}")]
 		public async Task<IActionResult> UpdateEmailAutomation([FromForm] EmailAutomationRequestDto emailAutomationRequest, int id)
 		{
@@ -129,7 +129,7 @@ namespace Recruitment.Service.API.Controllers
 
 
 		[Authorize]
-		// [Permission("client.job.profile.list")]
+		[Permission("email.automation.list")]
 		[HttpGet("dashboard_automation")]
 		public async Task<IActionResult> RetrieveEmailAutomationDashboard()
 		{
@@ -145,6 +145,16 @@ namespace Recruitment.Service.API.Controllers
 		{
 
 			var result = await _emailTemplateServices.SelectEmailTemplateDropDown();
+
+			return result;
+		}
+
+		[Authorize]
+		[HttpGet("retrieve_email_action_dropdown")]
+		public async Task<IActionResult> RetrieveEmailActionDropDown()
+		{
+
+			var result = await _emailTemplateServices.SelectEmailActionDropDown();
 
 			return result;
 		}

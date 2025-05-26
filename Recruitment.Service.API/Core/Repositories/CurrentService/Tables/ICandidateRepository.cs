@@ -11,8 +11,8 @@ public interface ICandidateRepository
     Task SaveApplicationForm(Candidate candidate);
 
     Task<List<CandidateDto>> RetrieveCandidateList();
-    Task<List<CandidateDto>> RetrieveCandidateDashboardList(int departmentGroupId, int departmentId, int jobId, int sourceId, bool isDisqualified);
-
+    Task<List<CandidateDto>> RetrieveCandidateDashboardList(
+        int departmentGroupId, int departmentId, int jobId, int sourceId, bool isDisqualified);
 
 	Task<CandidateDto> RetrieveCandidateInfo(int candidateId);
     Task SaveHistoryItem(CandidateHistory candidateHistory);

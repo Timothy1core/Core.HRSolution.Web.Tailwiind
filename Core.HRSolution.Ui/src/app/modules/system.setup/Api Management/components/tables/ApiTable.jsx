@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { KTIcon } from '@/_metronic/helpers';
+import { KTIcon } from '../../../../../../_metronic/helpers';
 import { listApi, removeApi } from '../../core/requests/_request';
-// import { Modal } from 'bootstrap';
+import { Modal } from 'bootstrap';
 import {format} from 'date-fns';
-import TableWithPagination from '../../../../../../app/helpers/table/TableWithPagination';
+import TableWithPagination from '../../../core/helpers/Table Layout/TableWithPagination';
 import { CreateEditApi } from '../modals/create-or-edit-api/CreateEditApi';
-// import { CreateAppModal } from '../../../../../../_metronic/partials';
+import { CreateAppModal } from '../../../../../../_metronic/partials';
 import Swal from 'sweetalert2';
 import {
   enableLoadingRequest,
@@ -147,7 +147,7 @@ const ApiTable = ({ className }) => {
         )
      },
     { Header: 'Actions', accessor: 'id', className: 'text-end', Cell: row => (
-      <div className='d-flex justify-end flex-shrink-0'>
+      <div className='d-flex justify-content-end flex-shrink-0'>
         <ActionComponent
             buttonPermission={'system.setup.update.api'}
             actionButton={ 

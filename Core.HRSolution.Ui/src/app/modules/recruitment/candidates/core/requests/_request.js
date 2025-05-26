@@ -41,6 +41,9 @@ export const RETRIEVE_EMAILS_BY_DISTRO_URL = `${config.API_URL}/recruitment/cand
 
 export const SAVE_JOB_OFFER_INFO = `${config.API_URL}/recruitment/joboffer/save_job_offer_info`;
 
+export const INFO_ASSESSMENT_URL = `${config.API_URL}/recruitment/candidate/retrieve_candidate_assessments`;
+
+
 export function listCandidate(search, columns, sortColumnKey, sortDirection, page, size, client, clientGroup, job, qualification, source, applicationProcess) {
   return axios.post(LIST_API_URL, qs.stringify({ search, start: (page * size), draw: (page + 1),  length: size, columns, sortDirection, sortColumnKey, client, clientGroup, job, qualification, source, applicationProcess }),{
       headers: {
@@ -214,4 +217,8 @@ export function retrieveEmailsByDistro(recipient) {
 
 export function saveJobOfferInfo(formData) {
   return axios.post(SAVE_JOB_OFFER_INFO,formData);
+}
+
+export function infoAssessments(id) {
+  return axios.get(`${INFO_ASSESSMENT_URL}/${id}`);
 }

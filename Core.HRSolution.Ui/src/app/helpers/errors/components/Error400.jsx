@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { toAbsoluteUrl } from '@/_metronic/utils';
+import { toAbsoluteUrl } from '../../../../_metronic/helpers'
 
 const Error400 = () => {
   return (

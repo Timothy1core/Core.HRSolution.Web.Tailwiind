@@ -16,7 +16,7 @@ const PublicMasterLayout = () => {
             <div className="app-page flex-column flex-column-fluid" id="kt_app_page">
                 <div id="kt_app_header" className="app-header h-100px" data-kt-sticky="true" data-kt-sticky-activate="{default: true, lg: true}" data-kt-sticky-name="app-header-minimize" data-kt-sticky-offset="{default: '200px', lg: '0'}" data-kt-sticky-animation="false" style={{ backgroundColor: '#000000' }}
                 >
-                    <div className="app-container container-xxl d-flex align-items-stretch  justify-center" id="kt_app_header_container">
+                    <div className="app-container container-xxl d-flex align-items-stretch  justify-content-center" id="kt_app_header_container">
                         <div className="d-flex align-items-center">
                             <a href="index.html">
                                 <img alt="Logo" src="https://cdn.onecoredevit.com/logos/core-logo-white-text.png" className="h-30px h-lg-50px app-sidebar-logo-default" />

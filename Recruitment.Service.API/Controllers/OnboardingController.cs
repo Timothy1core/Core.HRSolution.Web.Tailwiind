@@ -41,9 +41,8 @@ namespace Recruitment.Service.API.Controllers
 			return result;
 		}
 
-		[AllowAnonymous]
-		// [Authorize]
-		// [Permission("system.retrieve.assessment.info")]
+		[Authorize]
+		[Permission("retrieve.onboarding.info.sheet")]
 		[HttpGet("info_onboarding_info/{id}")]
 		public async Task<IActionResult> RetrieveOnboardingInformationSheet(int id)
 		{
@@ -55,8 +54,6 @@ namespace Recruitment.Service.API.Controllers
 		}
 
 		[AllowAnonymous]
-		// [Authorize]
-		// [Permission("system.retrieve.assessment.info")]
 		[HttpGet("onboarding_form_infos/{id}")]
 		public async Task<IActionResult> RetrieveOnboardingFormInformations(string id)
 		{
@@ -67,9 +64,8 @@ namespace Recruitment.Service.API.Controllers
 
 		}
 
-		// [Authorize]
-		// [Permission("recruitment.retrieve.dashboard.candidate")]
-		[AllowAnonymous]
+		[Authorize]
+		[Permission("retrieve.onboarding.list")]
 		[HttpPost("list_onboarding_info")]
 		public async Task<IActionResult> RetrieveDashboardOnboardingInformationSheet([FromForm] string? search)
 		{
@@ -78,17 +74,16 @@ namespace Recruitment.Service.API.Controllers
 			string sortColumnName = HttpContext.Request.Form["sortColumnKey"]!;
 			string sortDirection = HttpContext.Request.Form["sortDirection"]!;
 			string draw = HttpContext.Request.Form["draw"]!;
+			var status = Convert.ToInt32(HttpContext.Request.Form["status"]);
 
 			var result = await _onboardingServices.RetrieveAllOnboardingInformationSheetService(
 				search, start, length, draw,
-				sortColumnName, sortDirection);
+				sortColumnName, sortDirection, status);
 			;
 			return result;
 		}
 
 		[AllowAnonymous]
-		// [Authorize]
-		// [Permission("system.update.assessment")]
 		[HttpPut("update_onboarding_info/{id}")]
 		public async Task<IActionResult> UpdateOnboardingInformation(string id, [FromForm] OnboardingInformationSheetRequestDto onboardinInfoRequestDto)
 		{
@@ -97,8 +92,6 @@ namespace Recruitment.Service.API.Controllers
 		}
 
 		[AllowAnonymous]
-		// [Authorize]
-		// [Permission("system.update.assessment")]
 		[HttpPut("acknowledged_onboarding_form/{id}")]
 		public async Task<IActionResult> AcknowledgeOnboardingForm(string id, [FromForm] bool isAcknowledged)
 		{
@@ -118,9 +111,8 @@ namespace Recruitment.Service.API.Controllers
 		}
 
 
-		[AllowAnonymous]
-		// [Authorize]
-		// [Permission("system.retrieve.assessment.info")]
+		[Authorize]
+		[Permission("retrieve.onboarding.document.info")]
 		[HttpGet("info_onboarding_document/{id}")]
 		public async Task<IActionResult> RetrieveOnboardingDocument(int id)
 		{
@@ -131,9 +123,8 @@ namespace Recruitment.Service.API.Controllers
 
 		}
 
-		// [Authorize]
-		// [Permission("recruitment.retrieve.dashboard.candidate")]
-		[AllowAnonymous]
+		[Authorize]
+		[Permission("retrieve.onboarding.document.list")]
 		[HttpPost("list_onboarding_document")]
 		public async Task<IActionResult> RetrieveDashboardOnboardingDocument([FromForm] int id)
 		{
@@ -153,9 +144,8 @@ namespace Recruitment.Service.API.Controllers
 			return result;
 		}
 
-		[AllowAnonymous]
-		// [Authorize]
-		// [Permission("system.retrieve.assessment.info")]
+		[Authorize]
+		[Permission("retrieve.wfh.info")]
 		[HttpGet("info_wfh_info/{id}")]
 		public async Task<IActionResult> RetrieveWorkFromHomeInformationSheet(int id)
 		{
@@ -167,8 +157,6 @@ namespace Recruitment.Service.API.Controllers
 		}
 
 		[AllowAnonymous]
-		// [Authorize]
-		// [Permission("system.update.assessment")]
 		[HttpPut("update_wfh_info/{id}")]
 		public async Task<IActionResult> UpdateWorkFromHomeInformation(string id, [FromForm] WorkFromHomeInformationRequestDto workFromHomeInfoRequestDto)
 		{
@@ -176,9 +164,8 @@ namespace Recruitment.Service.API.Controllers
 			return result;
 		}
 
-		[AllowAnonymous]
-		// [Authorize]
-		// [Permission("system.update.assessment")]
+		[Authorize]
+		[Permission("wfh.info.hr.approve")]
 		[HttpPut("wfh_info_hr_approve/{id}")]
 		public async Task<IActionResult> WorkFromHomeInfoHrApprove(int id, [FromForm] string HrApprover)
 		{
@@ -186,9 +173,9 @@ namespace Recruitment.Service.API.Controllers
 			return result;
 		}
 
-		[AllowAnonymous]
-		// [Authorize]
-		// [Permission("system.update.assessment")]
+
+		[Authorize]
+		[Permission("wfh.info.it.approve")]
 		[HttpPut("wfh_info_it_approve/{id}")]
 		public async Task<IActionResult> WorkFromHomeInfoItApprove(int id, [FromForm] string ItApprover)
 		{
@@ -226,9 +213,8 @@ namespace Recruitment.Service.API.Controllers
 			return Ok(result);
 		}
 
-		// [Authorize]
-		// [Permission("recruitment.retrieve.dashboard.candidate")]
-		[AllowAnonymous]
+		[Authorize]
+		[Permission("send.email.pending.pre.docs")]
 		[HttpGet("send_email_pending_pre_docs/{id}")]
 		public async Task<IActionResult> SendEmailForPendingDocuments(int id)
 		{
@@ -237,9 +223,8 @@ namespace Recruitment.Service.API.Controllers
 			return Ok(result);
 		}
 
-		// [Authorize]
-		// [Permission("recruitment.retrieve.dashboard.candidate")]
-		[AllowAnonymous]
+		[Authorize]
+		[Permission("send.email.pending.general.docs")]
 		[HttpGet("send_email_pending_general_docs/{id}")]
 		public async Task<IActionResult> SendEmailForPendingGeneralDocuments(int id)
 		{
@@ -248,5 +233,69 @@ namespace Recruitment.Service.API.Controllers
 			return Ok(result);
 		}
 
+
+		[Authorize]
+		[Permission("retrieve.contract.generation.info")]
+		[HttpGet("info_for_contract_generation/{id}")]
+		public async Task<IActionResult> RetrieveInfoForContractGeneration(int id)
+		{
+
+			var result = await _onboardingServices.RetrieveInformationForContractGenerationService(id);
+
+			return result;
+
+		}
+
+		[AllowAnonymous]
+		[HttpGet("contract_to_pdf/{id}")]
+		public async Task<IActionResult> GenerateContractPdf(int id)
+		{
+			var loggedEmployee = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+			var pdfBytes = await _onboardingServices.GenerateContractPdfService(id, loggedEmployee);
+
+			if (pdfBytes == null)
+				return NotFound("Contract info not found or error occurred.");
+
+			return File(pdfBytes, "application/pdf", $"contract-{id}.pdf");
+		}
+
+
+		[Authorize]
+		[Permission("update.onboarding.status")]
+		[HttpPut("update_onboarding_status/{id}")]
+		public async Task<IActionResult> UpdateJobOfferStatus(int id, [FromForm] int onboardingStatusId)
+		{
+			var result = await _onboardingServices.UpdateOnboardingStatusService(id, onboardingStatusId);
+			return result;
+		}
+
+		[AllowAnonymous]
+		[HttpPost("list_temporary_id")]
+		public async Task<IActionResult> RetrieveExistingTemporaryIdList()
+		{
+
+			var result = await _onboardingServices.RetrieveExistingTemporaryIdListService();
+			;
+			return result;
+		}
+
+		[Authorize]
+		[Permission("update.temporary.employee.id")]
+		[HttpPut("update_temporary_employee_id/{id}")]
+		public async Task<IActionResult> UpdateTemporaryEmployeeId(int id, [FromForm] int temporaryEmployeeId)
+		{
+			var result = await _onboardingServices.UpdateTemporaryEmployeeIdService(id, temporaryEmployeeId);
+			return result;
+		}
+
+
+		[Authorize]
+		[Permission("update.onboarding.info.internal")]
+		[HttpPut("update_onboarding_info_internal/{id}")]
+		public async Task<IActionResult> UpdateOnboardingInformationInternal(int id, [FromForm] OnboardingInformationSheetRequestDto onboardinInfoRequestDto)
+		{
+			var result = await _onboardingServices.UpdateOnboardingInformationInternalService(id, onboardinInfoRequestDto);
+			return result;
+		}
 	}
 }

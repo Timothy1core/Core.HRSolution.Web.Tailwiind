@@ -1,7 +1,6 @@
 import clsx from 'clsx'
-import { KTIcon } from '@/_metronic/helpers';
-import { toAbsoluteUrl } from '@/_metronic/utils';
-// import {HeaderNotificationsMenu, HeaderUserMenu, Search, ThemeModeSwitcher} from '../../../partials'
+import {KTIcon, toAbsoluteUrl} from '../../../helpers'
+import {HeaderNotificationsMenu, HeaderUserMenu, Search, ThemeModeSwitcher} from '../../../partials'
 import {useLayout} from '../../core'
 
 const itemClass = 'ms-1 ms-md-4'
@@ -27,7 +26,7 @@ const Navbar = () => {
           <span className="pulse-ring border-4"></span>
 
         </div>
-        {/* <HeaderNotificationsMenu /> */}
+        <HeaderNotificationsMenu />
       </div>
 
       {/* <div className={clsx('app-navbar-item', itemClass)}>
@@ -38,7 +37,7 @@ const Navbar = () => {
       </div> */}
 
       <div className={clsx('app-navbar-item', itemClass)}>
-        {/* <ThemeModeSwitcher toggleBtnClass={clsx('btn-active-light-danger btn-custom')} /> */}
+        <ThemeModeSwitcher toggleBtnClass={clsx('btn-active-light-danger btn-custom')} />
       </div>
 
       <div className={clsx('app-navbar-item', itemClass)}>
@@ -50,7 +49,7 @@ const Navbar = () => {
         >
           <img src={toAbsoluteUrl('media/profile/user-male.png')} alt='' />
         </div>
-        {/* <HeaderUserMenu /> */}
+        <HeaderUserMenu />
       </div>
 
       {/* {config.app?.header?.default?.menu?.display && (

@@ -7,9 +7,6 @@ public class CreateQuestionRequestDto
 
     public int Type { get; set; }
 
-    public bool Required { get; set; }
-    public int Marks { get; set; }
-
     public virtual IList<AnswerRequestDto> Answers { get; set; }
 
     public virtual IList<ChoiceRequestDto> Choices { get; set; }

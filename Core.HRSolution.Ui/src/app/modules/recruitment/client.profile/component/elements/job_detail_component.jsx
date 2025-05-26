@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams,Link as RouterLink  } from 'react-router-dom';
 import { ClassicEditor, Bold, Essentials, Italic, Paragraph, List, Heading, Link, Table, TableToolbar, Indent, IndentBlock } from 'ckeditor5';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import Swal from 'sweetalert2';
@@ -11,16 +11,14 @@ import {
     SelectJobProfileStatusComponent,
     SelectClientCompanyGroupComponent
 } from '../dropdowns/client_profile_dropdown_component';
-import { CreateClientJobProfile,UpdateClientJobProfile } from '../../core/request/job_profile_request';
+import { CreateClientJobProfile,UpdateClientJobProfile,GET_JOB_PROFILE_MARKET_RESEACH } from '../../core/request/job_profile_request';
 import { enableLoadingRequest, disableLoadingRequest } from '../../../../../helpers/loading_request';
 import {Navigate} from 'react-router-dom'
 import ActionComponent from '../../../../../helpers/action_component';
 
 const JobDetailsComponent = ({ profileDataValue }) => {
-    const [clientValue, setClientValue] = useState(profileDataValue?.clientCompanyId || '');
     const [departmentValue, setDepartmentValue] = useState(profileDataValue?.departmentId || '');
     const { id } = useParams();
-
     const CKEditorConfig = {
         plugins: [
             Essentials, Bold, Italic, Paragraph, List, Heading, Link,
@@ -40,7 +38,7 @@ const JobDetailsComponent = ({ profileDataValue }) => {
     };
 
     const validationSchema = Yup.object().shape({
-        clientCompanyId: Yup.string().required('Client is required'),
+        departmentId: Yup.string().required('Client is required'),
         position: Yup.string().max(1000, 'Must be 1000 characters or less').required('Position is required'),
         employmentTypeId: Yup.string().required('Employment Type is required'),
         jobStatusId: Yup.string().required('Status is required'),
@@ -50,17 +48,22 @@ const JobDetailsComponent = ({ profileDataValue }) => {
         keyResponsibility: Yup.string().required('Key Responsibilities are required'),
         qualifications: Yup.string().required('Qualifications are required'),
         showInCareerPage: Yup.boolean(), 
-        // departmentId: Yup.string().when('clientCompanyId', {
-        //     is: (value) => value === '1', // Check if client is '1'
-        //     then: () => Yup.string().required('Department is required for this client'),
-        //     otherwise: () => Yup.string().notRequired(),
-        // }),
+        marketScanFile: Yup.mixed()
+        .nullable()
+        .test("FILE_SIZE", "File too large", (value) => {
+            return !value || (value && value.size <= 5 * 1024 * 1024); // 5MB
+        })
+        .test("FILE_TYPE", "Unsupported file format", (value) => {
+            return (
+                !value ||
+                (value && ['application/pdf'].includes(value.type))
+            );
+        }),
     });
     
 
     const formik = useFormik({
         initialValues: {
-            clientCompanyId: profileDataValue?.clientCompanyId || '',
             departmentId: profileDataValue?.departmentId || '',
             position: profileDataValue?.position || '',
             employmentTypeId: profileDataValue?.employmentTypeId ||'',
@@ -71,16 +74,21 @@ const JobDetailsComponent = ({ profileDataValue }) => {
             keyResponsibility: profileDataValue?.keyResponsibility ||'',
             qualifications: profileDataValue?.qualifications ||'',
             showInCareerPage: profileDataValue?.showInCareerPage || false,
-
+            marketScanFile: null,
         },
         validationSchema,
         onSubmit: async (values) => {
             enableLoadingRequest();
             try {
+                const formData = new FormData();
+                Object.entries(values).forEach(([key, value]) => {
+                    if (value !== null) formData.append(key, value);
+                });
+        
                 const response = profileDataValue
-                ? await UpdateClientJobProfile(id, values)
-                : await CreateClientJobProfile(values);
-                 
+                    ? await UpdateClientJobProfile(id, formData)
+                    : await CreateClientJobProfile(formData);
+        
                 Swal.fire({
                     title: 'Success!',
                     text: `${response.data.responseText}`,
@@ -88,8 +96,9 @@ const JobDetailsComponent = ({ profileDataValue }) => {
                     confirmButtonText: 'OK',
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        profileDataValue? '' :
-                        window.location.href = `/recruitment/editjobprofile/${response.data.jobId}`;
+                        if (!profileDataValue) {
+                            window.location.href = `/recruitment/editjobprofile/${response.data.jobId}`;
+                        }
                         formik.resetForm();
                     }
                 });
@@ -103,14 +112,8 @@ const JobDetailsComponent = ({ profileDataValue }) => {
             } finally {
                 disableLoadingRequest();
             }
-        },
+        }        
     });
-
-    const handleClientChange = (e) => {
-        const selectedValue = e.target.value;
-        setClientValue(selectedValue);
-        formik.setFieldValue('clientCompanyId', selectedValue);
-    };
 
     const handleDepartmentChange = (e) => {
         const selectedValue = e.target.value;
@@ -124,15 +127,15 @@ const JobDetailsComponent = ({ profileDataValue }) => {
                 <div className="w-100">
                     <div className="row g-4 mb-8">
                         <div className="col-md-3 fv-row">
-                            <label className="required fs-6 fw-semibold mb-2">Client</label>
+                            <label className="required fs-6 fw-semibold mb-2">Department</label>
                             <SelectClientComponent
-                                name="clientCompanyId"
-                                value={formik.values.clientCompanyId}
-                                onChange={handleClientChange}
+                                name="departmentId"
+                                value={formik.values.departmentId}
+                                onChange={handleDepartmentChange}
                                 className="form-select"
                             />
-                            {formik.touched.clientCompanyId && formik.errors.clientCompanyId && (
-                                <div className="text-danger mt-2">{formik.errors.clientCompanyId}</div>
+                            {formik.touched.departmentId && formik.errors.departmentId && (
+                                <div className="text-danger mt-2">{formik.errors.departmentId}</div>
                             )}
                         </div>
                     </div>
@@ -253,8 +256,22 @@ const JobDetailsComponent = ({ profileDataValue }) => {
                         </div>
                     </div>
                     <div className='row'>
-                        <div className='col-md-12'>
-                            <div className="form-check form-switch form-check-custom form-check-solid me-10">
+                        <div className="col-md-3 fv-row">
+                            <label className="fs-6 fw-semibold mb-2">Upload Attachment</label>
+                            <input
+                                type="file"
+                                name="marketScanFile"
+                                className="form-control"
+                                onChange={(event) => {
+                                    formik.setFieldValue("marketScanFile", event.currentTarget.files[0]);
+                                }}
+                            />
+                            {formik.touched.file && formik.errors.file && (
+                                <div className="text-danger mt-2">{formik.errors.file}</div>
+                            )}
+                        </div>
+                        <div className='col-md-6'>
+                            <div className="form-check form-switch form-check-custom form-check-solid mt-10 me-10">
                                 <input
                                     className="form-check-input h-25px w-40px"
                                     type="checkbox"
@@ -269,15 +286,18 @@ const JobDetailsComponent = ({ profileDataValue }) => {
                             </div>
                         </div>
                     </div>
-                    
+                    <div className='row mt-5'>
+                        <div className='col-md-6'>
+                        <RouterLink to={`${GET_JOB_PROFILE_MARKET_RESEACH}/${profileDataValue.id}/${profileDataValue?.marketScanFileName}`} className="menu-link px-3" target="_blank"> {profileDataValue?.marketScanFileName || ''}</RouterLink>
+                        </div>
+                    </div>
                     <div className="text-end mt-4">
                     <ActionComponent
-            buttonPermission={'client.job.profile.create'}
-            actionButton={ 
-                        <button type="submit" className="btn btn-dark">
-                            Save & Continue
-                        </button>
-            }/>
+                     buttonPermission={'department.job.profile.create'}
+                     actionButton=
+                     { 
+                        <button type="submit" className="btn btn-dark"> Save & Continue</button>
+                     }/>
                     </div>
                 </div>
             </form>

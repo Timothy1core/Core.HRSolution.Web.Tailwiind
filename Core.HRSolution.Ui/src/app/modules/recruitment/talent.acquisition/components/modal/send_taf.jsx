@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Swal from 'sweetalert2';
-// import { Modal, Button } from 'react-bootstrap';
-import { KTIcon } from '@/_metronic/helpers';
+import { Modal, Button } from 'react-bootstrap';
+import { KTIcon } from '../../../../../../_metronic/helpers';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 
@@ -15,7 +15,7 @@ import {
 } from '../dropdown/taf_dropdown_component';
 
 import {SendTaf} from '../../request/taf_request'
-function SendTAFModal({ companyId, onSuccess }) {
+function SendTAFModal() {
     const [show, setShow] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -36,30 +36,38 @@ function SendTAFModal({ companyId, onSuccess }) {
         onSubmit: async (values) => {
             setLoading(true);
             try {
-                // Replace this with your API call
-                values.tafId = values.tafId.map((option) => option.value); // Extract only the values
-                await SendTaf(values);
-                Swal.fire('Success', 'TAF sent successfully!', 'success');
-                onSuccess();
-                setShow(false);
+
+                values.tafId = values.tafId.map((option) => option.value);
+
+                const response = await SendTaf(values);
+                console.log(response)
+                if (response && (response.status === 200 || response.status === 201 || response.success)) {
+                    Swal.fire('Success', 'TAF sent successfully!', 'success');
+                    setShow(false);
+                } else {
+                    Swal.fire('Error','Failed to send TAF', 'error');
+                    throw new Error(response?.message || 'Unexpected response from server');
+                }
             } catch (error) {
-                Swal.fire('Error', 'Failed to send TAF', 'error');
+                console.error("Error sending TAF:", error);
+                Swal.fire('Error', error.message || 'Failed to send TAF', 'error');
             } finally {
                 setLoading(false);
             }
         },
     });
+    
+
 
     return (
         <>
-        1
-            {/* <Button onClick={() => setShow(true)} className='btn btn-sm btn-light-info me-3'>
+            <Button onClick={() => setShow(true)} className='btn btn-sm btn-light-info me-3'>
                 <KTIcon iconName='send' className='fs-2' />
                 Send TRF
             </Button>
             <Modal show={show} onHide={() => setShow(false)} dialogClassName="modal-dialog-centered mw-800px">
                 <Modal.Header>
-                    <Modal.Title>Send TAF</Modal.Title>
+                    <Modal.Title className='text-uppercase'>Send Talent Acquisition Form</Modal.Title>
                     <button className="btn btn-sm btn-icon btn-active-color-primary" onClick={() => setShow(false)}>
                         <KTIcon iconName="cross" className="fs-1" />
                     </button>
@@ -69,7 +77,7 @@ function SendTAFModal({ companyId, onSuccess }) {
                     <form onSubmit={formik.handleSubmit}>
                         <div className='row g-4 mb-8'>
                             <div className='col-md-6 fv-row'>
-                                <label className="required fs-6 fw-semibold mb-2">Client</label>
+                                <label className="required fs-6 fw-semibold mb-2">Department Name</label>
                                 <SelectClientComponent
                                     className="form-select form-select-solid"
                                     onChange={(e) => formik.setFieldValue('client', e.target.value)}
@@ -79,10 +87,10 @@ function SendTAFModal({ companyId, onSuccess }) {
                                 )}
                             </div>
                             <div className='col-md-6 fv-row'>
-                                <label className="required fs-6 fw-semibold mb-2">Client Individual</label>
+                                <label className="required fs-6 fw-semibold mb-2">Department Individual</label>
                                 <SelectClientIndividualsComponent
                                     className="form-select form-select-solid"
-                                    clientId={formik.values.client}
+                                    departmentId={formik.values.client}
                                     onChange={(e) => formik.setFieldValue('clientApprover', e.target.value)}
                                 />
                                 {formik.touched.clientApprover && formik.errors.clientApprover && (
@@ -92,10 +100,9 @@ function SendTAFModal({ companyId, onSuccess }) {
                         </div>
                         <div className='row g-4 mb-8'>
                             <div className='col-md-12 fv-row'>
-                                <label className="required fs-6 fw-semibold mb-2">TAF</label>
+                                <label className="required fs-6 fw-semibold mb-2">Talent Acquisition Form</label>
                                 <SelectMultipleClientJobProfilesComponent
-                                   clientId={formik.values.client}
-                                   departmentid={''}
+                                   departmentId={formik.values.client}
                                    className={'react-select-styled react-select-solid'}
                                    onChange={(selected) => formik.setFieldValue('tafId', selected)}
                                    value={formik.values.tafId}
@@ -121,7 +128,7 @@ function SendTAFModal({ companyId, onSuccess }) {
                         {loading ? 'Sending...' : 'Send'}
                     </Button>
                 </Modal.Footer>
-            </Modal> */}
+            </Modal>
         </>
     );
 }

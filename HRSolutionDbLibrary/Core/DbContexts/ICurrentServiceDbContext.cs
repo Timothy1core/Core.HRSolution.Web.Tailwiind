@@ -74,4 +74,7 @@ public interface ICurrentServiceDbContext
 	DbSet<OnboardingInformationSheet> OnboardingInformationSheets { get; set; }
 	DbSet<WorkFromHomeInformation> WorkFromHomeInformations { get; set; }
 	DbSet<OnboardingStatus> OnboardingStatuses { get; set; }
+	DbSet<EmployeeMilestone> EmployeeMilestones { get; set; }
+	DbSet<EmployeeDependent> EmployeeDependents { get; set; }
+	DbSet<EmployeeDocument> EmployeeDocuments { get; set; }
 }

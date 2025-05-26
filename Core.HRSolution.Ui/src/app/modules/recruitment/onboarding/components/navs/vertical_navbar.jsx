@@ -4,15 +4,20 @@ import { Viewer, Worker, SpecialZoomLevel  } from '@react-pdf-viewer/core';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
-// import { Accordion, Form } from 'react-bootstrap';
-import { KTIcon } from '@/_metronic/helpers';
-import { ApiGateWayUrl} from '../../core/requests/_request';
+import { Accordion, Form } from 'react-bootstrap';
+import { KTIcon } from "../../../../../../_metronic/helpers";
+import { ApiGateWayUrl, SelectDepartmentsDropDown, updateOnboardingFormInfoInternal} from '../../core/requests/_request';
 import axios from 'axios';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import provinces from '../../../../../../../public/json/provinces.json';
 import cities from '../../../../../../../public/json/citiesMunicipalities.json';
+import dayjs from "dayjs";
+import advancedFormat from 'dayjs/plugin/advancedFormat';
+import InputMask from 'react-input-mask-next';
+import Swal from 'sweetalert2';
 
+dayjs.extend(advancedFormat);
     const detectFileType = async (url) => {
         try {
         const response = await fetch(url, { method: 'GET' });
@@ -51,17 +56,19 @@ import cities from '../../../../../../../public/json/citiesMunicipalities.json';
 
 const VerticalNavBar = ({
     candidateId,
-    //   logo,
-    //   status,
-    //   clientCompanyName,
     wfhInformation,
-    coreInfoSheet
+    coreInfoSheet,
+    acceptedDate,
+    refresh
     }) => {
     const defaultLayoutPluginInstance = defaultLayoutPlugin();
-    
+    const [loading, setLoading] = useState(false);
     const [availableCities, setAvailableCities] = useState([]);
     const [availablePermanentCities, setAvailablePermanentCities] = useState([]);
     const [documents, setDocuments] = useState([]);
+    const [wfhLength, setWfhLength] = useState(0);
+    const [selectedDepartment, setSelectedDepartment] = useState(0);
+    const [departments, setDepartments] = useState([]);
 
     const [nbiClearance, setNbiClearance] = useState({ type: null, exists: false });
     const [birthCertificate, setBirthCertificate] = useState({ type: null, exists: false });
@@ -91,6 +98,11 @@ const VerticalNavBar = ({
     const employmentFileUrl = `${ApiGateWayUrl()}/recruitment/onboarding/candidate_document/${candidateId}/employmentCert`;
     const form2316FileUrl = `${ApiGateWayUrl()}/recruitment/onboarding/candidate_document/${candidateId}/form2316`;
 
+    const cleanMaskedValue = (val) => {
+        if (typeof val !== 'string') return '';
+        return val.replace(/[^0-9]/g, '');
+      };
+
     const formik = useFormik({
         initialValues: {
           lastName: coreInfoSheet?.lastName || '',
@@ -113,8 +125,8 @@ const VerticalNavBar = ({
           permanentZipcode: coreInfoSheet?.permanentZipcode || '',
           landlineNo: coreInfoSheet?.landlineNo || '',
           mobileNo: coreInfoSheet?.mobileNo || '',
-          alternativeMobileNo: coreInfoSheet?.alternativeMobileNo || '',
-          email: coreInfoSheet?.personalEmail || '',
+          alternativeMobileNo: coreInfoSheet?.alternativeMobileNo || null,
+          personalEmail: coreInfoSheet?.personalEmail || '',
           emergencyContactPerson: coreInfoSheet?.emergencyContactPerson || '',
           emergencyContactNo: coreInfoSheet?.emergencyContactNo || '',
           emergencyRelation: coreInfoSheet?.emergencyRelation || '',
@@ -122,11 +134,9 @@ const VerticalNavBar = ({
           philhealthIdNo: coreInfoSheet?.philhealthIdNo || '',
           tinidNo: coreInfoSheet?.tinidNo || '',
           pagibigIdNo: coreInfoSheet?.pagibigIdNo || '',
-          department: '',
-          startDate: '',
-          orientationDate: '',
-          NTLogin: '',
-          companyEmail: '',
+          department: coreInfoSheet?.departmentId || '',
+          startDate: coreInfoSheet?.startDate?.split('T')[0] || '',
+          orientationDate: coreInfoSheet?.orientationDate?.split('T')[0] || '',
         },
         validationSchema: Yup.object({
           lastName: Yup.string().required('Required'),
@@ -146,8 +156,7 @@ const VerticalNavBar = ({
           permanentLocation: Yup.string().required('Required'),
           permanentZipcode: Yup.string().required('Required'),
           mobileNo: Yup.string().required('Required'),
-          alternativeMobileNo: Yup.string().required('Required'),
-          email: Yup.string().email('Invalid email').required('Required'),
+          personalEmail: Yup.string().email('Invalid email').required('Required'),
           emergencyContactPerson: Yup.string().required('Required'),
           emergencyContactNo: Yup.string().required('Required'),
           emergencyRelation: Yup.string().required('Required'),
@@ -156,13 +165,61 @@ const VerticalNavBar = ({
           tinidNo: Yup.string().required('Required'),
           pagibigIdNo: Yup.string().required('Required'),
           department: Yup.string().required('Required'),
-          startDate: Yup.string().required('Required'),
-          orientationDate: Yup.string().required('Required'),
-          NTLogin: Yup.string().required('Required'),
-          companyEmail: Yup.string().email('Invalid email').required('Required'),
+        //   startDate: Yup.string().required('Required'),
+        //   orientationDate: Yup.string().required('Required'),
         }),
-        onSubmit: values => {
-          console.log('Form Submitted:', values);
+        onSubmit: async (values, { setStatus, setSubmitting }) => {
+            const formData = new FormData();
+
+            Object.entries({
+              LastName: values.lastName,
+              FirstName: values.firstName,
+              MiddleName: values.middleName,
+              MiddleNamePrefix: values.middleNamePrefix,
+              Suffix: values.suffix,
+              Salutation: values.salutation,
+              Gender: values.gender,
+              CivilStatus: values.civilStatus,
+              DateOfBirth: values.dateOfBirth,
+              EducationalAttainment: values.educationalAttainment,
+              CurrentAddress: values.currentAddress,
+              CurrentCityProvince: values.currentCityProvince,
+              CurrentLocation: values.currentLocation,
+              CurrentZipCode: cleanMaskedValue(values.currentZipcode),
+              PermanentAddress: values.permanentAddress,
+              PermanentCityProvince: values.permanentCityProvince,
+              PermanentLocation: values.permanentLocation,
+              PermanentZipCode: cleanMaskedValue(values.permanentZipcode),
+              LandlineNo: cleanMaskedValue(values.landlineNo),
+              MobileNo: cleanMaskedValue(values.mobileNo),
+              AlternativeMobileNo: cleanMaskedValue(values.alternativeMobileNo),
+              PersonalEmail: values.personalEmail,
+              EmergencyContactPerson: values.emergencyContactPerson,
+              EmergencyContactNo: cleanMaskedValue(values.emergencyContactNo),
+              EmergencyRelation: values.emergencyRelation,
+              SssidNo: cleanMaskedValue(values.sssidNo),
+              PhilhealthIdNo: cleanMaskedValue(values.philhealthIdNo),
+              TinidNo: cleanMaskedValue(values.tinidNo),
+              PagibigIdNo: cleanMaskedValue(values.pagibigIdNo),
+              DepartmentId: parseInt(values.department),
+              StartDate: values.startDate,
+              OrientationDate: values.orientationDate
+            }).forEach(([key, value]) => formData.append(key, value));
+            // formData.append('DepartmentId', values.department);
+            try {
+                let response = await updateOnboardingFormInfoInternal(candidateId, formData);
+        
+                if (response.data.success) {
+                  Swal.fire('Updated', 'Information has been Updated Successfully!', 'success');
+                  refresh()
+                }
+              } catch (error) {
+                console.error(error);
+                setStatus(error.message || 'An error occurred');
+              } finally {
+                setSubmitting(false);
+                setLoading(false);
+              }
         },
       });     
 
@@ -207,7 +264,9 @@ const VerticalNavBar = ({
           };
           fetchFileType();
         }
-        
+        if (wfhInformation) {
+            setWfhLength(parseInt(wfhInformation.length));
+          }
     }, []);
 
     useEffect(() => {
@@ -220,9 +279,9 @@ const VerticalNavBar = ({
         } else {
           setAvailableCities([]);
         }
-      }, [formik.values.currentCityProvince]);
+    }, [formik.values.currentCityProvince]);
 
-      useEffect(() => {
+    useEffect(() => {
         const selectedProvCode = formik.values.permanentCityProvince;
         if (selectedProvCode) {
           setAvailablePermanentCities(
@@ -231,7 +290,7 @@ const VerticalNavBar = ({
         } else {
           setAvailablePermanentCities([]);
         }
-      }, [formik.values.permanentCityProvince]);      
+    }, [formik.values.permanentCityProvince]);      
 
     useEffect(() => {
         if (candidateId) {
@@ -245,27 +304,48 @@ const VerticalNavBar = ({
         };
     
         fetchDocuments();
-    }
-      }, [candidateId]);
+        }
+    }, [candidateId]);
+
+    useEffect(() => {
+        const fetchDocuments = async () => {
+          try {
+            const response = await SelectDepartmentsDropDown()
+            setDepartments(response.data.values);
+          } catch (error) {
+            console.error("Error fetching departments:", error);
+          }
+        };
+    
+        fetchDocuments();
+    }, []);
+
   return (
     <div className="row fs-5 mb-5">
               <div className="col-4">
                 <div className="card p-8">
                           <ul className="nav nav-pills flex-column">
                               <li className="nav-item my-1">
-                                  <a className="btn btn-sm nav-link active btn-secondary d-flex align-items-center justify-between" data-bs-toggle="tab" href="#tab_job_offer">
+                                  <a className="btn btn-sm nav-link btn-secondary d-flex align-items-center justify-content-between" data-bs-toggle="tab" href="#tab_job_offer">
                                     <div>
                                       <div className="text-start">Job Offer</div>
-                                      <div className="text-start fs-7 text-gray-700">Due Date [date]</div>
+                                      { acceptedDate &&<div className="text-start fs-7 text-gray-700">
+                                            Accepted on {dayjs(acceptedDate).format('MMM Do, YYYY')}
+                                        </div>
+                                       }
                                     </div>
                                     <div><KTIcon iconName='verify' className='text-success'/> Done</div>
                                   </a>
                               </li>
                               <li className="nav-item my-1">
-                                  <a className="btn btn-sm nav-link btn-secondary d-flex justify-between align-items-center" data-bs-toggle="tab" href="#tab_core_info">
+                                  <a className="btn btn-sm nav-link active btn-secondary d-flex justify-content-between align-items-center" data-bs-toggle="tab" href="#tab_core_info">
                                     <div>
                                       <div className="text-start">Core Information Sheet</div>
-                                      <div className="text-start fs-7 text-gray-700">Due Date [date]</div>
+                                      { coreInfoSheet.createdDate &&
+                                      <div className="text-start fs-7 text-gray-700">
+                                        Completed on {dayjs(coreInfoSheet.createdDate).format('MMM Do, YYYY')}
+                                      </div>
+                                        }
                                     </div>
                                     
                                     {
@@ -277,10 +357,10 @@ const VerticalNavBar = ({
                                   </a>
                               </li>
                               <li className="nav-item my-1">
-                                  <a className="btn btn-sm nav-link btn-secondary d-flex justify-between align-items-center" data-bs-toggle="tab" href="#tab_pre_requisite">
+                                  <a className="btn btn-sm nav-link btn-secondary d-flex justify-content-between align-items-center" data-bs-toggle="tab" href="#tab_pre_requisite">
                                     <div>
                                       <div className="text-start">Pre-Requisite Requirements</div>
-                                      <div className="text-start fs-7 text-gray-700">Due Date [date]</div>
+                                      {/* <div className="text-start fs-7 text-gray-700">Due Date [date]</div> */}
                                     </div>
                                     {
                                         (nbiClearance.exists && birthCertificate.exists && medicalExam.exists)
@@ -290,10 +370,10 @@ const VerticalNavBar = ({
                                   </a>
                               </li>
                               <li className="nav-item my-1">
-                                  <a className="btn btn-sm nav-link btn-secondary d-flex justify-between align-items-center" data-bs-toggle="tab" href="#tab_general_req">
+                                  <a className="btn btn-sm nav-link btn-secondary d-flex justify-content-between align-items-center" data-bs-toggle="tab" href="#tab_general_req">
                                     <div>
                                       <div className="text-start">General Requirements</div>
-                                      <div className="text-start fs-7 text-gray-700">Due Date [date]</div>
+                                      {/* <div className="text-start fs-7 text-gray-700">Due Date [date]</div> */}
                                     </div>
                                     {
                                         (pagibig.exists && philhealth.exists && tin.exists && sss.exists && diploma.exists && (coreInfoSheet.civilStatus == "Married" ? marriageCert.exists : true) && dependentCert.exists && employmentCert.exists && form2316.exists)
@@ -303,17 +383,17 @@ const VerticalNavBar = ({
                                   </a>
                               </li>
                               <li className="nav-item my-1">
-                                  <a className="btn btn-sm nav-link btn-secondary d-flex justify-between align-items-center" data-bs-toggle="tab" href="#tab_wfh_eligibility">
+                                  <a className="btn btn-sm nav-link btn-secondary d-flex justify-content-between align-items-center" data-bs-toggle="tab" href="#tab_wfh_eligibility">
                                     <div>
                                       <div className="text-start">WFH Eligibility</div>
-                                      <div className="text-start fs-7 text-gray-700">Due Date [date]</div>
+                                      {/* <div className="text-start fs-7 text-gray-700">Due Date [date]</div> */}
                                     </div>
                                     {
-                                        wfhInformation
-                                        ? <div> <KTIcon iconName='watch' className='text-warning'/> Needs Approval </div>
+                                        wfhLength == 0
+                                        ? <div> <KTIcon iconName='information' className='text-info'/> In Progress </div>
                                         : wfhInformation.workFromHomeApproval && wfhInformation.workFromHomeApproval1 ? 
                                         <div> <KTIcon iconName='verify' className='text-success'/> Done </div>
-                                        : <div> <KTIcon iconName='information' className='text-info'/> In Progress </div>
+                                        : <div> <KTIcon iconName='watch' className='text-warning'/> Needs Approval </div>
                                     }
                                   </a>
                               </li>
@@ -328,11 +408,11 @@ const VerticalNavBar = ({
                         {/* <div className="tab-pane fade show active" id="tab_job_offer" role="tabpanel">
                           <h2>{candidateId}</h2>
                         </div> */}
-                        <div className="tab-pane fade" id="tab_core_info" role="tabpanel">
+                        <div className="tab-pane fade show active" id="tab_core_info" role="tabpanel">
                           <h4 className="text-danger">Personal Informations</h4>
                           <form onSubmit={formik.handleSubmit}>
                           <div className='fv-row d-flex mb-3'>
-                            <div className='me-2 flex-fill'>
+                            <div className='me-2 flex-fill col-3'>
                             <label className='form-label required fs-8'>Last Name</label>
                             <input
                                 name='lastName'
@@ -344,7 +424,7 @@ const VerticalNavBar = ({
                                 <div className='text-danger mt-2'>{formik.errors.lastName}</div>
                             )}
                             </div>
-                            <div className='me-2 flex-fill'>
+                            <div className='me-2 flex-fill col-3'>
                             <label className='form-label required fs-8'>First Name</label>
 
                             <input
@@ -357,7 +437,7 @@ const VerticalNavBar = ({
                                 <div className='text-danger mt-2'>{formik.errors.firstName}</div>
                             )}
                             </div>
-                            <div className='me-2 flex-fill'>
+                            <div className='me-2 flex-fill col-3'>
                             <label className='form-label fs-8'>Middle Name</label>
                             <input
                                 name='middleName'
@@ -366,7 +446,7 @@ const VerticalNavBar = ({
                                 onChange={formik.handleChange}
                             />
                             </div>
-                            <div  className='flex-fill'>
+                            <div  className='col-3 flex-fill'>
                             <label className='form-label required fs-8'>Middle Name Prefix</label>
                             <input
                                 name='middleNamePrefix'
@@ -446,10 +526,10 @@ const VerticalNavBar = ({
                           </div>
 
                           <div className='fv-row d-flex mb-3'>
-                            <div className='me-2 col-3'>
+                            <div className='me-2 flex-fill col-3'>
                                 <label className='form-label required fs-8'>Date of Birth</label>
                                 <input 
-                                    type="dateOfBirth" 
+                                    type="date" 
                                     className="form-control form-control-sm" 
                                     value={formik.values.dateOfBirth}
                                     onChange={formik.handleChange}
@@ -458,7 +538,7 @@ const VerticalNavBar = ({
                                     <div className='text-danger mt-2'>{formik.errors.dateOfBirth}</div>
                                 )}
                             </div>
-                            <div className='col-3'>
+                            <div className='me-2 col-3 flex-fill'>
                                 <label className='form-label required fs-8'>Educational Attainment</label>
                                 <select
                                     name='educationalAttainment'
@@ -469,6 +549,7 @@ const VerticalNavBar = ({
                                     <option value='' disabled>Select Education Attainment</option>
                                     <option value='Elementary Graduate'>Elementary Graduate</option>
                                     <option value='High School Gradute'>High School Gradute</option>
+                                    <option value='College Gradute'>College Gradute</option>
                                     <option value='Undergradute'>Undergradute</option>
                                     <option value='Trade/Technical/Vocational Traning'>Trade/Technical/Vocational Traning</option>
                                     <option value="Master's Degree">Master's Degree</option>
@@ -478,6 +559,10 @@ const VerticalNavBar = ({
                                 {formik.touched.educationalAttainment && formik.errors.educationalAttainment && (
                                     <div className='text-danger mt-2'>{formik.errors.educationalAttainment}</div>
                                 )}
+                            </div>
+                            <div className='col-3 flex-fill'>
+                            </div>
+                            <div className='col-3'>
                             </div>
                           </div>
 
@@ -535,12 +620,16 @@ const VerticalNavBar = ({
                             </div>
                             <div  className='flex-fill col-3'>
                             <label className='form-label required fs-8'>Zipcode</label>
-                            <input
-                                name='currentZipcode'
-                                className='form-control form-control-sm'
-                                value={formik.values.currentZipcode}
-                                onChange={formik.handleChange}
-                            />
+
+                            <InputMask
+                                        className="form-control form-control-sm"
+                                        mask="9999"
+                                        onChange={formik.handleChange}
+                                        name='currentZipcode'
+                                        value={formik.values.currentZipcode}
+                                        // {...formik.getFieldProps('currentZipCode')}
+                                        >
+                            </InputMask>
                             {formik.touched.currentZipcode && formik.errors.currentZipcode && (
                                 <div className='text-danger mt-2'>{formik.errors.currentZipcode}</div>
                             )}
@@ -598,14 +687,17 @@ const VerticalNavBar = ({
                                 <div className='text-danger mt-2'>{formik.errors.permanentLocation}</div>
                             )}
                             </div>
-                            <div  className='flex-fill col-3'>
+                            <div  className=' flex-fill col-3'>
                             <label className='form-label required fs-8'>Zipcode</label>
-                            <input
-                                name='permanentZipcode'
-                                className='form-control form-control-sm'
-                                value={formik.values.permanentZipcode}
-                                onChange={formik.handleChange}
-                            />
+                            <InputMask
+                                        className="form-control form-control-sm"
+                                        mask="9999"
+                                        name='permanentZipcode'
+                                        onChange={formik.handleChange}
+                                        value={formik.values.permanentZipcode}
+                                        // {...formik.getFieldProps('currentZipCode')}
+                                        >
+                            </InputMask>
                             {formik.touched.permanentZipcode && formik.errors.permanentZipcode && (
                                 <div className='text-danger mt-2'>{formik.errors.permanentZipcode}</div>
                             )}
@@ -617,46 +709,51 @@ const VerticalNavBar = ({
                           <h4 className="text-danger mt-4">Contact Information</h4>
 
                           <div className='fv-row d-flex mb-3'>
-                            <div className='me-2 flex-fill'>
-                            <label className='form-label fs-8'>landlineNo</label>
-                            <input
-                                name='landlineNo'
-                                className='form-control form-control-sm'
-                                value={formik.values.landlineNo}
-                                onChange={formik.handleChange}
-                            />
+                            <div className='me-2 flex-fill col-3'>
+                            <label className='form-label fs-8'>Landline Number</label>
+                            <InputMask
+                                        className="form-control form-control-sm"
+                                        mask="99999999999"
+                                        onChange={formik.handleChange}
+                                        name='landlineNo'
+                                        value={formik.values.landlineNo}
+                                        // {...formik.getFieldProps('currentZipCode')}
+                                        >
+                            </InputMask>
                             </div>
-                            <div className='me-2 flex-fill'>
+                            <div className='me-2 flex-fill col-3'>
                             <label className='form-label required fs-8'>Mobile Number</label>
-
-                            <input
-                                name='mobileNo'
-                                className='form-control form-control-sm'
-                                value={formik.values.mobileNo}
-                                onChange={formik.handleChange}
-                            />
+                            <InputMask
+                                        className="form-control form-control-sm"
+                                        mask="9999-999-9999"
+                                        onChange={formik.handleChange}
+                                        value={formik.values.mobileNo}
+                                        name='mobileNo'
+                                        // {...formik.getFieldProps('currentZipCode')}
+                                        >
+                            </InputMask>
                             {formik.touched.mobileNo && formik.errors.mobileNo && (
                                 <div className='text-danger mt-2'>{formik.errors.mobileNo}</div>
                             )}
                             </div>
-                            <div className='me-2 flex-fill'>
-                            <label className='form-label required fs-8'>Alternate Number</label>
-                            <input
-                                name='alternativeMobileNo'
-                                className='form-control form-control-sm'
-                                value={formik.values.alternativeMobileNo}
-                                onChange={formik.handleChange}
-                            />
-                            {formik.touched.alternativeMobileNo && formik.errors.alternativeMobileNo && (
-                                <div className='text-danger mt-2'>{formik.errors.alternativeMobileNo}</div>
-                            )}
+                            <div className='me-2 flex-fill col-3'>
+                            <label className='form-label fs-8'>Alternate Number</label>
+                            <InputMask
+                                        className="form-control form-control-sm"
+                                        mask="9999-999-9999"
+                                        onChange={formik.handleChange}
+                                        value={formik.values.alternativeMobileNo}
+                                        // {...formik.getFieldProps('currentZipCode')}
+                                        name='alternativeMobileNo'
+                                        >
+                            </InputMask>
                             </div>
-                            <div  className='flex-fill'>
+                            <div  className='flex-fill col-3'>
                             <label className='form-label required fs-8'>Email</label>
                             <input
                                 name='personalEmail'
                                 className='form-control form-control-sm'
-                                value={formik.values.alternativeMobileNo}
+                                value={formik.values.personalEmail}
                                 onChange={formik.handleChange}
                             />
                             {formik.touched.personalEmail && formik.errors.personalEmail && (
@@ -665,8 +762,8 @@ const VerticalNavBar = ({
                             </div>
                           </div>
 
-                          <div className='fv-row gap-1 d-flex mb-3'>
-                            <div className=' col-3'>
+                          <div className='fv-row d-flex mb-3'>
+                            <div className='me-2 flex-fill col-3'>
                             <label className='form-label required fs-8'>Emergency Contact Person</label>
                             <input
                                 name='emergencyContactPerson'
@@ -678,30 +775,34 @@ const VerticalNavBar = ({
                                 <div className='text-danger mt-2'>{formik.errors.emergencyContactPerson}</div>
                             )}
                             </div>
-                            <div className=' col-3'>
+                            <div className='flex-fill me-2 col-3'>
                             <label className='form-label required fs-8'>Emergency Contact Number</label>
-
-                            <input
-                                name='emergencyContactNo'
-                                className='form-control form-control-sm'
-                                value={formik.values.emergencyContactNo}
-                                onChange={formik.handleChange}
-                            />
+                            <InputMask
+                                        className="form-control form-control-sm"
+                                        mask="9999-999-9999"
+                                        onChange={formik.handleChange}
+                                        value={formik.values.emergencyContactNo}
+                                        name='emergencyContactNo'
+                                        // {...formik.getFieldProps('currentZipCode')}
+                                        >
+                            </InputMask>
                             {formik.touched.emergencyContactNo && formik.errors.emergencyContactNo && (
                                 <div className='text-danger mt-2'>{formik.errors.emergencyContactNo}</div>
                             )}
                             </div>
-                            <div className='col-3'>
+                            <div className='flex-fill me-2 col-3'>
                             <label className='form-label required fs-8'>Relation</label>
                             <input
                                 name='emergencyRelation'
                                 className='form-control form-control-sm'
-                                value={formik.values.emergencyContactNo}
+                                value={formik.values.emergencyRelation}
                                 onChange={formik.handleChange}
                             />
                             {formik.touched.emergencyRelation && formik.errors.emergencyRelation && (
                                 <div className='text-danger mt-2'>{formik.errors.emergencyRelation}</div>
                             )}
+                            </div>
+                            <div className='flex-fill col-3'>
                             </div>
                           </div>
 
@@ -710,50 +811,62 @@ const VerticalNavBar = ({
                           <h4 className="text-danger mt-4">Government Information</h4>
 
                           <div className='fv-row d-flex mb-3'>
-                            <div className='me-2 flex-fill'>
+                            <div className='me-2 flex-fill col-3'>
                             <label className='form-label required fs-8'>Social Security System (SSS)</label>
-                            <input
-                                name='sssidNo'
-                                className='form-control form-control-sm'
-                                value={formik.values.sssidNo}
-                                onChange={formik.handleChange}
-                            />
+                            <InputMask
+                                        className="form-control form-control-sm"
+                                        mask="99-9999999-9"
+                                        onChange={formik.handleChange}
+                                        value={formik.values.sssidNo}
+                                        // {...formik.getFieldProps('currentZipCode')}
+                                        name='sssidNo'
+                                        >
+                            </InputMask>
                             {formik.touched.sssidNo && formik.errors.sssidNo && (
                                 <div className='text-danger mt-2'>{formik.errors.sssidNo}</div>
                             )}
                             </div>
-                            <div className='me-2 flex-fill'>
+                            <div className='me-2 flex-fill col-3'>
                             <label className='form-label required fs-8'>Philhealth</label>
-                            <input
-                                name='philhealthIdNo'
-                                className='form-control form-control-sm'
-                                value={formik.values.philhealthIdNo}
-                                onChange={formik.handleChange}
-                            />
+                            <InputMask
+                                        className="form-control form-control-sm"
+                                        mask="99-999999999-9"
+                                        onChange={formik.handleChange}
+                                        value={formik.values.philhealthIdNo}
+                                        // {...formik.getFieldProps('currentZipCode')}
+                                        name='philhealthIdNo'
+                                        >
+                            </InputMask>
                             {formik.touched.philhealthIdNo && formik.errors.philhealthIdNo && (
                                 <div className='text-danger mt-2'>{formik.errors.philhealthIdNo}</div>
                             )}
                             </div>
-                            <div className='me-2 flex-fill'>
+                            <div className='me-2 flex-fill col-3'>
                             <label className='form-label required fs-8'>TIN</label>
-                            <input
-                                name='tinidNo'
-                                className='form-control form-control-sm'
-                                value={formik.values.tinidNo}
-                                onChange={formik.handleChange}
-                            />
+                            <InputMask
+                                        className="form-control form-control-sm"
+                                        mask="99999-999-999"
+                                        onChange={formik.handleChange}
+                                        value={formik.values.tinidNo}
+                                        // {...formik.getFieldProps('currentZipCode')}
+                                        name='tinidNo'
+                                        >
+                            </InputMask>
                             {formik.touched.tinidNo && formik.errors.tinidNo && (
                                 <div className='text-danger mt-2'>{formik.errors.tinidNo}</div>
                             )}
                             </div>
-                            <div  className='flex-fill'>
+                            <div  className='flex-fill col-3'>
                             <label className='form-label required fs-8'>PagIBIG</label>
-                            <input
-                                name='pagibigIdNo'
-                                className='form-control form-control-sm'
-                                value={formik.values.pagibigIdNo}
-                                onChange={formik.handleChange}
-                            />
+                            <InputMask
+                                        className="form-control form-control-sm"
+                                        mask="9999-9999-9999"
+                                        onChange={formik.handleChange}
+                                        value={formik.values.pagibigIdNo}
+                                        // {...formik.getFieldProps('currentZipCode')}
+                                        name='pagibigIdNo'
+                                        >
+                            </InputMask>
                             {formik.touched.pagibigIdNo && formik.errors.pagibigIdNo && (
                                 <div className='text-danger mt-2'>{formik.errors.pagibigIdNo}</div>
                             )}
@@ -765,79 +878,61 @@ const VerticalNavBar = ({
                           <h4 className="text-danger mt-4">Government Information</h4>
 
                           <div className='fv-row d-flex mb-3'>
-                            <div className='me-2 flex-fill'>
-                            <label className='form-label required fs-8'>Department</label>
-                            <input
-                                name='department'
-                                className='form-control form-control-sm'
-                                value={formik.values.department}
-                                onChange={formik.handleChange}
-                            />
-                            {/* {formik.touched.menuName && formik.errors.menuName && (
-                                <div className='text-danger mt-2'>{formik.errors.menuName}</div>
-                            )} */}
+                            <div className='me-2 flex-fill col-3'>
+                            <label className='form-label fs-8'>Department</label>
+                            <select
+                            name="department"
+                            className="form-select form-select-sm form-control form-control-sm"
+                            value={formik.values.department}
+                            onChange={(e) => {
+                                formik.setFieldValue('department', e.target.value);
+                                setSelectedDepartment(e.target.value); // optional, if needed elsewhere
+                            }}
+                            >
+                                <option value='0' hidden>All</option>      
+                                {departments.map((department) => (
+                                    <option key={department.id} value={department.id}>
+                                    {department.label}
+                                    </option>
+                            ))}
+                            </select>                               
                             </div>
-                            <div className='me-2 flex-fill'>
+                            <div className='me-2 flex-fill col-3'>
                             <label className='form-label required fs-8'>Start Date</label>
 
                             <input
+                            type='date'
                                 name='startDate'
                                 className='form-control form-control-sm'
-                                // {...formik.getFieldProps('menuName')}
+                                {...formik.getFieldProps('startDate')}
                             />
                             {/* {formik.touched.menuName && formik.errors.menuName && (
                                 <div className='text-danger mt-2'>{formik.errors.menuName}</div>
                             )} */}
                             </div>
-                            <div className='me-2 flex-fill'>
+                            <div className='flex-fill col-3'>
                             <label className='form-label required fs-8'>Orientation Date</label>
                             <input
+                            type='date'
                                 name='orientationDate'
                                 className='form-control form-control-sm'
-                                // {...formik.getFieldProps('menuName')}
+                                {...formik.getFieldProps('orientationDate')}
                             />
                             {/* {formik.touched.menuName && formik.errors.menuName && (
                                 <div className='text-danger mt-2'>{formik.errors.menuName}</div>
                             )} */}
                             </div>
-                            <div  className='flex-fill'>
-                            <label className='form-label required fs-8'>NT Login</label>
-                            <input
-                                name='NTLogin'
-                                className='form-control form-control-sm'
-                                // {...formik.getFieldProps('menuPath')}
-                            />
-                            {/* {formik.touched.menuPath && formik.errors.menuPath && (
-                                <div className='text-danger mt-2'>{formik.errors.menuPath}</div>
-                            )} */}
+                            <div className='flex-fill col-3'>
                             </div>
                           </div>
-
-                          <div className='fv-row d-flex mb-3'>
-                            <div className='me-2 flex-fill'>
-                            <label className='form-label required fs-8'>Company Email</label>
-                            <input
-                                name='companyEmail'
-                                className='form-control form-control-sm'
-                                // {...formik.getFieldProps('menuName')}
-                            />
-                            {/* {formik.touched.menuName && formik.errors.menuName && (
-                                <div className='text-danger mt-2'>{formik.errors.menuName}</div>
-                            )} */}
-                            </div>
-                            <div  className='w-25'>
-                            </div>
-                            <div  className='w-25'>
-                            </div>
-                            <div  className='w-25'>
-                            </div>
+                          <div className='d-flex justify-content-end'>
+                          <button type='submit' className='btn btn-sm btn-danger'>Submit</button>
                           </div>
-                          <button type='submit' className='btn btn-primary'>Submit</button>
                           </form>
                         </div>
                         <div className="tab-pane fade" id="tab_pre_requisite" role="tabpanel " >
                             <h4 className="card-title text-danger mb-5 fw-bold">Pre-Requisite Requirements</h4>
-                            {/* <Accordion>
+                            <Accordion>
                                 <Accordion.Item eventKey="0" className='text-center'>
                                     <Accordion.Header >
                                         <Form.Check type="checkbox" checked={nbiClearance.exists} disabled className="me-3" />
@@ -871,11 +966,11 @@ const VerticalNavBar = ({
                                         <PdfOrImagePreview fileUrl={medicalFileUrl} fileType={medicalExam.type} />
                                     </Accordion.Body>
                                 </Accordion.Item>
-                            </Accordion> */}
+                            </Accordion>
                         </div>
                         <div className="tab-pane fade" id="tab_general_req" role="tabpanel">
                             <h4 className="card-title text-danger mb-5 fw-bold">General Requirements</h4>
-                            {/* <Accordion>
+                            <Accordion>
                                 <Accordion.Item eventKey="0" className='text-center'>
                                     <Accordion.Header >
                                         <Form.Check type="checkbox" checked={pagibig.exists} disabled className="me-3" />
@@ -986,10 +1081,11 @@ const VerticalNavBar = ({
                                         <PdfOrImagePreview fileUrl={form2316FileUrl} fileType={form2316.type} />
                                     </Accordion.Body>
                                 </Accordion.Item>
-                            </Accordion> */}
+                            </Accordion>
                             
                         </div>
-                        <div className="tab-pane fade" id="tab_wfh_eligibility" role="tabpanel">
+                        {wfhLength != 0 &&
+                            <div className="tab-pane fade" id="tab_wfh_eligibility" role="tabpanel">
                         <h4 className="text-danger">WFH Application</h4>
 
                           <div className='fv-row d-flex mb-3'>
@@ -1080,12 +1176,12 @@ const VerticalNavBar = ({
 
                           <div className='fv-row d-flex mb-3'>
                             <div className='me-2 col-6'>
-                            {/* <Accordion>
+                            <Accordion>
                                 <Accordion.Item eventKey="0" className='text-center'>
                                     <Accordion.Header >
                                         <span className='fw-bold m-0 fs-7'>HOW DO I SET UP A WORKSTATION AT HOME?</span>
                                     </Accordion.Header>
-                                    {pagibig.exists && 
+
                                     <Accordion.Body>
                                         {[
                                             "Find a work surface - whether this be a desk, dining table, kitchen bench etc, that allows you to sit upright and have relaxed shoulders with elbows slightly above the work surface height when typing.",
@@ -1108,18 +1204,17 @@ const VerticalNavBar = ({
                                             </label>
                                             </div>
                                         ))}
-                                    </Accordion.Body>}
+                                    </Accordion.Body>
                                     
                                 </Accordion.Item>
-                            </Accordion> */}
+                            </Accordion>
                             </div>
                             <div className='col-6'>
-                            {/* <Accordion>
+                            <Accordion>
                                 <Accordion.Item eventKey="0" className='text-center'>
                                     <Accordion.Header >
                                         <span className='fw-bold m-0 fs-7'>WHAT ABOUT THE SURROUND AREAS IN MY HOME?</span>
                                     </Accordion.Header>
-                                    {pagibig.exists && 
                                     <Accordion.Body>
                                         {[
                                             "Ensure there is enough lighting for the task being performed and that the work is easy to see so your eyes don’t become fatigued.",
@@ -1146,9 +1241,9 @@ const VerticalNavBar = ({
                                             </label>
                                             </div>
                                         ))}
-                                    </Accordion.Body>} 
+                                    </Accordion.Body>
                                 </Accordion.Item>
-                            </Accordion> */}
+                            </Accordion>
                             </div>
                           </div>
 
@@ -1166,6 +1261,8 @@ const VerticalNavBar = ({
                         ))}
                           </div>
                         </div>
+                        }
+                        
                     </div>
                 </div>
                 

@@ -6,7 +6,7 @@ import {
   StickyComponent,
   ToggleComponent,
 } from '../../../assets/ts/components';
-import { KTIcon } from '@/_metronic/helpers';
+import { KTIcon } from '../../../helpers';
 
 export function ScrollTop() {
   const { pathname } = useLocation();

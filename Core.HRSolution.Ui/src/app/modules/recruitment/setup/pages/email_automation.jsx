@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { KTIcon } from '@/_metronic/helpers';
+import { KTIcon } from '../../../../../_metronic/helpers';
 import Swal from 'sweetalert2';
 import { ToolbarWrapper } from '../../../../../_metronic/layout/components/toolbar';
 import { Content } from '../../../../../_metronic/layout/components/content';

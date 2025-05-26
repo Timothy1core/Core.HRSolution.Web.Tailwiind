@@ -44,7 +44,7 @@ const CandidateAssessmentPublicRoutes = () => (
 const JobOfferApprovalPublicRoutes = () => (
   <Routes>
     <Route element={<PublicMasterLayout />}>
-      <Route path='/approval' element={<JobOfferApproval />} />
+      <Route path='/approval/:id' element={<JobOfferApproval />} />
     </Route>
   </Routes>
 )
@@ -53,7 +53,7 @@ const JobOfferApprovalPublicRoutes = () => (
 const JobOfferAcceptancePublicRoutes = () => (
   <Routes>
     <Route element={<PublicMasterLayout />}>
-      <Route path='/acceptance' element={<JobOfferAcceptance />} />
+      <Route path='/acceptance/:id' element={<JobOfferAcceptance />} />
     </Route>
   </Routes>
 )

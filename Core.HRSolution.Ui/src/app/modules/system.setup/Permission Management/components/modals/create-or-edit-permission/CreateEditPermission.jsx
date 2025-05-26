@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
-import { KTIcon } from '@/_metronic/helpers';
+import { KTIcon } from '../../../../../../../_metronic/helpers';
 import { useFormik } from 'formik';
 import { createApiPermission, infoApiPermission, updateApiPermission } from '../../../core/requests/_request';
 import { listRole } from '../../../../Role Management/core/requests/_request';
-// import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
 import { listApi } from '../../../../Api Management/core/requests/_request';
 import Select from 'react-select'
 
@@ -94,9 +94,9 @@ const CreateEditPermission = ({ id, editMode, showModal, handleClose, handleClos
   }, [id, editMode]);
 
   return (
-    // <Modal show={showModal} onHide={handleClose} centered className='modal-lg'>
-    //   <Modal.Header  closeButton><Modal.Title>{editMode ? 'Edit API Permission' : 'Add API Permission'}</Modal.Title></Modal.Header>
-    //   <Modal.Body>
+    <Modal show={showModal} onHide={handleClose} centered className='modal-lg'>
+      <Modal.Header  closeButton><Modal.Title>{editMode ? 'Edit API Permission' : 'Add API Permission'}</Modal.Title></Modal.Header>
+      <Modal.Body>
             <form onSubmit={formik.handleSubmit}>
               {formik.status && (
                 <div className='mb-lg-10 alert alert-danger'>
@@ -161,8 +161,8 @@ const CreateEditPermission = ({ id, editMode, showModal, handleClose, handleClos
                 </button>
               </div>
             </form>
-            // </Modal.Body>
-            // </Modal>
+            </Modal.Body>
+            </Modal>
   );
 };
 

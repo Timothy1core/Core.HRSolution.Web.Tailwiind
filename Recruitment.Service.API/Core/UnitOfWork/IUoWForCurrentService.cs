@@ -26,6 +26,7 @@ public interface IUoWForCurrentService
 	IJobOfferRepository JobOfferRepository { get; }
 	IOnboardingRepository OnboardingRepository { get; }
 	IWorkFromHomeInformationRepository WorkFromHomeInformationRepository { get; }
+	IEmployeeRepository EmployeeRepository { get; }
 	void SaveChanges();
 	Task CommitAsync();
 

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { KTIcon } from '@/_metronic/helpers';
+import { KTIcon } from '../../../../../../_metronic/helpers';
 import { listAssessment, removeAssessment } from '../../core/requests/_request';
-// import { Modal } from 'bootstrap';
+import { Modal } from 'bootstrap';
 import {format} from 'date-fns';
-import TableWithPagination from '@/app/helpers/table/TableWithPagination';
-
-// import { CreateAppModal } from '../../../../../../_metronic/partials';
+import TableWithPagination from '../../../../system.setup/core/helpers/Table Layout/TableWithPagination';
+import { CreateAppModal } from '../../../../../../_metronic/partials';
 // import { CreateAssessment } from '../modals/create-question-to-db/CreateAssessment';
 import {
   enableLoadingRequest,
@@ -13,7 +12,6 @@ import {
 } from '../../../../../helpers/loading_request';
 import Swal from 'sweetalert2';
 import ActionComponent from '../../../../../helpers/action_component';
-import { Link } from 'react-router-dom';
 
 const AssessmentTable = ({ className }) => {
   const [filteredData, setFilteredData] = useState([]);
@@ -130,26 +128,28 @@ const AssessmentTable = ({ className }) => {
         )
      },
     { Header: 'Actions', accessor: 'id', className: 'text-end', Cell: row => (
-      <div className='flex gap-2 justify-end flex-shrink-0'>
+      <div className='d-flex justify-content-end flex-shrink-0'>
         <ActionComponent
             buttonPermission={'system.update.assessment'}
             actionButton={ 
-              <Link className="btn btn-icon btn-outline btn-primary btn-xs"
-              to={`/recruitment/editAssessment/${row.id}`}
+        <a
+          href={`editAssessment?id=${row.id}`}
+          className='btn btn-icon btn-bg-light btn-active-color-danger btn-sm me-1'
           data-id={row.id}
         >
           <KTIcon iconName='pencil' className='fs-3' />
-        </Link>
+        </a>
         }/>
         <ActionComponent
             buttonPermission={'system.remove.assessment'}
             actionButton={ 
-        <button className="btn btn-icon btn-outline btn-primary btn-xs"
+        <a
           href='#'
+          className='btn btn-icon btn-bg-light btn-active-color-danger btn-sm'
           onClick={() => handleDeleteAssessment(row.id)}
         >
           <KTIcon iconName='trash' className='fs-3' />
-        </button>
+        </a>
         }/>
     </div>
       )
@@ -164,8 +164,8 @@ const AssessmentTable = ({ className }) => {
 
   return (
     <div className={`card ${className}`}>
-      <div className='card-header'>
-      <h3 className='card-title'>
+      <div className='card-header border-0 pt-5'>
+      <h3 className='card-title align-items-start flex-column'>
       <ActionComponent
             buttonPermission={'system.create.assessment'}
             actionButton={ 
@@ -176,27 +176,22 @@ const AssessmentTable = ({ className }) => {
             // data-bs-target='#create-assessment'
             // data-edit='false'
           >
-            <KTIcon iconName='plus' />
+            <KTIcon iconName='plus' className='fs-3' />
             Add New Assessment
           </a>
             }/>
           
-        {/* <CreateAppModal show={showCreateAppModal} handleClose={() => setShowCreateAppModal(false)} /> */}
+        <CreateAppModal show={showCreateAppModal} handleClose={() => setShowCreateAppModal(false)} />
         </h3>
         <div className="card-toolbar">
           <div className='d-flex'>
-            {/* <input
+            <input
               type='text'
               className='form-control form-control-sm me-2'
               placeholder='Search'
               value={searchTerm}
               onChange={handleSearch}
-            /> */}
-
-            <label className="input input-sm">
-              <KTIcon iconName='magnifier' />
-              <input type="text" placeholder="Search assessment" value={searchTerm} onChange={handleSearch} />
-            </label>
+            />
             {/* <button href='#' className='btn btn-sm btn-light-danger' onClick={handleSearch}>
               Search
             </button> */}
@@ -205,7 +200,7 @@ const AssessmentTable = ({ className }) => {
       </div>
       
 
-
+      <div className='card-body py-3'>
         <TableWithPagination 
         data={filteredData} 
         columns={columns} 
@@ -215,6 +210,10 @@ const AssessmentTable = ({ className }) => {
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
         />
+      </div>
+      {/* <CreateEditAssessment /> */}
+      {/* <CreateAssessment /> */}
+      {/* <DeleteAssessment /> */}
     </div>
   );
 };

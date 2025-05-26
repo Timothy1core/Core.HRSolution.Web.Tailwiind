@@ -20,4 +20,5 @@ public class AssessmentCorrectionDto
     public int CorrectAnswers { get; set; }
 
     public int NeedManualChecking { get; set; }
+	public object QuestionBody { get; internal set; }
 }

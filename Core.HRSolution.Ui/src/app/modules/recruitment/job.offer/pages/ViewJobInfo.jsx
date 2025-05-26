@@ -7,9 +7,10 @@ import {
   disableLoadingRequest,
 } from '../../../../helpers/loading_request';
 import dayjs from "dayjs";
+import {  Button } from 'react-bootstrap';
 import { SigOptionComponentApprove } from '../../../../helpers/esignature/approve_esignature_modal_component';
 import { SigOptionComponentDecline } from '../../../../helpers/esignature/decline_esignature_modal_component';
-import { KTIcon } from '@/_metronic/helpers';
+import { KTIcon } from '../../../../../_metronic/helpers';
 const ViewJobOfferPage = () => {
     const location = useLocation();
     const [candidateId, setCandidateId] = useState([]);
@@ -107,7 +108,7 @@ const ViewJobOfferPage = () => {
     {!loading && 
       <div id="kt_app_toolbar" className="app-toolbar py-3 py-lg-6">
         <div id="kt_app_toolbar_container" className="app-container container-fluid d-flex flex-stack">
-          <div className="page-title d-flex flex-column justify-center flex-wrap me-3">
+          <div className="page-title d-flex flex-column justify-content-center flex-wrap me-3">
               <a href='joboffer' className='btn btn-sm btn-light-danger'>
               <KTIcon iconName='entrance-right' className='fs-2' />
                 Go Back

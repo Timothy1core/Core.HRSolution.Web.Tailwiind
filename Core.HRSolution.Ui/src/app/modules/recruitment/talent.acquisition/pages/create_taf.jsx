@@ -4,7 +4,6 @@ import * as Yup from 'yup';
 import Flatpickr from 'react-flatpickr';
 import {
   SelectClientComponent,
-  SelectClientCompanyGroupComponent,
 } from '../../client.profile/component/dropdowns/client_profile_dropdown_component';
 import {
   SelectReasonComponent,
@@ -23,8 +22,7 @@ import { Content } from '../../../../../_metronic/layout/components/content';
 import Swal from 'sweetalert2';
 
 const CreateTafPage = () => {
-  const [clientValue, setClientValue] = useState('');
-  const [departmentValue, setDepartmentValue] = useState('');
+  const [departmentValue, setDepartmentValue] = useState('0');
   const [jobProfileValue, setJobProfileValue] = useState('');
   const [reasonValue, setReasonValue] = useState('');
   const [hiringManager, setHiringManager] = useState('');
@@ -40,8 +38,7 @@ const CreateTafPage = () => {
     headcount: Yup.number()
       .required('Headcount is required')
       .min(1, 'Headcount must be at least 1'),
-    clientId: Yup.string().required('Client is required'),
-    
+    departmentId: Yup.string().required('Department is required'),
     jobId: Yup.string().required('Job profile is required'),
     negotiable: Yup.string().when('reason', {
       is: (value) => value !== '4', // Check if reason is not '4'
@@ -71,8 +68,7 @@ const CreateTafPage = () => {
     statusId: '',
     reasonId: '',
     headcount: '',
-    clientId: '',
-    department: '',
+    departmentId: '',
     jobId: '',
     negotiable: '',
     nonNegotiable: '',
@@ -89,6 +85,7 @@ const CreateTafPage = () => {
 
   const handleSubmit = async (values, { resetForm }) => {
     try {
+      console.log('Form Submitted:', values);
   
       // Assuming `formData` needs to be constructed from `values`
       const formData = {
@@ -212,25 +209,25 @@ const CreateTafPage = () => {
                       <div className="row g-4 mb-8">
                         <div className="col-md-12 fv-row">
                           <label className="required fs-6 fw-semibold mb-2 text-gray-700">
-                            Company/Client Name
+                            Department
                           </label>
                           <Field
                             as={SelectClientComponent}
-                            name="clientId"
+                            name="departmentId"
                             className="form-select"
                             onChange={(e) => {
-                              setFieldValue('clientId', e.target.value);
-                              setClientValue(e.target.value);
+                              setFieldValue('departmentId', e.target.value);
+                              setDepartmentValue(e.target.value);
                             }}
                           />
                           <ErrorMessage
-                            name="client"
+                            name="departmentId"
                             component="div"
                             className="text-danger mt-2"
                           />
                         </div>
                       </div>
-                      
+                    
                       <div className="row g-4 mb-8">
                         <div className="col-md-12 fv-row">
                           <label className="required fs-6 fw-semibold mb-2 text-gray-700">
@@ -240,8 +237,7 @@ const CreateTafPage = () => {
                             as={SelectClientJobProfilesComponent}
                             name="jobId"
                             className="form-select"
-                            clientId={clientValue} 
-                            departmentid={departmentValue}
+                            departmentId={departmentValue}
                             onChange={(e) => {
                               setFieldValue('jobId', e.target.value);
                               setJobProfileValue(e.target.value);
@@ -326,7 +322,7 @@ const CreateTafPage = () => {
                             as={SelectClientIndividualsComponent}
                             name="hiringManager"
                             className="form-select"
-                            clientId={clientValue} 
+                            departmentId={departmentValue} 
                             onChange={(e) => {
                               setFieldValue('hiringManager', e.target.value);
                               setHiringManager(e.target.value);

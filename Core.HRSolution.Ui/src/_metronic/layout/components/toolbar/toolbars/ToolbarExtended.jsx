@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { toAbsoluteUrl } from '@/_metronic/utils';
-import { KTIcon} from '@/_metronic/helpers';
+import { KTIcon, toAbsoluteUrl } from '../../../../helpers';
 
 const ToolbarExtended = () => {
   const [progress, setProgress] = useState('1');

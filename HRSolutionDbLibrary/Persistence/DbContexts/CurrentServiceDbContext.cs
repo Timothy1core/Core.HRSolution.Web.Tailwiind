@@ -82,6 +82,10 @@ namespace HRSolutionDbLibrary.Persistence.DbContexts
 		public DbSet<OnboardingInformationSheet> OnboardingInformationSheets { get; set; }
 		public DbSet<WorkFromHomeInformation> WorkFromHomeInformations { get; set; }
 		public DbSet<OnboardingStatus> OnboardingStatuses { get; set; }
+		public DbSet<EmployeeMilestone> EmployeeMilestones { get; set; }
+		public DbSet<EmployeeDependent> EmployeeDependents { get; set; }
+		public DbSet<EmployeeDocument> EmployeeDocuments { get; set; }
+		
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.ApplyConfiguration(new ApplicationProcessConfig());
@@ -129,6 +133,9 @@ namespace HRSolutionDbLibrary.Persistence.DbContexts
 			modelBuilder.ApplyConfiguration(new OnboardingInformationSheetConfig());
 			modelBuilder.ApplyConfiguration(new WorkFromHomeInformationConfig());
 			modelBuilder.ApplyConfiguration(new OnboardingStatusConfig());
+			modelBuilder.ApplyConfiguration(new EmployeeMilestoneConfig());
+			modelBuilder.ApplyConfiguration(new EmployeeDependentConfig());
+			modelBuilder.ApplyConfiguration(new EmployeeDocumentConfig());
 			base.OnModelCreating(modelBuilder);
 		}
 	}

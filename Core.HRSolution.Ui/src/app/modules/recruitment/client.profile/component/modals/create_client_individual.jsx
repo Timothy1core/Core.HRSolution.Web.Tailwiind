@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Swal from 'sweetalert2';
-// import { Modal, Button } from 'react-bootstrap';
-import { KTIcon } from '@/_metronic/helpers';
+import { Modal, Button } from 'react-bootstrap';
+import { KTIcon } from '../../../../../../_metronic/helpers';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { CreateCompanyIndividual } from '../../core/request/clients_request';
@@ -10,7 +10,7 @@ const companyProfileValidationSchema = Yup.object().shape({
 
   individuals: Yup.array().of(
     Yup.object().shape({
-      name: Yup.string().required('Client Name is required'),
+      name: Yup.string().required('Department Name is required'),
       position: Yup.string().required('Position is required'),
       email: Yup.string().email('Invalid email format').required('Email is required'),
     })
@@ -31,7 +31,7 @@ const FormRepeater = ({ entries, addEntry, removeEntry, handleEntryChange, error
             <input
               type="text"
               name={`individuals[${index}].name`}
-              placeholder="Client Name"
+              placeholder="Department Name"
               onChange={(e) => handleEntryChange(index, e)}
               value={entry.name}
               className="form-control"
@@ -152,8 +152,7 @@ function CreateClientIndividualModal({ companyId,onSuccess }) {
 
   return (
     <>
-    1
-      {/* <Button className="btn btn-dark btn-sm" onClick={() => setShow(true)}>
+      <Button className="btn btn-dark btn-sm" onClick={() => setShow(true)}>
         New Client
       </Button>
 
@@ -187,7 +186,7 @@ function CreateClientIndividualModal({ companyId,onSuccess }) {
             {loading ? 'Submitting...' : 'Submit'}
           </Button>
         </Modal.Footer>
-      </Modal> */}
+      </Modal>
     </>
   );
 }

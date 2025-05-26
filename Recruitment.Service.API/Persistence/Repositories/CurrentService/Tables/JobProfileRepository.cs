@@ -98,7 +98,7 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
 				.Select(s => new ClientJobProfileDashboardDto()
 				{
 					Id = s.Id,
-					JobApplicationProcesses = s.JobApplicationProcesses.Where(w=>w.IsActive == true).Select(x => new JobApplicationProcess()
+					JobApplicationProcesses = s.JobApplicationProcesses.Select(x => new JobApplicationProcess()
 					{
 						Id = x.Id,
 						ApplicationProcessId = x.ApplicationProcessId,
@@ -267,6 +267,7 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
 						DepartmentId = s.DepartmentId,
 						Position = s.Position,
 						EmploymentTypeId = s.EmploymentTypeId,
+						EmploymentTypeName = s.EmploymentType.TypeName,
 						JobStatusId = s.JobStatusId,
 						JobDescription = s.JobDescription,
 						Education = s.Education,

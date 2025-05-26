@@ -1,10 +1,10 @@
-import { KTIcon } from '@/_metronic/helpers';
+import { KTIcon } from '../../../../../../_metronic/helpers';
 import { updateJob } from '../../core/requests/_request';
 import { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import Swal from 'sweetalert2';
-
+import { Offcanvas  } from 'react-bootstrap';
 const jobSchema = Yup.object().shape({
   stage: Yup.string().required('Required'),
   job: Yup.string().required('Required'),
@@ -16,6 +16,7 @@ const MoveToJobWrapper = ({
   currentJob,
   candidateId,
   currentStage,
+  handleShow,
   handleClose,
 }) => {
   const [loading, setLoading] = useState(false);
@@ -105,34 +106,12 @@ const MoveToJobWrapper = ({
   }, [currentJob, jobData, currentStage, applicationProcessesData]);
 
   return (
-    <div
-      id="kt_drawer_move_to_job"
-      className="bg-white"
-      data-kt-drawer="true"
-      data-kt-drawer-activate="true"
-      data-kt-drawer-toggle="#kt_drawer_move_to_job_button"
-      data-kt-drawer-close="#kt_drawer_move_to_job_close"
-      data-kt-drawer-overlay="true"
-      data-kt-drawer-width="{default:'300px', 'md': '500px'}"
-    >
-      <div className="card rounded-0 w-100">
+    <Offcanvas show={handleShow} onHide={handleClose} placement="end">
+    <Offcanvas.Header closeButton>
+        <Offcanvas.Title>Move To job</Offcanvas.Title>
+      </Offcanvas.Header>
+      <Offcanvas.Body>
         <form onSubmit={formik.handleSubmit}>
-          {formik.status && (
-            <div className="mb-lg-10 alert alert-danger">
-              <div className="alert-text font-weight-bold">{formik.status}</div>
-            </div>
-          )}
-          <div className="card-header pe-5">
-            <div className="card-title">Move To Job</div>
-            <div className="card-toolbar">
-              <div
-                className="btn btn-sm btn-icon btn-active-light-danger"
-                id="kt_drawer_move_to_job_close"
-              >
-                <KTIcon iconName="cross" className="fs-3" />
-              </div>
-            </div>
-          </div>
 
           <div className="card-body hover-scroll-overlay-y">
             <label className="form-label">Job</label>
@@ -194,8 +173,8 @@ const MoveToJobWrapper = ({
             </div>
           </div>
         </form>
-      </div>
-    </div>
+        </Offcanvas.Body>
+      </Offcanvas>
   );
 };
 

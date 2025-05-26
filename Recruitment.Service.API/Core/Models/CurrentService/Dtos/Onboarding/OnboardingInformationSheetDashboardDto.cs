@@ -67,7 +67,6 @@ namespace Recruitment.Service.API.Core.Models.CurrentService.Dtos.Onboarding
 		public bool IsAcknowledged { get; internal set; }
 		public string CandidateName { get; internal set; }
 		public string Position { get; internal set; }
-		public string OnboardingStatus { get; internal set; }
 		public int? OnboardingStatusId { get; internal set; }
 		public string OnboardingStatusName { get; internal set; }
 	}

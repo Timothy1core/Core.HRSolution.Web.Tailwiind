@@ -20,12 +20,12 @@ public interface ICandidateServices
     Task<JsonResult> CreateCommentService(CandidateCommentRequestDto comment);
 
 
-	Task<JsonResult> CreateCandidateWriteUpService(CandidateWriteUpRequestDto candidateWriteUpDto, int candidateId,
+    Task<JsonResult> CreateCandidateWriteUpService(CandidateWriteUpRequestDto candidateWriteUpDto, int candidateId,
         string createdBy);
     Task<JsonResult> UpdateCandidateStageService(int candidateId, int stageId, string stageName, string loggedEmployee);
     Task<JsonResult> RetrieveCandidateWriteUpService(int candidateId);
     Task<JsonResult> UpdateWriteUpService(int writeUpId, CandidateWriteUpRequestDto writeUpRequest);
-    Task<JsonResult> UpdateCandidateJobService(int candidateId, int jobId, int stageId,string jobName,string stageName,string loggedEmployee);
+    Task<JsonResult> UpdateCandidateJobService(int candidateId, int jobId, int stageId, string jobName, string stageName, string loggedEmployee);
 
     Task<JsonResult> CopyCandidateToJobService(CopyToJobRequestDto candidateDto, string jobName, string stageName);
 
@@ -41,6 +41,8 @@ public interface ICandidateServices
     Task<JsonResult> SubmitCandidateCorrectionService(int id, bool isCorrect);
 
     Task<JsonResult> RetrieveCandidateToOfferService(string? search, int start, int length, string draw,
-	    string sortColumnName, string sortDirection, int status);
+        string sortColumnName, string sortDirection, int status);
 
+	
+	Task<JsonResult> RetrieveCandidateAssessmentsService(string id);
 }

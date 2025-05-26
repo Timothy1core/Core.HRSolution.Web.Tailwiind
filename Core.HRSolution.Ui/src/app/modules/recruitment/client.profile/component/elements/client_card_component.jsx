@@ -1,8 +1,7 @@
 
 import {Link} from 'react-router-dom'
-import {toAbsoluteUrl} from '@/_metronic/utils'
-// import { useThemeMode } from '../../../../../../_metronic/partials'
-import { useSettings } from '@/_metronic/providers';
+import {toAbsoluteUrl} from '../../../../../../_metronic/helpers'
+import { useThemeMode } from '../../../../../../_metronic/partials'
 
 const ClientInfoCard = ({
   id,
@@ -11,12 +10,10 @@ const ClientInfoCard = ({
   clientCompanyName,
   industry,
   services,
+  comanyGroup
 }) => {
-  // const { mode } = useThemeMode()
-  const {
-        getThemeMode
-      } = useSettings();
-  const cardBg = getThemeMode === 'light' ? 'abstract-2.svg' :'abstract-2-dark.svg'
+  const { mode } = useThemeMode()
+  const cardBg = mode === 'light' ? 'abstract-2.svg' :'abstract-2-dark.svg'
   return (
     <Link
       to={`/recruitment/clientprofile/${id}`}
@@ -41,12 +38,14 @@ const ClientInfoCard = ({
       </div>
 
       <div className='card-body py-5'>
-        <h4 className='fs-2 fw-bolder text-gray-900'>{clientCompanyName}</h4>
-        <p className='text-gray-500 fw-bold fs-7 mt-1 mb-1'>{industry}</p>
-        <span className={`badge badge-info`}>
+        <h4 className='fs-2 fw-bolder text-gray-900 mb-0'>{clientCompanyName}</h4>
+        <p className='text-gray-500 fw-bold fs-7 mt-1 mb-3'>{industry}</p>
+        <span className={`badge badge-dark me-1`}>
           {services}
         </span>
-        
+        <span className={`badge badge-dark`}>
+          {comanyGroup}
+        </span>
       </div>
     </Link>
   )

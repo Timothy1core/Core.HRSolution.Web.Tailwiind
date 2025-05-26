@@ -69,7 +69,7 @@ const ClientTAF = () => {
     return (
         <div
             id="kt_app_content_container"
-            className="app-container container-xxl d-flex justify-center align-items-center"
+            className="app-container container-xxl d-flex justify-content-center align-items-center"
         >
             <div className="card w-100">
                 <div className="card-body py-10">
@@ -84,17 +84,17 @@ const ClientTAF = () => {
                                 <div className="fw-bold fs-6 text-gray-800">{data.companyName}</div>                
                             </div>    
                             <div className="col-sm-6">
-                                <div className="fw-semibold fs-7 text-gray-600 mb-1">Client Name:</div>                
+                                <div className="fw-semibold fs-7 text-gray-600 mb-1">Department Name:</div>                
                                 <div className="fw-bold fs-6 text-gray-800">{data.clientApproverName}</div>                
                             </div> 
                             <div className="col-sm-6">
-                                <div className="fw-semibold fs-7 text-gray-600 mb-1">Client Email:</div>                
+                                <div className="fw-semibold fs-7 text-gray-600 mb-1">Department Email:</div>                
                                 <div className="fw-bold fs-6 text-gray-800">{data.clientApproverEmail}</div>                
                             </div>             
                         </div>
                         <div className="separator border-secondary my-10"></div>
                         
-                        {/* <div className='row'>
+                        <div className='row'>
                             <div className='col-sm-12 mt-0'>
                                 <div className="table-responsive">
                                     <table className="table table-row-dashed align-middle gs-7 gy-5 text-center">
@@ -122,7 +122,7 @@ const ClientTAF = () => {
                                     </table>
                                 </div>
                             </div>
-                        </div> */}
+                        </div>
 
                         <div className="separator border-secondary my-10"></div>
 
@@ -171,7 +171,7 @@ const ClientTAF = () => {
                                         <SignaturePadModal onSave={handleSaveSignature} />
                                     )}
                                 </div>                
-                                <div className="fw-bold fs-6 text-gray-800">Client Signature</div>                
+                                <div className="fw-bold fs-6 text-gray-800">Department Signature</div>                
                             </div>    
                         </div>
 

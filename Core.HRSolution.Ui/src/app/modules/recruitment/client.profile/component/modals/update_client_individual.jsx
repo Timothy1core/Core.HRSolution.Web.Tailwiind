@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import Swal from 'sweetalert2';
-// import { Modal, Button } from 'react-bootstrap';
-import { KTIcon } from '@/_metronic/helpers';
+import { Modal, Button } from 'react-bootstrap';
+import { KTIcon } from '../../../../../../_metronic/helpers';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { UpdateClientIndividual } from '../../core/request/clients_request';
 
 const clientIndividualValidationSchema = Yup.object().shape({
-    clientName: Yup.string().max(1000, 'Must be 1000 characters or less').required('Client Name is required'),
+    clientName: Yup.string().max(1000, 'Must be 1000 characters or less').required('Department Name is required'),
     position: Yup.string().max(1000, 'Must be 1000 characters or less').required('Position is required'),
     email: Yup.string().max(1000, 'Must be 1000 characters or less').required('Email is required'),
 });
@@ -66,7 +66,7 @@ function UpdateClientIndividualModal({clientIndividual,onSuccess }) {
         <a href="#" className="fs-4 text-gray-800 text-hover-primary fw-bold mb-0" onClick={() => setShow(true)}>
             {clientIndividual.name}
         </a>
-        {/* <Modal show={show} onHide={() => setShow(false)} dialogClassName="modal-dialog-centered mw-800px">
+        <Modal show={show} onHide={() => setShow(false)} dialogClassName="modal-dialog-centered mw-800px">
             <Modal.Header>
             <Modal.Title>UPDATE CLIENT INDIVIDUAL{clientIndividual.id}</Modal.Title>
             <button className="btn btn-sm btn-icon btn-active-color-primary" onClick={() => setShow(false)}>
@@ -78,7 +78,7 @@ function UpdateClientIndividualModal({clientIndividual,onSuccess }) {
             <form onSubmit={formik.handleSubmit}>
                 <div className='row g-4 mb-8'>
                     <div className='col-md-4 fv-row'>
-                        <label className="required fs-6 fw-semibold mb-2">Client Name</label>
+                        <label className="required fs-6 fw-semibold mb-2">Department Name</label>
                         <input 
                         type="text" 
                         name="clientName"
@@ -99,7 +99,6 @@ function UpdateClientIndividualModal({clientIndividual,onSuccess }) {
                         onChange={formik.handleChange}
                         value={formik.values.position}
                         className="form-control" 
-                        placeholder="Enter industry"
                         />
                         {formik.touched.position && formik.errors.position && (
                         <div className='text-danger mt-2'>{formik.errors.position}</div>
@@ -109,11 +108,10 @@ function UpdateClientIndividualModal({clientIndividual,onSuccess }) {
                         <label className="required fs-6 fw-semibold mb-2">Email</label>
                         <input 
                         type="text" 
-                        name="industry"
+                        name="email"
                         onChange={formik.handleChange}
                         value={formik.values.email}
                         className="form-control" 
-                        placeholder="Enter industry"
                         />
                         {formik.touched.email && formik.errors.email && (
                         <div className='text-danger mt-2'>{formik.errors.email}</div>
@@ -131,7 +129,7 @@ function UpdateClientIndividualModal({clientIndividual,onSuccess }) {
                 {loading ? 'Submitting...' : 'Submit'}
             </Button>
             </Modal.Footer>
-        </Modal> */}
+        </Modal>
     </>
   );
 }

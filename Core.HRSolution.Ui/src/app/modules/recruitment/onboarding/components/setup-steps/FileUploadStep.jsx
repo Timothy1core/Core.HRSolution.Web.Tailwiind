@@ -2,14 +2,14 @@
 import { useState, useRef } from 'react';
 // import { KTIcon, toAbsoluteUrl } from '../../../../_metronic/helpers';
 // import { FaFacebook, FaLinkedin } from "react-icons/fa";
-// import { Container, Row, Col, Button, Form } from "react-bootstrap";
+import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import { Viewer, Worker, SpecialZoomLevel  } from '@react-pdf-viewer/core';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
-import { KTIcon } from '@/_metronic/helpers';
+import { KTIcon } from '../../../../../../_metronic/helpers';
 import { saveOnboardingDocuments } from '../../core/requests/_request';
-// import { Formik } from 'formik';
+import { Formik } from 'formik';
 
 const FileUploadBox = ({ label, name, setFieldValue, value, documentGroup }) => {
   const inputRef = useRef();
@@ -100,7 +100,7 @@ const FileUploadBox = ({ label, name, setFieldValue, value, documentGroup }) => 
           />
           <div className="upload-area">
             {value?.file ? (
-              <div className="d-flex border border-2 p-2 justify-between">
+              <div className="d-flex border border-2 p-2 justify-content-between">
                 <div>
                   <h3>File name: {value.file.name}</h3>
                   <h4>Size: {(value.file.size / (1024 * 1024)).toFixed(2)} MB</h4>
@@ -108,9 +108,9 @@ const FileUploadBox = ({ label, name, setFieldValue, value, documentGroup }) => 
                 <div className='w-50 bd-highlight'>{renderPreview()}</div>
                 
                 <div className='text-end ml-auto bd-highlight'>
-                  {/* <Button variant='danger' type="button" onClick={handleClearFile} className="btn-icon btn-icon-lg size-5 bg-danger text-white" >
+                  <Button variant='danger' type="button" onClick={handleClearFile} className="btn-icon btn-icon-lg size-5 bg-danger text-white" >
                     <KTIcon iconName='cross' className='fs-1' />
-                  </Button> */}
+                  </Button>
                 </div>
 
                 
@@ -195,257 +195,255 @@ const FileUploadStep = ({ id, onboardingDocuments }) => {
   };
 
   return (
-    // <Container className="my-5">
-    //   <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-    //     {({ handleSubmit, setFieldValue, values, isSubmitting }) => (
-    //       <Form onSubmit={handleSubmit}>
-    //         <h5 className="text-dark">Pre-Employment Requirements</h5>
-    //         <span className="mb-4 text-muted fs-7">Check those requirements that you can already submit or your have completed already as part of of your onboarding. Upload the soft copies of your documents as provided below.</span>
-    //         <h5 className="my-4 text-danger">Pre-Requisite Requirements</h5>
+    <Container className="my-5">
+      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+        {({ handleSubmit, setFieldValue, values, isSubmitting }) => (
+          <Form onSubmit={handleSubmit}>
+            <h5 className="text-dark">Pre-Employment Requirements</h5>
+            <span className="mb-4 text-muted fs-7">Check those requirements that you can already submit or your have completed already as part of of your onboarding. Upload the soft copies of your documents as provided below.</span>
+            <h5 className="my-4 text-danger">Pre-Requisite Requirements</h5>
 
-    //         {docMap.nbiClearance ? 
-    //         <>
-    //           <h3 className='text-dark'>Updated and original NBI clearance/ Police/ Barangay Clearance</h3>
-    //           <div className="d-flex border border-2 p-2 justify-between my-5">
-    //             <div>
-    //               <h3>File name: {docMap.nbiClearance.file.name}</h3>
-    //             </div>
-    //           </div>
-    //           </>
-    //          :
-    //         <FileUploadBox 
-    //           label="Updated and original NBI clearance/ Police/ Barangay Clearance" 
-    //           name="nbiClearance" 
-    //           value={values.nbiClearance} 
-    //           setFieldValue={setFieldValue} 
-    //           documentGroup={1}
-    //         />
-    //         }
+            {docMap.nbiClearance ? 
+            <>
+              <h3 className='text-dark'>Updated and original NBI clearance/ Police/ Barangay Clearance</h3>
+              <div className="d-flex border border-2 p-2 justify-content-between my-5">
+                <div>
+                  <h3>File name: {docMap.nbiClearance.file.name}</h3>
+                </div>
+              </div>
+              </>
+             :
+            <FileUploadBox 
+              label="Updated and original NBI clearance/ Police/ Barangay Clearance" 
+              name="nbiClearance" 
+              value={values.nbiClearance} 
+              setFieldValue={setFieldValue} 
+              documentGroup={1}
+            />
+            }
 
-    //         {docMap.birthCertificate ? 
-    //         <>
-    //           <h3 className='text-dark'>PSA/ NSO Birth Certificate</h3>
-    //           <div className="d-flex border border-2 p-2 justify-between my-5">
-    //             <div>
-    //               <h3>File name: {docMap.birthCertificate.file.name}</h3>
-    //             </div>
-    //           </div>
-    //           </>
-    //          :
-    //          <FileUploadBox 
-    //          label="PSA/ NSO Birth Certificate" 
-    //          name="birthCertificate"
-    //          value={values.birthCertificate} 
-    //          setFieldValue={setFieldValue}
-    //          documentGroup={1} 
-    //         />
-    //         }
+            {docMap.birthCertificate ? 
+            <>
+              <h3 className='text-dark'>PSA/ NSO Birth Certificate</h3>
+              <div className="d-flex border border-2 p-2 justify-content-between my-5">
+                <div>
+                  <h3>File name: {docMap.birthCertificate.file.name}</h3>
+                </div>
+              </div>
+              </>
+             :
+             <FileUploadBox 
+             label="PSA/ NSO Birth Certificate" 
+             name="birthCertificate"
+             value={values.birthCertificate} 
+             setFieldValue={setFieldValue}
+             documentGroup={1} 
+            />
+            }
 
-    //         {docMap.medicalExam ? 
-    //         <>
-    //           <h3 className='text-dark'>Pre-Employment Medical Exam</h3>
-    //           <div className="d-flex border border-2 p-2 justify-between my-5">
-    //             <div>
-    //               <h3>File name: {docMap.medicalExam.file.name}</h3>
-    //             </div>
-    //           </div>
-    //           </>
-    //          :
-    //          <FileUploadBox
-    //           label="Pre-Employment Medical Exam" 
-    //           name="medicalExam" 
-    //           value={values.medicalExam} 
-    //           setFieldValue={setFieldValue}
-    //           documentGroup={1} 
-    //         />
-    //         }
+            {docMap.medicalExam ? 
+            <>
+              <h3 className='text-dark'>Pre-Employment Medical Exam</h3>
+              <div className="d-flex border border-2 p-2 justify-content-between my-5">
+                <div>
+                  <h3>File name: {docMap.medicalExam.file.name}</h3>
+                </div>
+              </div>
+              </>
+             :
+             <FileUploadBox
+              label="Pre-Employment Medical Exam" 
+              name="medicalExam" 
+              value={values.medicalExam} 
+              setFieldValue={setFieldValue}
+              documentGroup={1} 
+            />
+            }
 
-    //         <div className="separator border-secondary my-7"></div>
+            <div className="separator border-secondary my-7"></div>
 
-    //         <h5 className="my-4 text-danger">General Requirements</h5>
+            <h5 className="my-4 text-danger">General Requirements</h5>
 
-    //         {docMap.pagibig ? 
-    //         <>
-    //           <h3 className='text-dark'>PagIBIG / MID</h3>
-    //           <div className="d-flex border border-2 p-2 justify-between my-5">
-    //             <div>
-    //               <h3>File name: {docMap.pagibig.file.name}</h3>
-    //             </div>
-    //           </div>
-    //           </>
-    //          :
-    //          <FileUploadBox 
-    //           label="PagIBIG / MID" 
-    //           name="pagibig" 
-    //           value={values.pagibig} 
-    //           setFieldValue={setFieldValue}
-    //           documentGroup={2} 
-    //         />
-    //         }
+            {docMap.pagibig ? 
+            <>
+              <h3 className='text-dark'>PagIBIG / MID</h3>
+              <div className="d-flex border border-2 p-2 justify-content-between my-5">
+                <div>
+                  <h3>File name: {docMap.pagibig.file.name}</h3>
+                </div>
+              </div>
+              </>
+             :
+             <FileUploadBox 
+              label="PagIBIG / MID" 
+              name="pagibig" 
+              value={values.pagibig} 
+              setFieldValue={setFieldValue}
+              documentGroup={2} 
+            />
+            }
 
-    //         {docMap.philhealth ? 
-    //         <>
-    //           <h3 className='text-dark'>Philhealth</h3>
-    //           <div className="d-flex border border-2 p-2 justify-between my-5">
-    //             <div>
-    //               <h3>File name: {docMap.philhealth.file.name}</h3>
-    //             </div>
-    //           </div>
-    //           </>
-    //          :
-    //          <FileUploadBox 
-    //           label="Philhealth" 
-    //           name="philhealth" 
-    //           value={values.philhealth} 
-    //           setFieldValue={setFieldValue}
-    //           documentGroup={2} 
-    //         />
-    //         }
+            {docMap.philhealth ? 
+            <>
+              <h3 className='text-dark'>Philhealth</h3>
+              <div className="d-flex border border-2 p-2 justify-content-between my-5">
+                <div>
+                  <h3>File name: {docMap.philhealth.file.name}</h3>
+                </div>
+              </div>
+              </>
+             :
+             <FileUploadBox 
+              label="Philhealth" 
+              name="philhealth" 
+              value={values.philhealth} 
+              setFieldValue={setFieldValue}
+              documentGroup={2} 
+            />
+            }
 
-    //         {docMap.tin ? 
-    //         <>
-    //           <h3 className='text-dark'>Tax Identification Number (TIN)</h3>
-    //           <div className="d-flex border border-2 p-2 justify-between my-5">
-    //             <div>
-    //               <h3>File name: {docMap.tin.file.name}</h3>
-    //             </div>
-    //           </div>
-    //           </>
-    //          :
-    //          <FileUploadBox 
-    //           label="Tax Identification Number (TIN)" 
-    //           name="tin" 
-    //           value={values.tin} 
-    //           setFieldValue={setFieldValue} 
-    //           documentGroup={2} 
-    //         />
-    //         }
+            {docMap.tin ? 
+            <>
+              <h3 className='text-dark'>Tax Identification Number (TIN)</h3>
+              <div className="d-flex border border-2 p-2 justify-content-between my-5">
+                <div>
+                  <h3>File name: {docMap.tin.file.name}</h3>
+                </div>
+              </div>
+              </>
+             :
+             <FileUploadBox 
+              label="Tax Identification Number (TIN)" 
+              name="tin" 
+              value={values.tin} 
+              setFieldValue={setFieldValue} 
+              documentGroup={2} 
+            />
+            }
 
-    //         {docMap.sss ? 
-    //         <>
-    //           <h3 className='text-dark'>Social Security System (SSS)</h3>
-    //           <div className="d-flex border border-2 p-2 justify-between my-5">
-    //             <div>
-    //               <h3>File name: {docMap.sss.file.name}</h3>
-    //             </div>
-    //           </div>
-    //           </>
-    //          :
-    //          <FileUploadBox 
-    //           label="Social Security System (SSS)" 
-    //           name="sss" 
-    //           value={values.sss} 
-    //           setFieldValue={setFieldValue} 
-    //           documentGroup={2} 
-    //         />
-    //         }
+            {docMap.sss ? 
+            <>
+              <h3 className='text-dark'>Social Security System (SSS)</h3>
+              <div className="d-flex border border-2 p-2 justify-content-between my-5">
+                <div>
+                  <h3>File name: {docMap.sss.file.name}</h3>
+                </div>
+              </div>
+              </>
+             :
+             <FileUploadBox 
+              label="Social Security System (SSS)" 
+              name="sss" 
+              value={values.sss} 
+              setFieldValue={setFieldValue} 
+              documentGroup={2} 
+            />
+            }
             
-    //         {docMap.diploma ? 
-    //         <>
-    //           <h3 className='text-dark'>Diploma/ Transcript of Records/ Any proof of educational attainment</h3>
-    //           <div className="d-flex border border-2 p-2 justify-between my-5">
-    //             <div>
-    //               <h3>File name: {docMap.diploma.file.name}</h3>
-    //             </div>
-    //           </div>
-    //           </>
-    //          :
-    //          <FileUploadBox 
-    //           label="Diploma/ Transcript of Records/ Any proof of educational attainment" 
-    //           name="diploma" 
-    //           value={values.diploma} 
-    //           setFieldValue={setFieldValue} 
-    //           documentGroup={2} 
-    //         />
-    //         }
+            {docMap.diploma ? 
+            <>
+              <h3 className='text-dark'>Diploma/ Transcript of Records/ Any proof of educational attainment</h3>
+              <div className="d-flex border border-2 p-2 justify-content-between my-5">
+                <div>
+                  <h3>File name: {docMap.diploma.file.name}</h3>
+                </div>
+              </div>
+              </>
+             :
+             <FileUploadBox 
+              label="Diploma/ Transcript of Records/ Any proof of educational attainment" 
+              name="diploma" 
+              value={values.diploma} 
+              setFieldValue={setFieldValue} 
+              documentGroup={2} 
+            />
+            }
             
-    //         {docMap.marriageCert ? 
-    //         <>
-    //           <h3 className='text-dark'>PSA/ NSO Marriage Certificate (if married)</h3>
-    //           <div className="d-flex border border-2 p-2 justify-between my-5">
-    //             <div>
-    //               <h3>File name: {docMap.marriageCert.file.name}</h3>
-    //             </div>
-    //           </div>
-    //           </>
-    //          :
-    //          <FileUploadBox 
-    //           label="PSA/ NSO Marriage Certificate (if married)" 
-    //           name="marriageCert" 
-    //           value={values.marriageCert} 
-    //           setFieldValue={setFieldValue} 
-    //           documentGroup={2}
-    //         />
-    //         }
+            {docMap.marriageCert ? 
+            <>
+              <h3 className='text-dark'>PSA/ NSO Marriage Certificate (if married)</h3>
+              <div className="d-flex border border-2 p-2 justify-content-between my-5">
+                <div>
+                  <h3>File name: {docMap.marriageCert.file.name}</h3>
+                </div>
+              </div>
+              </>
+             :
+             <FileUploadBox 
+              label="PSA/ NSO Marriage Certificate (if married)" 
+              name="marriageCert" 
+              value={values.marriageCert} 
+              setFieldValue={setFieldValue} 
+              documentGroup={2}
+            />
+            }
             
-    //         {docMap.dependentCert ? 
-    //         <>
-    //           <h3 className='text-dark'>Dependent/s PSA/ NSO Birth Certificate</h3>
-    //           <div className="d-flex border border-2 p-2 justify-between my-5">
-    //             <div>
-    //               <h3>File name: {docMap.dependentCert.file.name}</h3>
-    //             </div>
-    //           </div>
-    //           </>
-    //          :
-    //          <FileUploadBox 
-    //           label="Dependent/s PSA/ NSO Birth Certificate"
-    //           name="dependentCert" 
-    //           value={values.dependentCert} 
-    //           setFieldValue={setFieldValue} 
-    //           documentGroup={2} 
-    //         />
-    //         }
+            {docMap.dependentCert ? 
+            <>
+              <h3 className='text-dark'>Dependent/s PSA/ NSO Birth Certificate</h3>
+              <div className="d-flex border border-2 p-2 justify-content-between my-5">
+                <div>
+                  <h3>File name: {docMap.dependentCert.file.name}</h3>
+                </div>
+              </div>
+              </>
+             :
+             <FileUploadBox 
+              label="Dependent/s PSA/ NSO Birth Certificate"
+              name="dependentCert" 
+              value={values.dependentCert} 
+              setFieldValue={setFieldValue} 
+              documentGroup={2} 
+            />
+            }
             
-    //         {docMap.employmentCert ? 
-    //         <>
-    //           <h3 className='text-dark'>Certificate of Employment / Signed resignation letter / Clearance</h3>
-    //           <div className="d-flex border border-2 p-2 justify-between my-5">
-    //             <div>
-    //               <h3>File name: {docMap.employmentCert.file.name}</h3>
-    //             </div>
-    //           </div>
-    //           </>
-    //          :
-    //          <FileUploadBox 
-    //           label="Certificate of Employment / Signed resignation letter / Clearance" 
-    //           name="employmentCert" 
-    //           value={values.employmentCert} 
-    //           setFieldValue={setFieldValue}
-    //           documentGroup={2}  
-    //         />
-    //         }
+            {docMap.employmentCert ? 
+            <>
+              <h3 className='text-dark'>Certificate of Employment / Signed resignation letter / Clearance</h3>
+              <div className="d-flex border border-2 p-2 justify-content-between my-5">
+                <div>
+                  <h3>File name: {docMap.employmentCert.file.name}</h3>
+                </div>
+              </div>
+              </>
+             :
+             <FileUploadBox 
+              label="Certificate of Employment / Signed resignation letter / Clearance" 
+              name="employmentCert" 
+              value={values.employmentCert} 
+              setFieldValue={setFieldValue}
+              documentGroup={2}  
+            />
+            }
             
-    //         {docMap.form2316 ? 
-    //         <>
-    //           <h3 className='text-dark'>Current Year’s 2316</h3>
-    //           <div className="d-flex border border-2 p-2 justify-between my-5">
-    //             <div>
-    //               <h3>File name: {docMap.form2316.file.name}</h3>
-    //             </div>
-    //           </div>
-    //           </>
-    //          :
-    //          <FileUploadBox 
-    //           label="Current Year’s 2316" 
-    //           name="form2316" 
-    //           value={values.form2316} 
-    //           setFieldValue={setFieldValue} 
-    //           documentGroup={2} 
-    //         />
-    //         }
+            {docMap.form2316 ? 
+            <>
+              <h3 className='text-dark'>Current Year’s 2316</h3>
+              <div className="d-flex border border-2 p-2 justify-content-between my-5">
+                <div>
+                  <h3>File name: {docMap.form2316.file.name}</h3>
+                </div>
+              </div>
+              </>
+             :
+             <FileUploadBox 
+              label="Current Year’s 2316" 
+              name="form2316" 
+              value={values.form2316} 
+              setFieldValue={setFieldValue} 
+              documentGroup={2} 
+            />
+            }
             
-    //         <div className="d-flex bd-highlight gap-5 justify-end py-2 mt-5">
-    //           {/* <Button type="submit" className="btn btn-danger mt-5" disabled={isSubmitting}>
-    //             {isSubmitting ? 'Submitting...' : 'Submit'}
-    //           </Button> */}
-    //         </div>
-    //       </Form>
-    //     )}
-    //   </Formik>
-    // </Container>
-
-    <>1</>
+            <div className="d-flex bd-highlight gap-5 justify-content-end py-2 mt-5">
+              <Button type="submit" className="btn btn-danger mt-5" disabled={isSubmitting}>
+                {isSubmitting ? 'Submitting...' : 'Submit'}
+              </Button>
+            </div>
+          </Form>
+        )}
+      </Formik>
+    </Container>
   );
 };
 

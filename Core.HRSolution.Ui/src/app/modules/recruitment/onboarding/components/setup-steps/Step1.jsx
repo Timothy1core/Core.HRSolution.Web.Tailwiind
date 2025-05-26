@@ -1,8 +1,8 @@
 import * as Yup from 'yup';
-// import { Container } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import { useState, useEffect } from 'react';
-import InputMask from 'react-input-mask';
+import InputMask from 'react-input-mask-next';
 import { useAuth } from '../../../../../modules/auth';
 import { saveOnboardingInformation, updateOnboardingFormInfo } from '../../core/requests/_request';
 import provinces from '../../../../../../../public/json/provinces.json';
@@ -25,7 +25,6 @@ const step1Schema = Yup.object().shape({
   permanentLocation: Yup.string().required('Required'),
   permanentZipCode: Yup.string().required('Required'),
   mobileNo: Yup.string().required('Required'),
-  alternativeMobileNo: Yup.string().required('Required'),
   personalEmail: Yup.string().required('Required'),
   emergencyContactPerson: Yup.string().required('Required'),
   emergencyContactNo: Yup.string().required('Required'),
@@ -52,6 +51,7 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
       firstName: onboardingInfoSheet?.firstName || '',
       middleName: onboardingInfoSheet?.middleName || '',
       middleNamePrefix: onboardingInfoSheet?.middleNamePrefix || '',
+      suffix: onboardingInfoSheet?.suffix || '',
       salutation: onboardingInfoSheet?.salutation || '',
       gender: onboardingInfoSheet?.gender || '',
       civilStatus: onboardingInfoSheet?.civilStatus || '',
@@ -65,6 +65,7 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
       permanentCityProvince: onboardingInfoSheet?.permanentCityProvince || '',
       permanentLocation: onboardingInfoSheet?.permanentLocation || '',
       permanentZipCode: onboardingInfoSheet?.permanentZipcode || '',
+      landlineNo: onboardingInfoSheet?.landlineNo || '',
       mobileNo: onboardingInfoSheet?.mobileNo || '',
       alternativeMobileNo: onboardingInfoSheet?.alternativeMobileNo || '',
       personalEmail: onboardingInfoSheet?.personalEmail || '',
@@ -80,6 +81,7 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
     validateOnChange: false,
     validateOnBlur: true,
     onSubmit: async (values, { setStatus, setSubmitting }) => {
+      console.log(123);
       const hasChanged = hasFormChanged(formik.initialValues, values);
       if (!hasChanged) {
         handleNext();
@@ -109,6 +111,7 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
         PermanentCityProvince: values.permanentCityProvince,
         PermanentLocation: values.permanentLocation,
         PermanentZipCode: values.permanentZipCode,
+        LandlineNo: values.landlineNo,
         MobileNo: values.mobileNo,
         AlternativeMobileNo: values.alternativeMobileNo,
         PersonalEmail: values.personalEmail,
@@ -163,12 +166,12 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
 
   return (
     // <div className="d-flex flex-column flex-sm-row">
-      // <Container className="my-5">
+      <Container className="my-5">
         <form onSubmit={formik.handleSubmit}>
         <h4 className="text-danger">Personal Informations</h4>
 
           <div className='fv-row d-flex mb-3'>
-            <div className='me-2 flex-fill'>
+            <div className='me-2 col-3'>
             <label className='form-label required fs-8'>Last Name</label>
             <input
                 name='lastName'
@@ -179,7 +182,7 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
                 <div className='text-danger mt-2'>{formik.errors.lastName}</div>
             )}
             </div>
-            <div className='me-2 flex-fill'>
+            <div className='me-2 col-3'>
             <label className='form-label required fs-8'>First Name</label>
 
             <input
@@ -191,7 +194,7 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
                 <div className='text-danger mt-2'>{formik.errors.firstName}</div>
             )}
             </div>
-            <div className='me-2 flex-fill'>
+            <div className='me-2 col-3'>
             <label className='form-label fs-8'>Middle Name</label>
             <input
                 name='middleName'
@@ -199,7 +202,7 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
                 {...formik.getFieldProps('middleName')}
             />
             </div>
-            <div  className='flex-fill'>
+            <div  className='col-3'>
             <label className='form-label required fs-8'>Middle Name Prefix</label>
             <input
                 name='middleNamePrefix'
@@ -213,7 +216,7 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
           </div>
 
           <div className='fv-row d-flex mb-3'>
-            <div className='me-2 flex-fill col-3'>
+            <div className='me-2  col-3'>
             <label className='form-label fs-8'>Suffix</label>
             <input
                 name='suffix'
@@ -221,7 +224,7 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
                 {...formik.getFieldProps('suffix')}
             />
             </div>
-            <div className='me-2 flex-fill col-3'>
+            <div className='me-2  col-3'>
             <label className='form-label required fs-8'>Salutation</label>
             <select
                 name='salutation'
@@ -237,7 +240,7 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
                 <div className='text-danger mt-2'>{formik.errors.salutation}</div>
             )}
             </div>
-            <div className='me-2 flex-fill col-3'>
+            <div className='me-2  col-3'>
             <label className='form-label required fs-8'>Gender</label>
             <select
                 name='gender'
@@ -252,7 +255,7 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
                 <div className='text-danger mt-2'>{formik.errors.gender}</div>
             )}
             </div>
-            <div  className='flex-fill col-3'>
+            <div  className=' col-3'>
             <label className='form-label required fs-8'>Civil Status</label>
             <select
                 name='civilStatus'
@@ -288,6 +291,7 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
                 <option value='' disabled>Select Education Attainment</option>
                 <option value='Elementary Graduate'>Elementary Graduate</option>
                 <option value='High School Gradute'>High School Gradute</option>
+                <option value='College Gradute'>College Gradute</option>
                 <option value='Undergradute'>Undergradute</option>
                 <option value='Trade/Technical/Vocational Traning'>Trade/Technical/Vocational Traning</option>
                 <option value="Master's Degree">Master's Degree</option>
@@ -305,7 +309,7 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
           </div>
 
           <div className='fv-row d-flex mb-3'>
-            <div className='me-2 flex-fill'>
+            <div className='me-2 col-3'>
             <label className='form-label required fs-8'>Current Address</label>
             <input
                 name='currentAddress'
@@ -316,7 +320,7 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
                 <div className='text-danger mt-2'>{formik.errors.currentAddress}</div>
             )}
             </div>
-            <div className='me-2 flex-fill'>
+            <div className='me-2 col-3'>
             <label className='form-label required fs-8'>City/Province</label>
 
             <select
@@ -335,7 +339,7 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
                 <div className='text-danger mt-2'>{formik.errors.currentCityProvince}</div>
             )}
             </div>
-            <div className='me-2 flex-fill'>
+            <div className='me-2 col-3'>
             <label className='form-label required fs-8'>Location</label>
             <select
                 name='currentLocation'
@@ -344,7 +348,7 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
             >
                 <option value='' disabled>Select City/Municipality</option>
                 {availableCurrentCities.map((city) => (
-                <option key={city.code} value={city.name}>
+                <option key={city.code} value={city.code}>
                     {city.name}
                 </option>
                 ))}
@@ -353,7 +357,7 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
                 <div className='text-danger mt-2'>{formik.errors.currentLocation}</div>
             )}
             </div>
-            <div  className='flex-fill'>
+            <div  className='col-3'>
             <label className='form-label required fs-8'>Zipcode</label>
             {/* <input
                 name='currentZipCode'
@@ -365,17 +369,18 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
             )} */}
 
             <InputMask
+            className="form-control form-control-sm"
             mask="9999"
             {...formik.getFieldProps('currentZipCode')}
             >
-            {(inputProps) => (
+            {/* {(inputProps) => (
                 <input
                 {...inputProps}
                 type="text"
                 name="currentZipCode"
                 className="form-control form-control-sm"
                 />
-            )}
+            )} */}
             </InputMask>
             {formik.touched.currentZipCode && formik.errors.currentZipCode && (
             <div className='text-danger mt-2'>{formik.errors.currentZipCode}</div>
@@ -410,7 +415,7 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
         </label>
         </div>
           <div className='fv-row d-flex mb-3'>
-            <div className='me-2 flex-fill'>
+            <div className='me-2 col-3'>
             <label className='form-label required fs-8'>Permanent Address</label>
             <input
                 name='permanentAddress'
@@ -421,7 +426,7 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
                 <div className='text-danger mt-2'>{formik.errors.permanentAddress}</div>
             )}
             </div>
-            <div className='me-2 flex-fill'>
+            <div className='me-2 col-3'>
             <label className='form-label required fs-8'>City/Province</label>
             <select
                 name='permanentCityProvince'
@@ -439,7 +444,7 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
                 <div className='text-danger mt-2'>{formik.errors.permanentCityProvince}</div>
             )}
             </div>
-            <div className='me-2 flex-fill'>
+            <div className='me-2 col-3'>
             <label className='form-label required fs-8'>Location</label>
             <select
                 name='permanentLocation'
@@ -448,7 +453,7 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
             >
                 <option value='' disabled>Select City</option>
                 {availablePermanentCities.map((city) => (
-                <option key={city.code} value={city.name}>
+                <option key={city.code} value={city.code}>
                     {city.name}
                 </option>
                 ))}
@@ -457,20 +462,21 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
                 <div className='text-danger mt-2'>{formik.errors.permanentLocation}</div>
             )}
             </div>
-            <div  className='flex-fill'>
+            <div  className='col-3'>
             <label className='form-label required fs-8'>Zipcode</label>
             <InputMask
+            className="form-control form-control-sm"
             mask="9999"
             {...formik.getFieldProps('permanentZipCode')}
             >
-            {(inputProps) => (
+            {/* {(inputProps) => (
                 <input
                 {...inputProps}
                 type="text"
                 name="permanentZipCode"
                 className="form-control form-control-sm"
                 />
-            )}
+            )} */}
             </InputMask>
             {formik.touched.permanentZipCode && formik.errors.permanentZipCode && (
                 <div className='text-danger mt-2'>{formik.errors.permanentZipCode}</div>
@@ -483,50 +489,61 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
           <h4 className="text-danger mt-4">Contact Information</h4>
 
           <div className='fv-row d-flex mb-3'>
-            <div className='me-2 flex-fill'>
+            <div className='me-2 col-3'>
             <label className='form-label fs-8'>Landline</label>
-            <input
-                name='landline'
-                className='form-control form-control-sm'
-                {...formik.getFieldProps('landline')}
-            />
-            </div>
-            <div className='me-2 flex-fill'>
-            <label className='form-label required fs-8'>Mobile Number</label>
             <InputMask
-            mask="9999-999-9999"
-            {...formik.getFieldProps('mobileNo')}
+            className="form-control form-control-sm"
+            mask="99999999999"
+            {...formik.getFieldProps('landlineNo')}
             >
-            {(inputProps) => (
+            {/* {(inputProps) => (
                 <input
                 {...inputProps}
                 type="text"
                 name="mobileNo"
                 className="form-control form-control-sm"
                 />
-            )}
+            )} */}
+            </InputMask>
+            </div>
+            <div className='me-2 col-3'>
+            <label className='form-label required fs-8'>Mobile Number</label>
+            <InputMask
+            className="form-control form-control-sm"
+            mask="9999-999-9999"
+            {...formik.getFieldProps('mobileNo')}
+            >
+            {/* {(inputProps) => (
+                <input
+                {...inputProps}
+                type="text"
+                name="mobileNo"
+                className="form-control form-control-sm"
+                />
+            )} */}
             </InputMask>
             {formik.touched.mobileNo && formik.errors.mobileNo && (
                 <div className='text-danger mt-2'>{formik.errors.mobileNo}</div>
             )}
             </div>
-            <div className='me-2 flex-fill'>
+            <div className='me-2 col-3'>
             <label className='form-label fs-8'>Alternate Number</label>
             <InputMask
+            className="form-control form-control-sm"
             mask="9999-999-9999"
             {...formik.getFieldProps('alternativeMobileNo')}
             >
-            {(inputProps) => (
+            {/* {(inputProps) => (
                 <input
                 {...inputProps}
                 type="text"
                 name="alternativeMobileNo"
                 className="form-control form-control-sm"
                 />
-            )}
+            )} */}
             </InputMask>
             </div>
-            <div  className='flex-fill'>
+            <div  className='col-3'>
             <label className='form-label required fs-8'>Email</label>
             <input
                 name='personalEmail'
@@ -540,7 +557,7 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
           </div>
 
           <div className='fv-row d-flex mb-3'>
-            <div className='me-2 w-25'>
+            <div className='me-2 col-3'>
             <label className='form-label required fs-8'>Emergency Contact Person</label>
             <input
                 name='emergencyContactPerson'
@@ -551,26 +568,27 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
                 <div className='text-danger mt-2'>{formik.errors.emergencyContactPerson}</div>
             )}
             </div>
-            <div className='me-2 w-25'>
+            <div className='me-2 col-3'>
             <label className='form-label required fs-8'>Emergency Contact Number</label>
             <InputMask
+            className="form-control form-control-sm"
             mask="9999-999-9999"
             {...formik.getFieldProps('emergencyContactNo')}
             >
-            {(inputProps) => (
+            {/* {(inputProps) => (
                 <input
                 {...inputProps}
                 type="text"
                 name="emergencyContactNo"
                 className="form-control form-control-sm"
                 />
-            )}
+            )} */}
             </InputMask>
             {formik.touched.emergencyContactNo && formik.errors.emergencyContactNo && (
                 <div className='text-danger mt-2'>{formik.errors.emergencyContactNo}</div>
             )}
             </div>
-            <div className='w-25'>
+            <div className='col-3'>
             <label className='form-label required fs-8'>Relation</label>
             <input
                 name='emergencyRelation'
@@ -581,7 +599,7 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
                 <div className='text-danger mt-2'>{formik.errors.emergencyRelation}</div>
             )}
             </div>
-            <div className='w-25'>
+            <div className='col-3'>
             </div>
           </div>
 
@@ -590,91 +608,95 @@ const Step1Div = ({ handleNext, id, onboardingInfoSheet }) => {
           <h4 className="text-danger mt-4">Government Information</h4>
 
           <div className='fv-row d-flex mb-3'>
-            <div className='me-2 flex-fill'>
+            <div className='me-2 col-3'>
             <label className='form-label required fs-8'>Social Security System (SSS)</label>
             <InputMask
+            className="form-control form-control-sm"
             mask="99-9999999-9"
             {...formik.getFieldProps('sssidNo')}
             >
-            {(inputProps) => (
+            {/* {(inputProps) => (
                 <input
                 {...inputProps}
                 type="text"
                 name="sssidNo"
                 className="form-control form-control-sm"
                 />
-            )}
+            )} */}
             </InputMask>
             {formik.touched.sssidNo && formik.errors.sssidNo && (
                 <div className='text-danger mt-2'>{formik.errors.sssidNo}</div>
             )}
             </div>
-            <div className='me-2 flex-fill'>
+            <div className='me-2 col-3'>
             <label className='form-label required fs-8'>Philhealth</label>
             <InputMask
+            className="form-control form-control-sm"
             mask="99-999999999-9"
             {...formik.getFieldProps('philhealthIdNo')}
             >
-            {(inputProps) => (
+            {/* {(inputProps) => (
                 <input
                 {...inputProps}
                 type="text"
                 name="philhealthIdNo"
                 className="form-control form-control-sm"
                 />
-            )}
+            )} */}
             </InputMask>
             {formik.touched.philhealthIdNo && formik.errors.philhealthIdNo && (
                 <div className='text-danger mt-2'>{formik.errors.philhealthIdNo}</div>
             )}
             </div>
-            <div className='me-2 flex-fill'>
+            <div className='me-2 col-3'>
             <label className='form-label required fs-8'>TIN</label>
             <InputMask
+            className="form-control form-control-sm"
             mask="99999-999-999"
             {...formik.getFieldProps('tinidNo')}
             >
-            {(inputProps) => (
+            {/* {(inputProps) => (
                 <input
                 {...inputProps}
                 type="text"
                 name="tinidNo"
                 className="form-control form-control-sm"
                 />
-            )}
+            )} */}
             </InputMask>
             {formik.touched.tinidNo && formik.errors.tinidNo && (
                 <div className='text-danger mt-2'>{formik.errors.tinidNo}</div>
             )}
             </div>
-            <div  className='flex-fill'>
+            <div  className='col-3'>
             <label className='form-label required fs-8'>PagIBIG</label>
             <InputMask
+            className="form-control form-control-sm"
             mask="9999-9999-9999"
             {...formik.getFieldProps('pagibigIdNo')}
             >
-            {(inputProps) => (
+            {/* {(inputProps) => (
                 <input
                 {...inputProps}
                 type="text"
                 name="pagibigIdNo"
                 className="form-control form-control-sm"
                 />
-            )}
+            )} */}
             </InputMask>
             {formik.touched.pagibigIdNo && formik.errors.pagibigIdNo && (
                 <div className='text-danger mt-2'>{formik.errors.pagibigIdNo}</div>
             )}
             </div>
           </div>
-          <div className="d-flex bd-highlight  gap-5 justify-end py-2 mt-5">
+          <div className="d-flex bd-highlight  gap-5 justify-content-end py-2 mt-5">
             
             <button type="submit" className="btn btn-danger" disabled={loading || formik.isSubmitting}>
               {loading ? 'Saving...' : 'Continue'}
             </button>
           </div>
           </form>
-      // </Container>
+      </Container>
     /* </div> */
   );
 };

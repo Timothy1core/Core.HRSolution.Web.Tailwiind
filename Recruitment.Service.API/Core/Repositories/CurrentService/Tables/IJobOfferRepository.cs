@@ -9,6 +9,7 @@ public interface IJobOfferRepository
 	Task<List<JobOfferDashboardDto>> RetrieveCandidateForJobOfferList();
 	Task<List<JobOfferStatusDto>> RetrieveJobOfferStatusList();
 	Task<JobOfferDto> RetrieveJobOfferInfo(int jobOfferId);
+	Task<JobOfferDto> RetrieveJobOfferAcceptedDate(int candidateId);
 	Task UpdateJobOffer(JobOfferInformation jobOfferInformationDto);
 	Task JobOfferApproved(JobOfferInformation jobOfferInformationDto);
 	Task JobOfferSalaryDeclined(JobOfferInformation jobOfferInformationDto);

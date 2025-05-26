@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Swal from 'sweetalert2';
-// import { Modal, Button } from 'react-bootstrap';
-import { KTIcon } from '@/_metronic/helpers';
+import { Modal, Button } from 'react-bootstrap';
+import { KTIcon } from '../../../../../../_metronic/helpers';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { UpdateCompanyProfile } from '../../core/request/clients_request';
@@ -9,27 +9,29 @@ import { SelectCoreServiceComponent, SelectClientStatusComponent } from '../drop
 
 const companyProfileValidationSchema = Yup.object().shape({
   name: Yup.string().max(1000, 'Must be 1000 characters or less').required('Company Name is required'),
+  alias: Yup.string().max(5, 'Must be 5 characters or less').required('Alias is required'),
   industry: Yup.string().max(1000, 'Must be 1000 characters or less').required('Industry is required'),
   website: Yup.string().max(1000, 'Must be 1000 characters or less').required('Website is required'),
   coreServiceId: Yup.string().required('CORE Service is required'),
-  clientStatusId: Yup.string().required('Status is required'),
+  departmentStatusId: Yup.string().required('Status is required'),
   timezone: Yup.string().required('Timezone is required'),
   timezoneOffset: Yup.string().required('Time Difference is required'),
 });
 
-function ClientUpdateModal({ clientInfoData, onUpdate }) {
+function ClientUpdateModal({ departmentInfoData, onUpdate }) {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const formik = useFormik({
     initialValues: {
-      name: clientInfoData.name,
-      industry: clientInfoData.industry,
-      website: clientInfoData.website,
-      timezone: clientInfoData.timezone,
-      timezoneOffset: clientInfoData.timezoneOffset,
-      coreServiceId: clientInfoData.coreServiceId,
-      clientStatusId: clientInfoData.clientStatusId,
+      name: departmentInfoData.name,
+      industry: departmentInfoData.industry,
+      alias: departmentInfoData.alias,
+      website: departmentInfoData.website,
+      timezone: departmentInfoData.timezone,
+      timezoneOffset: departmentInfoData.timezoneOffset,
+      coreServiceId: departmentInfoData.coreServiceId,
+      departmentStatusId: departmentInfoData.departmentStatusId,
       logo: null,
     },
     validationSchema: companyProfileValidationSchema,
@@ -40,13 +42,14 @@ function ClientUpdateModal({ clientInfoData, onUpdate }) {
         formData.append('logo', values.logo);
         formData.append('name', values.name);
         formData.append('industry', values.industry);
+        formData.append('alias', values.alias);
         formData.append('website', values.website);
         formData.append('timezone', values.timezone);
         formData.append('timezoneOffset', values.timezoneOffset);
         formData.append('coreServiceId', values.coreServiceId);
-        formData.append('clientStatusId', values.clientStatusId);
+        formData.append('departmentStatusId', values.departmentStatusId);
 
-        const response = await UpdateCompanyProfile(clientInfoData.id, formData);
+        const response = await UpdateCompanyProfile(departmentInfoData.id, formData);
         setShow(false);
         Swal.fire({
           title: 'Success!',
@@ -76,12 +79,12 @@ function ClientUpdateModal({ clientInfoData, onUpdate }) {
   return (
     <>
       <a className="menu-link px-3" onClick={() => setShow(true)}>
-        Update Client Profile
+        Update Department Profile
       </a>
 
-      {/* <Modal show={show} onHide={() => setShow(false)} dialogClassName="modal-dialog-centered mw-900px">
+      <Modal show={show} onHide={() => setShow(false)} dialogClassName="modal-dialog-centered mw-900px">
         <Modal.Header>
-          <Modal.Title>UPDATE CLIENT PROFILE</Modal.Title>
+          <Modal.Title>UPDATE DEPARTMENT PROFILE</Modal.Title>
           <button className="btn btn-sm btn-icon btn-active-color-primary" onClick={() => setShow(false)}>
             <KTIcon iconName="cross" className="fs-1" />
           </button>
@@ -104,7 +107,21 @@ function ClientUpdateModal({ clientInfoData, onUpdate }) {
                   <div className='text-danger mt-2'>{formik.errors.name}</div>
                 )}
               </div>
-              <div className='col-md-6 fv-row'>
+              <div className='col-md-3 fv-row'>
+                <label className="required fs-6 fw-semibold mb-2">Alias</label>
+                <input 
+                  type="text" 
+                  name="alias"
+                  onChange={formik.handleChange}
+                  value={formik.values.alias}
+                  className="form-control" 
+                  placeholder="Enter industry"
+                />
+                {formik.touched.alias && formik.errors.alias && (
+                  <div className='text-danger mt-2'>{formik.errors.alias}</div>
+                )}
+              </div>
+              <div className='col-md-3 fv-row'>
                 <label className="required fs-6 fw-semibold mb-2">Industry</label>
                 <input 
                   type="text" 
@@ -191,13 +208,13 @@ function ClientUpdateModal({ clientInfoData, onUpdate }) {
               <div className='col-md-3 fv-row'>
                 <label className="required fs-6 fw-semibold mb-2">Status</label>
                 <SelectClientStatusComponent 
-                 name="clientStatusId"
+                 name="departmentStatusId"
                  onChange={formik.handleChange}
-                 value={formik.values.clientStatusId}
+                 value={formik.values.departmentStatusId}
                  className="form-select" 
                 ></SelectClientStatusComponent>
-                {formik.touched.clientStatusId && formik.errors.clientStatusId && (
-                  <div className='text-danger mt-2'>{formik.errors.clientStatusId}</div>
+                {formik.touched.departmentStatusId && formik.errors.departmentStatusId && (
+                  <div className='text-danger mt-2'>{formik.errors.departmentStatusId}</div>
                 )}
               </div>
             </div>
@@ -214,7 +231,7 @@ function ClientUpdateModal({ clientInfoData, onUpdate }) {
             {loading ? 'Submitting...' : 'Submit'}
           </Button>
         </Modal.Footer>
-      </Modal> */}
+      </Modal>
     </>
   );
 }

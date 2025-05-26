@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Swal from 'sweetalert2';
-// import { Modal, Button } from 'react-bootstrap';
-import { KTIcon } from '@/_metronic/helpers';
+import { Modal, Button } from 'react-bootstrap';
+import { KTIcon } from '../../../../../../_metronic/helpers';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
@@ -84,7 +84,20 @@ function UpdateTafEmailTemplateModal({ onUpdate, id,name,subject,emailBody,email
             const listView = new ListView(locale);
             const options = [
                 { label: '[client_fullname]', content: '[client_fullname]' },
-                { label: '[taf_link]', content: '[taf_link]' }
+                { label: '[taf_link]', content: '[taf_link]' },
+                { label: '[candidate_full_name]', content: '[candidate_full_name]' },
+                { label: '[candidate_first_name]', content: '[candidate_first_name]' },
+                { label: '[candidate_email]', content: '[candidate_email]' },
+                { label: '[job_title]', content: '[job_title]' },
+                { label: '[job_link]', content: '[job_link]' },
+                { label: '[assessment_password]', content: '[assessment_password]' },
+                { label: '[assessment_link]', content: '[assessment_link]' },
+                { label: '[job_offer_link]', content: '[job_offer_link]' },
+                { label: '[onboarding_form_link]', content: '[onboarding_form_link]' },
+                { label: '[documents]', content: '[documents]' },
+                { label: '[hiring_manager_name]', content: '[hiring_manager_name]' },
+                { label: '[hiring_manager_email]', content: '[hiring_manager_email]' },
+                { label: '[approval_link]', content: '[approval_link]' },
             ];
 
             options.forEach((option) => {
@@ -120,7 +133,7 @@ function UpdateTafEmailTemplateModal({ onUpdate, id,name,subject,emailBody,email
             name: name,
             subject: subject,
             emailBody: emailBody,
-            emailCc: emailCc,
+            emailCc: emailCc ?? '',
         },
         validationSchema: emailTemplateValidationSchema,
         onSubmit: async (values, { setStatus, setSubmitting }) => {
@@ -160,12 +173,11 @@ function UpdateTafEmailTemplateModal({ onUpdate, id,name,subject,emailBody,email
 
     return (
         <>
-        1
-            {/* <Button className="menu-link btn btn-secondary btn-sm" onClick={() => setShow(true)}>
+            <Button className="menu-link btn btn-secondary btn-sm" onClick={() => setShow(true)}>
                 Update
-            </Button> */}
+            </Button>
 
-            {/* <Modal show={show} onHide={() => setShow(false)} dialogClassName="modal-dialog-centered mw-800px">
+            <Modal show={show} onHide={() => setShow(false)} dialogClassName="modal-dialog-centered mw-800px">
                 <Modal.Header>
                     <Modal.Title>UPDATE EMAIL TEMPLATE</Modal.Title>
                     <button
@@ -268,7 +280,7 @@ function UpdateTafEmailTemplateModal({ onUpdate, id,name,subject,emailBody,email
                         {loading ? 'Submitting...' : 'Submit'}
                     </Button>
                 </Modal.Footer>
-            </Modal> */}
+            </Modal>
         </>
     );
 }

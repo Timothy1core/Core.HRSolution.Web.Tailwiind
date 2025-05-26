@@ -13,15 +13,18 @@ namespace Recruitment.Service.API.Core.Applications
 
 		Task<JsonResult> RetrieveOnboardingFormInformations(string candidateId);
 		Task<JsonResult> RetrieveAllOnboardingInformationSheetService(string? search, int start, int length,
-			string draw, string sortColumnName, string sortDirection);
+			string draw, string sortColumnName, string sortDirection, int status);
 		Task<JsonResult> SaveOnboardingDocumentService(List<OnboardingDocumentRequestDto> onboardingDocumentDtoList);
 		Task<JsonResult> RetrieveOnboardingDocumentService(int candidateId);
 		Task<JsonResult> RetrieveAllOnboardingDocumentService(int candidateId);
 		Task<JsonResult> UpdateOnboardingInformationService(string candidateId,
 			OnboardingInformationSheetRequestDto onboardingInformationSheetDto);
+		Task<JsonResult> UpdateOnboardingInformationInternalService(int candidateId, OnboardingInformationSheetRequestDto onboardingInformationSheetDto);
 		Task<JsonResult> AcknowledgeOnboardingFormService(string candidateId,
 			bool isAcknowledged);
-
+		Task<JsonResult> UpdateOnboardingStatusService(int candidateId,
+			int onboardingStatusId);
+		Task<JsonResult> UpdateTemporaryEmployeeIdService(int candidateId, int temporaryEmployeeId);
 		Task<(string filePath, string contentType)> RetrieveSpecificOnboardingDocument(int candidateId, string documentType);
 
 		Task<List<(string filePath, string contentType)>> RetrieveAllOnboardingDocuments(int candidateId, string documentType);
@@ -39,6 +42,10 @@ namespace Recruitment.Service.API.Core.Applications
 			string workFromHomeApprovalBy1);
 		#endregion
 
+		Task<JsonResult> RetrieveInformationForContractGenerationService(int candidateId);
 
+		Task<byte[]?> GenerateContractPdfService(int candidateId, string loggedEmployee);
+
+		Task<JsonResult> RetrieveExistingTemporaryIdListService();
 	}
 }

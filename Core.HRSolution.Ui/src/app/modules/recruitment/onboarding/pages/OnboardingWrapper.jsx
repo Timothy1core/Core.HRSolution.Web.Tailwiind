@@ -9,10 +9,9 @@ const OnboardingPage = () => {
 
   return(
   <>
+    <ToolbarWrapper title="Onboarding Dashboard" subtitle="Recruitment" />
     <Content>
-      <OnboardingTable className='' />
-      {/* <ProfileRow />
-      <VerticalNavBar /> */}
+      <OnboardingTable />
     </Content>
   </>
   )

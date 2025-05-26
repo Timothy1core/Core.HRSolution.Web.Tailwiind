@@ -95,7 +95,7 @@ const ApplicationForm = () => {
     return (
         <div
             id="kt_app_content_container"
-            className="app-container container-xxl d-flex justify-center align-items-center"
+            className="app-container container-xxl d-flex justify-content-center align-items-center"
         >
             <div className="card w-75">
                 <div className="card-body py-10">
@@ -253,7 +253,7 @@ const ApplicationForm = () => {
                                             <label className="required fs-6 fw-semibold mb-2">Upload Resume</label>
                                             <div
                                                 {...getRootProps()}
-                                                className={`dropzone p-10 border rounded d-flex justify-center align-items-center ${fileError ? 'border-danger' : 'bg-secondary'}`}
+                                                className={`dropzone p-10 border rounded d-flex justify-content-center align-items-center ${fileError ? 'border-danger' : 'bg-secondary'}`}
                                             >
                                                 <input {...getInputProps()} />
                                                 {files.length > 0 ? (

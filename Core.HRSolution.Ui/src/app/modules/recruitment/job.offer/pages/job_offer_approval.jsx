@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { getJobOfferInfo, saveApproveSignature, salaryDeclined } from '../core/requests/_request';
+import { getJobOfferInfoPublic, saveApproveSignature, salaryDeclined } from '../core/requests/_request';
 import { useLocation } from 'react-router-dom';
 import {
   enableLoadingRequest,
   disableLoadingRequest,
 } from '../../../../helpers/loading_request';
 import dayjs from "dayjs";
-// import {  Button } from 'react-bootstrap';
+import {  Button } from 'react-bootstrap';
 import { SigOptionComponentApprove } from '../../../../helpers/esignature/approve_esignature_modal_component';
 import { SigOptionComponentDecline } from '../../../../helpers/esignature/decline_esignature_modal_component';
+import { useParams } from 'react-router-dom';
+
 const JobOfferApproval = () => {
-    const location = useLocation();
+    const { id } = useParams();
     const [candidateId, setCandidateId] = useState([]);
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -18,20 +20,16 @@ const JobOfferApproval = () => {
     const [declineReason, setDeclineReason] = useState(null);
     
 
-    // Update candidateId when location changes
     useEffect(() => {
-        const params = new URLSearchParams(location.search);
-        const id = params.get('id');
-        setCandidateId(id);
-    }, [location.search]); // Runs when URL search params change
+           if (id) setCandidateId(id);
+         }, [id]);
 
     const fetchJobOfferInfo = async () => {
         enableLoadingRequest();
-        console.log(candidateId)
         if (!candidateId) return;
         setLoading(true);
         try {
-          const res = await getJobOfferInfo(candidateId);
+          const res = await getJobOfferInfoPublic(candidateId);
           console.log(res.data)
           if (res.status === 200 && res.data) {
               setData(res.data.jobOfferInfo)
@@ -104,7 +102,7 @@ const JobOfferApproval = () => {
     return (
         <div
             id="kt_app_content_container"
-            className="app-container container-xxl d-flex justify-center align-items-center"
+            className="app-container container-xxl d-flex justify-content-center align-items-center"
         >
             <div className='card w-100 mb-5 mb-xl-8'>
                     <div className='card-header flex-nowrap'>
@@ -157,8 +155,8 @@ const JobOfferApproval = () => {
             
                         <div className="row g-5 mb-11 mt-6">
                          {/* <div className="col-sm-12"> */}
-                            <div className='w-25 justify-center flex-column'>
-                           <div className="mb-1 flex-column justify-center">
+                            <div className='w-25 justify-content-center flex-column'>
+                           <div className="mb-1 flex-column justify-content-center">
                              {declineReason ? (<div className="fw-bold fs-6 text-danger">Declined: {declineReason}</div> ) : signature ? (
                                <>
                                <img 
@@ -166,21 +164,21 @@ const JobOfferApproval = () => {
                                 alt="E-Signature" 
                                 className='w-25'
                                />
-                             <div className="fw-semibold fs-7 text-gray-600 mb-1">{ dayjs(data.approvedDate).format('	MMMM D, YYYY h:mm A')}</div>
+                             {/* <div className="fw-semibold fs-7 text-gray-600 mb-1">{ dayjs(data.approvedDate).format('	MMMM D, YYYY h:mm A')}</div> */}
                              <div className="fw-bold fs-6 text-gray-800">Approver Signature</div>    
                              </>   
                                                                            
                              ) : (
                             //    <SignaturePadModal onSave={handleSaveSignature} />
                             <>
-                            <div className='d-flex justify-center align-items-center flex-column'> 
+                            <div className='d-flex justify-content-center align-items-center flex-column'> 
                                 <div>
-                                    {/* <Button 
+                                    <Button 
                                         data-kt-menu-trigger="click" 
                                         data-kt-menu-placement="right-start" 
                                         data-kt-menu-flip="top-end" 
                                         className='btn btn-sm btn-danger'
-                                    >Sign Options</Button> */}
+                                    >Sign Options</Button>
                                     <div className='menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-auto min-w-200 mw-300px' data-kt-menu='true'>
                                         <div className="menu-item px-3">
                                             <div className="menu-content fs-6 text-gray-900 fw-bold px-3 py-4">Actions</div>

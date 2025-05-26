@@ -12,13 +12,15 @@ public interface IJobOfferServices
 
 	Task<JsonResult> RetrieveJobOfferInfoService(int jobOfferId);
 	Task<JsonResult> UpdateJobOfferInformationService(int jobOfferInfoId, JobOfferRequestDto jobOfferRequestDto);
-	Task<JsonResult> JobOfferApprovedService(int jobOfferInfoId,
+	Task<JsonResult> RetrieveJobOfferInfoPublicService(string jobOfferId);
+	Task<JsonResult> JobOfferApprovedService(string jobOfferInfoId,
 			string approverSignature);
-	Task<JsonResult> JobOfferSalaryDeclinedService(int jobOfferInfoId, string approverNotes);
-	Task<JsonResult> JobOfferAcceptedService(int jobOfferInfoId, string candidateSignature);
-	Task<JsonResult> JobOfferDeclinedService(int jobOfferInfoId, string candidateNotes);
+	Task<JsonResult> JobOfferSalaryDeclinedService(string jobOfferInfoId, string approverNotes);
+	Task<JsonResult> JobOfferAcceptedService(string jobOfferInfoId, string candidateSignature);
+	Task<JsonResult> JobOfferDeclinedService(string jobOfferInfoId, string candidateNotes);
 	Task<JsonResult> UpdateJobOfferStatusService(int jobOfferInfoId,
 			int jobOfferStatusId);
+	
 	Task<JsonResult> RetrieveEmailBodyContentService(int candidateId);
 	Task<byte[]> ExportCandidateToExcelService(int candidateId);
 }

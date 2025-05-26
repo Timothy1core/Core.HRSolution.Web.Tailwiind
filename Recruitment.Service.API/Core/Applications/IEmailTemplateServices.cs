@@ -11,6 +11,7 @@ public interface IEmailTemplateServices
 	Task<JsonResult> RemoveEmailTemplate(int id);
 	Task<JsonResult> RetrieveEmailTemplateDashboard();
 	Task<JsonResult> SelectEmailTemplateDropDown();
+	Task<JsonResult> SelectEmailActionDropDown();
 	Task<JsonResult> CreateEmailAutomation(EmailAutomation emailAutomation);
 	Task<JsonResult> UpdateEmailAutomation(EmailAutomation emailAutomationRequest);
 	Task<JsonResult> RetrieveEmailAutomationDashboard();

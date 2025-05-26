@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { useState } from 'react';
-import { KTIcon } from '@/_metronic/helpers';
+import { KTIcon } from '../../../../helpers';
 import { CreateAppModal, Dropdown1 } from '../../../../partials';
 import { useLayout } from '../../../core';
 

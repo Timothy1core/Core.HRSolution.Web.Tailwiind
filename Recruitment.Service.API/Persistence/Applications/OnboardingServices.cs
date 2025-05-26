@@ -1,13 +1,17 @@
 ﻿using FileServiceLibrary;
-using HRSolutionDbLibrary.Core.Entities.Tables;
 using Microsoft.AspNetCore.Mvc;
 using NETCore.Encrypt;
 using Recruitment.Service.API.Core.Applications;
-using Recruitment.Service.API.Core.Models.CurrentService.Dtos.JobOffer;
 using Recruitment.Service.API.Core.Models.CurrentService.Dtos.Onboarding;
 using Recruitment.Service.API.Core.Models.CurrentService.Dtos.WorkFromHome;
 using Recruitment.Service.API.Core.UnitOfWork;
 using System.Text;
+using Spire.Doc;
+using System.Linq.Dynamic.Core;
+using Microsoft.AspNetCore.Routing.Matching;
+using Microsoft.Graph.Models;
+using HRSolutionDbLibrary.Core.Entities.Tables;
+using Recruitment.Service.API.Core.Helpers;
 
 namespace Recruitment.Service.API.Persistence.Applications
 {
@@ -16,12 +20,14 @@ namespace Recruitment.Service.API.Persistence.Applications
 		ILogger<JobOfferServices> logger,
 		IWebHostEnvironment webHostEnvironment,
 		IConfiguration configuration,
-		IFileService fileService
+		IFileService fileService,
+		IApplicationProcessHelper applicationProcess
 	) : IOnboardingServices
 	{
 		private readonly IUoWForCurrentService _uoWForCurrentService = uoWForCurrentService;
 		private readonly ILogger<JobOfferServices> _logger = logger;
 		private readonly IFileService _fileService = fileService;
+		private readonly IApplicationProcessHelper _applicationProcess = applicationProcess;
 		private readonly string? _fileRootFolder = webHostEnvironment.IsDevelopment() ? webHostEnvironment.ContentRootPath : configuration.GetSection("baseFileLocation").Value;
 		public async Task<JsonResult> SaveOnboardingInformationSheetService(OnboardingInformationSheetRequestDto onboardingInformationSheetDto)
 		{
@@ -63,11 +69,15 @@ namespace Recruitment.Service.API.Persistence.Applications
 					PhilhealthIdNo = onboardingInformationSheetDto.PhilhealthIdNo,
 					PagibigIdNo = onboardingInformationSheetDto.PagibigIdNo,
 					CurrentStep = 2,
+					CreatedDate = DateTime.Now,
+					OnboardingStatusId = 1
 				};
 
 
 				await _uoWForCurrentService.OnboardingRepository.SaveOnboardingInformation(onboardingInformationSheet);
 				await _uoWForCurrentService.CommitAsync();
+
+				await _applicationProcess.SendEmailCompletedCoreInformationTemplate(recordId, 19);
 
 				result = new JsonResult(new { success = true, responseText = "Successfully Saved " })
 				{
@@ -89,7 +99,6 @@ namespace Recruitment.Service.API.Persistence.Applications
 
 			}
 		}
-
 		public async Task<JsonResult> RetrieveOnboardingInformationSheetService(int candidateId)
 		{
 			JsonResult result;
@@ -100,8 +109,10 @@ namespace Recruitment.Service.API.Persistence.Applications
 					await _uoWForCurrentService.OnboardingRepository.RetrieveOnboardingInformation(candidateId);
 				var wfhInfo =
 					await _uoWForCurrentService.WorkFromHomeInformationRepository.RetrieveWorkFromHomeInformation(candidateId);
+				var statusList = await _uoWForCurrentService.OnboardingRepository.RetrieveOnboardingStatusList();
+				var jobOfferInfo = await _uoWForCurrentService.JobOfferRepository.RetrieveJobOfferAcceptedDate(candidateId);
 
-				result = new JsonResult(new { onboardingInfo, wfhInfo })
+				result = new JsonResult(new { onboardingInfo, wfhInfo, statusList, jobOfferInfo })
 				{
 					StatusCode = 200
 				};
@@ -121,7 +132,6 @@ namespace Recruitment.Service.API.Persistence.Applications
 
 			}
 		}
-
 		public async Task<JsonResult> RetrieveOnboardingFormInformations(string candidateId)
 		{
 			JsonResult result;
@@ -159,9 +169,7 @@ namespace Recruitment.Service.API.Persistence.Applications
 
 			}
 		}
-
-		public async Task<JsonResult> UpdateOnboardingInformationService(string candidateId,
-			OnboardingInformationSheetRequestDto onboardingInformationSheetDto)
+		public async Task<JsonResult> UpdateOnboardingInformationService(string candidateId, OnboardingInformationSheetRequestDto onboardingInformationSheetDto)
 		{
 			JsonResult result;
 			try
@@ -228,8 +236,74 @@ namespace Recruitment.Service.API.Persistence.Applications
 			}
 		}
 
-		public async Task<JsonResult> AcknowledgeOnboardingFormService(string candidateId,
-			bool isAcknowledged)
+		public async Task<JsonResult> UpdateOnboardingInformationInternalService(int candidateId, OnboardingInformationSheetRequestDto onboardingInformationSheetDto)
+		{
+			JsonResult result;
+			try
+			{
+				var onboardingInformation = new OnboardingInformationSheet()
+				{
+					CandidateId = candidateId,
+					FirstName = onboardingInformationSheetDto.FirstName,
+					LastName = onboardingInformationSheetDto.LastName,
+					MiddleName = onboardingInformationSheetDto.MiddleName,
+					MiddleNamePrefix = onboardingInformationSheetDto.MiddleNamePrefix,
+					Suffix = onboardingInformationSheetDto.Suffix,
+					Salutation = onboardingInformationSheetDto.Salutation,
+					Gender = onboardingInformationSheetDto.Gender,
+					CivilStatus = onboardingInformationSheetDto.CivilStatus,
+					DateOfBirth = onboardingInformationSheetDto.DateOfBirth,
+					CurrentAddress = onboardingInformationSheetDto.CurrentAddress,
+					CurrentLocation = onboardingInformationSheetDto.CurrentLocation,
+					CurrentCityProvince = onboardingInformationSheetDto.CurrentCityProvince,
+					CurrentZipcode = onboardingInformationSheetDto.CurrentZipcode,
+					PermanentAddress = onboardingInformationSheetDto.PermanentAddress,
+					PermanentLocation = onboardingInformationSheetDto.PermanentLocation,
+					PermanentCityProvince = onboardingInformationSheetDto.PermanentCityProvince,
+					PermanentZipcode = onboardingInformationSheetDto.PermanentZipcode,
+					EducationalAttainment = onboardingInformationSheetDto.EducationalAttainment,
+					LandlineNo = onboardingInformationSheetDto.LandlineNo,
+					MobileNo = onboardingInformationSheetDto.MobileNo,
+					AlternativeMobileNo = onboardingInformationSheetDto.AlternativeMobileNo,
+					PersonalEmail = onboardingInformationSheetDto.PersonalEmail,
+					EmergencyContactPerson = onboardingInformationSheetDto.EmergencyContactPerson,
+					EmergencyContactNo = onboardingInformationSheetDto.EmergencyContactNo,
+					EmergencyRelation = onboardingInformationSheetDto.EmergencyRelation,
+					SssidNo = onboardingInformationSheetDto.SssidNo,
+					TinidNo = onboardingInformationSheetDto.TinidNo,
+					PhilhealthIdNo = onboardingInformationSheetDto.PhilhealthIdNo,
+					PagibigIdNo = onboardingInformationSheetDto.PagibigIdNo,
+					OrientationDate = onboardingInformationSheetDto.OrientationDate,
+					StartDate = onboardingInformationSheetDto.StartDate,
+					DepartmentId = onboardingInformationSheetDto.DepartmentId
+				};
+				await _uoWForCurrentService.OnboardingRepository.UpdateOnboardingInformation(onboardingInformation);
+				await _uoWForCurrentService.CommitAsync();
+
+				result = new JsonResult(new { success = true, responseText = "Onboarding Information Successfully Updated" })
+				{
+					StatusCode = 200
+				};
+				return result;
+
+			}
+			catch (Exception e)
+			{
+				_logger.LogError($"Error occurred while updating Onboarding Information: {e.Message}");
+
+				result = new JsonResult(new
+				{
+					success = false,
+					responseText = $"Error occurred while updating Onboarding Information: {e.Message}"
+				})
+				{
+					StatusCode = 400
+				};
+				return result;
+
+			}
+		}
+		public async Task<JsonResult> AcknowledgeOnboardingFormService(string candidateId, bool isAcknowledged)
 		{
 			JsonResult result;
 			try
@@ -262,15 +336,99 @@ namespace Recruitment.Service.API.Persistence.Applications
 
 			}
 		}
+		public async Task<JsonResult> UpdateOnboardingStatusService(int candidateId, int onboardingStatusId)
+		{
+			JsonResult result;
+			try
+			{
+				var onboardingInformation = new OnboardingInformationSheet()
+				{
+					CandidateId = candidateId,
+					OnboardingStatusId = onboardingStatusId,
+				};
+				await _uoWForCurrentService.OnboardingRepository.UpdateOnboardingStatus(onboardingInformation);
+				await _uoWForCurrentService.CommitAsync();
 
-		public async Task<JsonResult> RetrieveAllOnboardingInformationSheetService(string? search, int start, int length,
-			string draw, string sortColumnName, string sortDirection)
+				if (onboardingStatusId == 4)
+				{ 
+					await _applicationProcess.SendEmailReadyToStartToTeamTemplate(candidateId, 20);
+					await _applicationProcess.SendEmailReadyToStartToCandidateTemplate(candidateId, 21);
+				};
+
+				result = new JsonResult(new { success = true, responseText = "Onboarding Status Successfully Updated" })
+				{
+					StatusCode = 200
+				};
+				return result;
+
+			}
+			catch (Exception e)
+			{
+				_logger.LogError($"Error occurred while updating Onboarding Information: {e.Message}");
+
+				result = new JsonResult(new
+				{
+					success = false,
+					responseText = $"Error occurred while updating Onboarding Information: {e.Message}"
+				})
+				{
+					StatusCode = 400
+				};
+				return result;
+
+			}
+		}
+
+		public async Task<JsonResult> UpdateTemporaryEmployeeIdService(int candidateId, int temporaryEmployeeId)
+		{
+			JsonResult result;
+			try
+			{
+				var onboardingInformation = new OnboardingInformationSheet()
+				{
+					CandidateId = candidateId,
+					TemporaryEmployeeId = temporaryEmployeeId,
+				};
+				await _uoWForCurrentService.OnboardingRepository.UpdateTemporaryEmployeeId(onboardingInformation);
+				await _uoWForCurrentService.CommitAsync();
+
+				result = new JsonResult(new { success = true, responseText = "Temporary Employee Id Successfully Added" })
+				{
+					StatusCode = 200
+				};
+				return result;
+
+			}
+			catch (Exception e)
+			{
+				_logger.LogError($"Error occurred while updating Onboarding Information: {e.Message}");
+
+				result = new JsonResult(new
+				{
+					success = false,
+					responseText = $"Error occurred while updating Onboarding Information: {e.Message}"
+				})
+				{
+					StatusCode = 400
+				};
+				return result;
+
+			}
+		}
+		public async Task<JsonResult> RetrieveAllOnboardingInformationSheetService(string? search, int start, int length, string draw, string sortColumnName, string sortDirection, int status)
 		{
 			JsonResult result;
 			try
 			{
 				var onboardingInformation =
 					await _uoWForCurrentService.OnboardingRepository.RetrieveCandidateOnboardingInfoList();
+				var statuses = await _uoWForCurrentService.OnboardingRepository.RetrieveOnboardingStatusList();
+				Dictionary<int, string> applicationStatusMap;
+
+				applicationStatusMap = statuses.ToDictionary(
+				status => status.Id,
+				status => status.Status
+				);
 
 
 				var totalRows = onboardingInformation.Count;
@@ -281,13 +439,25 @@ namespace Recruitment.Service.API.Persistence.Applications
 					onboardingInformation = onboardingInformation.Where(x =>
 						(x.FirstName?.ToLower().Contains(search.ToLower()) ?? false)).ToList();
 				}
+				var statusCounts = applicationStatusMap
+				.Select(ap => new
+				{
+					statusId = ap.Key,
+					Status = ap.Value,
+					CandidateCount = onboardingInformation.Count(c => c.OnboardingStatusId == ap.Key)
+				})
+				.ToList();
+				if (status > 0)
+				{
+					onboardingInformation = onboardingInformation.Where(x => x.OnboardingStatusId == status).ToList();
 
+				}
 				var totalRowsAfterFiltering = onboardingInformation.Count;
 
 				// Apply sorting
-				//onboardingInformation = onboardingInformation.AsQueryable()
-				//		   .OrderBy(sortColumnName + " " + sortDirection)
-				//		   .ToList();
+				onboardingInformation = onboardingInformation.AsQueryable()
+												 .OrderBy(sortColumnName + " " + sortDirection)
+												 .ToList();
 
 				// Apply pagination
 				if (length != -1)
@@ -302,6 +472,7 @@ namespace Recruitment.Service.API.Persistence.Applications
 					draw,
 					recordsTotal = totalRows,
 					recordsFiltered = totalRowsAfterFiltering,
+					statusList = statusCounts
 				})
 				{
 					StatusCode = 200
@@ -324,7 +495,6 @@ namespace Recruitment.Service.API.Persistence.Applications
 				return result;
 			}
 		}
-
 		public async Task<JsonResult> SaveOnboardingDocumentService(List<OnboardingDocumentRequestDto> onboardingDocumentDtoList)
 		{
 			JsonResult result;
@@ -426,7 +596,6 @@ namespace Recruitment.Service.API.Persistence.Applications
 
 			}
 		}
-
 		public async Task<JsonResult> RetrieveAllOnboardingDocumentService(int candidateId)
 		{
 			JsonResult result;
@@ -463,7 +632,6 @@ namespace Recruitment.Service.API.Persistence.Applications
 				return result;
 			}
 		}
-
 		public async Task<JsonResult> SaveWorkFromHomeInformationService(WorkFromHomeInformationRequestDto workFromHomeInformationSheetDto)
 		{
 			JsonResult result;
@@ -557,7 +725,6 @@ namespace Recruitment.Service.API.Persistence.Applications
 
 			}
 		}
-
 		public async Task<JsonResult> RetrieveWorkFromHomeInformationService(int candidateId)
 		{
 			JsonResult result;
@@ -587,9 +754,7 @@ namespace Recruitment.Service.API.Persistence.Applications
 
 			}
 		}
-
-		public async Task<JsonResult> UpdateWorkFromHomeInformationService(string candidateId,
-			WorkFromHomeInformationRequestDto workFromHomeInformationRequestDto)
+		public async Task<JsonResult> UpdateWorkFromHomeInformationService(string candidateId, WorkFromHomeInformationRequestDto workFromHomeInformationRequestDto)
 		{
 			JsonResult result;
 			try
@@ -684,9 +849,7 @@ namespace Recruitment.Service.API.Persistence.Applications
 
 			}
 		}
-
-		public async Task<JsonResult> WorkFromHomeInformationHrApproveService(int candidateId,
-			string workFromHomeApprovalBy)
+		public async Task<JsonResult> WorkFromHomeInformationHrApproveService(int candidateId, string workFromHomeApprovalBy)
 		{
 			JsonResult result;
 			try
@@ -723,9 +886,7 @@ namespace Recruitment.Service.API.Persistence.Applications
 
 			}
 		}
-
-		public async Task<JsonResult> WorkFromHomeInformationItApproveService(int candidateId,
-			string workFromHomeApprovalBy1)
+		public async Task<JsonResult> WorkFromHomeInformationItApproveService(int candidateId, string workFromHomeApprovalBy1)
 		{
 			JsonResult result;
 			try
@@ -762,7 +923,6 @@ namespace Recruitment.Service.API.Persistence.Applications
 
 			}
 		}
-
 		public async Task<(string filePath, string contentType)> RetrieveSpecificOnboardingDocument(int candidateId, string documentType)
 		{
 			try
@@ -783,7 +943,6 @@ namespace Recruitment.Service.API.Persistence.Applications
 
 			}
 		}
-
 		public async Task<List<(string filePath, string contentType)>> RetrieveAllOnboardingDocuments(int candidateId, string documentType)
 		{
 			try
@@ -807,6 +966,110 @@ namespace Recruitment.Service.API.Persistence.Applications
 			{
 				_logger.LogError($"Error occurred while retrieving documents for candidateId {candidateId}, documentType {documentType}: {e.Message}");
 				throw;
+			}
+		}
+		public async Task<JsonResult> RetrieveInformationForContractGenerationService(int candidateId)
+		{
+			JsonResult result;
+			try
+			{
+
+				var onboardingInfo =
+					await _uoWForCurrentService.OnboardingRepository.RetrieveOnboardingInformation(candidateId);
+
+				var jobOfferInfo = await _uoWForCurrentService.JobOfferRepository.RetrieveJobOfferInfo(candidateId);
+
+				result = new JsonResult(new { onboardingInfo, jobOfferInfo })
+				{
+					StatusCode = 200
+				};
+				return result;
+
+			}
+			catch (Exception e)
+			{
+				_logger.LogError($"Error occurred while retrieving contract information: {e.Message}");
+
+				result = new JsonResult(new
+				{ success = false, responseText = $"Error occurred while retrieving contract information: {e.Message}" })
+				{
+					StatusCode = 400
+				};
+				return result;
+
+			}
+		}
+		public async Task<byte[]?> GenerateContractPdfService(int candidateId, string loggedEmployee)
+		{
+			var onboardingInfo = await _uoWForCurrentService.OnboardingRepository.RetrieveOnboardingInformation(candidateId);
+			var jobOfferInfo = await _uoWForCurrentService.JobOfferRepository.RetrieveJobOfferInfo(candidateId);
+
+			if (onboardingInfo == null && jobOfferInfo == null)
+				return null;
+
+			try
+			{
+				// Create a temporary copy of the template to avoid locking the original
+				string templatePath = Path.Combine(_fileRootFolder, "document_template", "contract_template.docx");
+				string tempTemplatePath = Path.GetTempFileName().Replace(".tmp", ".docx");
+				File.Copy(templatePath, tempTemplatePath, true);
+
+				var document = new Document();
+				document.LoadFromFile(tempTemplatePath);
+
+				// Replace placeholders
+				document.Replace("[start_date]", jobOfferInfo.TargetStartDate.ToString("dd/MM/yyyy"), false, true);
+				document.Replace("[employee_name]", jobOfferInfo.CandidateName, false, true);
+				document.Replace("[employee_address]", $"{onboardingInfo.CurrentAddress} {onboardingInfo.CurrentCityProvince} {onboardingInfo.CurrentLocation}", false, true);
+				document.Replace("[position]", onboardingInfo.Position, false, true);
+				document.Replace("[monthly_salary]", (jobOfferInfo.ProbitionarySalary + jobOfferInfo.ProbitionaryDeminimis).ToString(), false, true);
+				document.Replace("[employer_representative]", loggedEmployee, false, true);
+
+				// Generate PDF
+				using var stream = new MemoryStream();
+				document.SaveToStream(stream, Spire.Doc.FileFormat.PDF);
+
+				// Clean up temp file
+				File.Delete(tempTemplatePath);
+
+				return stream.ToArray();
+			}
+			catch (Exception ex)
+			{
+				// Optionally log the error
+				return null;
+			}
+		}
+		public async Task<JsonResult> RetrieveExistingTemporaryIdListService()
+		{
+			JsonResult result;
+			try
+			{ 
+				var temporaryIds = await _uoWForCurrentService.OnboardingRepository.RetrieveExistingTemporaryIdList();
+
+				result = new JsonResult(new
+				{
+					data = temporaryIds,
+				})
+				{
+					StatusCode = 200
+				};
+
+				return result;
+			}
+			catch (Exception e)
+			{
+				_logger.LogError($"Error occurred while retrieving onboarding information: {e.Message}");
+
+				result = new JsonResult(new
+				{
+					success = false,
+					responseText = $"Error occurred while retrieving onboarding information: {e.Message}"
+				})
+				{
+					StatusCode = 400
+				};
+				return result;
 			}
 		}
 	}

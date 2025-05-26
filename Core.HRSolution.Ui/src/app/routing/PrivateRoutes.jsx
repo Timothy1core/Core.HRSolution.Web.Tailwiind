@@ -3,16 +3,16 @@ import { Route, Routes, Navigate } from 'react-router-dom';
 import { MasterLayout } from '../../_metronic/layout/MasterLayout';
 import TopBarProgress from 'react-topbar-progress-indicator';
 import { DashboardWrapper } from '../modules/landing-page/user_dashboard';
-// import { getCSSVariableValue } from '../../_metronic/assets/ts/_utils';
+import { getCSSVariableValue } from '../../_metronic/assets/ts/_utils';
 import { PermissionManagementWrapper, MenuManagementWrapper, RoleManagementWrapper, SectionMenuManagementWrapper, ApiManagementWrapper } from '../modules/system.setup';
 import { getUserMenuRoutes } from '../modules/auth/core/requests/_requests';
 
 //#region recruitment private routes
 import { 
-  ClientDashboardWrapper,
-  ClientProfileWrapper,
-  ClientCreateJobProfileWrapper,
-  ClientEditJobProfileWrapper,
+  DepartmentDashboardWrapper,
+  DepartmentProfileWrapper,
+  CreateJobProfileWrapper,
+  EditJobProfileWrapper,
   CreateAssessment,
   EditAssessment,
   AssessmentManagementWrapper,
@@ -32,7 +32,6 @@ import { ViewJobOffer } from '../modules/recruitment/job.offer/pages/ViewJobInfo
 import { OnboardingWrapper } from '../modules/recruitment/onboarding/pages/OnboardingWrapper';
 import { ViewOnboardingInfo } from '../modules/recruitment/onboarding/pages/ViewOnboardingInfo';
 import { PreviewJobOfferInfo } from '../modules/recruitment/job.offer/pages/PreviewJobOfferInfo';
-import { Demo1Layout } from '../../_metronic/layouts/demo1';
 //#endregion
 
 
@@ -52,15 +51,15 @@ const componentMap = {
   //#endregion
 
   //#region RECRUITMENT
-  '/recruitment/clientdashboard': <ClientDashboardWrapper />,
-  '/recruitment/clientprofile/:id': <ClientProfileWrapper />,
-  '/recruitment/createjobprofile': <ClientCreateJobProfileWrapper />,
-  '/recruitment/editjobprofile/:id': <ClientEditJobProfileWrapper />,
+  '/recruitment/clientdashboard': <DepartmentDashboardWrapper />,
+  '/recruitment/clientprofile/:id': <DepartmentProfileWrapper />,
+  '/recruitment/createjobprofile': <CreateJobProfileWrapper />,
+  '/recruitment/editjobprofile/:id': <EditJobProfileWrapper />,
   
   
-  '/recruitment/assessmentmanagement' : <AssessmentManagementWrapper />,
+'/recruitment/assessmentmanagement' : <AssessmentManagementWrapper />,
   '/recruitment/createassessment' : <CreateAssessment />,
-  '/recruitment/editassessment/:id' : <EditAssessment />,
+  '/recruitment/editassessment' : <EditAssessment />,
 
 
   '/recruitment/createtalentacquisition' : <CreateTalentAcquisitionWrapper />,
@@ -112,7 +111,7 @@ const PrivateRoutes = () => {
 
   return (
     <Routes>
-      <Route element={<Demo1Layout />}>
+      <Route element={<MasterLayout />}>
       {/* Static Routes */}
       <Route path="auth/*" element={<Navigate to="/dashboard" />} />
 
@@ -133,16 +132,16 @@ const PrivateRoutes = () => {
 };
 
 // Suspense wrapper
-// const SuspensedView = ({ children }) => {
-//   const baseColor = getCSSVariableValue('--bs-primary');
-//   TopBarProgress.config({
-//     barColors: {
-//       '0': baseColor,
-//     },
-//     barThickness: 1,
-//     shadowBlur: 5,
-//   });
-//   return <Suspense fallback={<TopBarProgress />}>{children}</Suspense>;
-// };
+const SuspensedView = ({ children }) => {
+  const baseColor = getCSSVariableValue('--bs-primary');
+  TopBarProgress.config({
+    barColors: {
+      '0': baseColor,
+    },
+    barThickness: 1,
+    shadowBlur: 5,
+  });
+  return <Suspense fallback={<TopBarProgress />}>{children}</Suspense>;
+};
 
 export { PrivateRoutes };

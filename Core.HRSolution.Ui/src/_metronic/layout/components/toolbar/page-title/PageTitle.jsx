@@ -19,7 +19,7 @@ const PageTitle = () => {
         classes.pageTitle.join(' '),
         config.app?.pageTitle?.class,
         {
-          'flex-column justify-center': appPageTitleDirection === 'column',
+          'flex-column justify-content-center': appPageTitleDirection === 'column',
           'align-items-center': appPageTitleDirection !== 'column',
         }
       )}
@@ -28,7 +28,7 @@ const PageTitle = () => {
       {config.app?.pageTitle?.display && pageTitle && (
         <h1
           className={clsx('page-heading d-flex text-gray-900 fw-bold fs-3 my-0', {
-            'flex-column justify-center': appPageTitleDirection,
+            'flex-column justify-content-center': appPageTitleDirection,
             'align-items-center': !appPageTitleDirection,
           })}
         >

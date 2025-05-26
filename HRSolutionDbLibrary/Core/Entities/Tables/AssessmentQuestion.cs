@@ -10,9 +10,6 @@ public class AssessmentQuestion
 	public string Body { get; set; }
 
 	public int Type { get; set; }
-
-	public bool Required { get; set; }
-	public int Marks { get; set; }
 	public bool IsActive { get; set; }
 
 	public virtual ICollection<AssessmentAnswer> AssessmentAnswers { get; set; } = new List<AssessmentAnswer>();

@@ -50,13 +50,13 @@ const EditJobProfilePage = () => {
     return (
         <>
             <ToolbarWrapper
-                title="Update Client Job Profile"
-                subtitle="Recruitment - Client and Job Library"
+                title="Update Department Job Profile"
+                subtitle="Recruitment - Department and Job Library"
             />
             <Content>
                 <div className="card mb-5">
                     <div className="card-body">
-                        <ul className="nav nav-tabs nav-pills d-flex flex-wrap justify-center align-items-stretch border-0 fs-6 row">
+                        <ul className="nav nav-tabs nav-pills d-flex flex-wrap justify-content-center align-items-stretch border-0 fs-6 row">
                             {[
                                 {
                                     id: 'jp-job-details',
@@ -96,7 +96,7 @@ const EditJobProfilePage = () => {
                         <div className="separator my-10"></div>
                         <div className="tab-content" id="myTabContent">
                             <div className="tab-pane fade show active" id="jp-job-details" role="tabpanel">
-                                <JobDetailsComponent profileDataValue={data.clientJobProfile} />
+                                <JobDetailsComponent profileDataValue={data.clientJobProfile}/>
                             </div>
                             <div className="tab-pane fade" id="jb-job-application-form" role="tabpanel">
                                 <JobApplicationForm applicationQuestions={data.applicationQuestions} />
@@ -115,6 +115,6 @@ const EditJobProfilePage = () => {
     );
 };
 
-const ClientEditJobProfileWrapper = () => <EditJobProfilePage />;
+const EditJobProfileWrapper = () => <EditJobProfilePage />;
 
-export { ClientEditJobProfileWrapper };
+export { EditJobProfileWrapper };

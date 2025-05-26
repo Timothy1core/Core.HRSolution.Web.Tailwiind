@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { KTIcon } from '@/_metronic/helpers';
+import { KTIcon } from '../../../../../../_metronic/helpers';
 import { Link } from 'react-router-dom';
-import { SelectJobProfileDashboard } from '../../core/request/job_profile_request';
+import { SelectJobProfileDashboard,GET_JOB_PROFILE_PDF } from '../../core/request/job_profile_request';
 import { SelectClientCompanyGroupComponent } from '../dropdowns/client_profile_dropdown_component';
 
 const ClientJobProfileCardList = ({ companyId }) => {
@@ -118,8 +118,11 @@ const ClientJobProfileCardList = ({ companyId }) => {
                         </div>
                         <div className='separator border-gray-200'></div>
                         <div className="menu-item px-3 py-5">
-                            <Link to={`/apply/jobs/${value.id}4`} className="menu-link px-3" target="_blank">
+                            <Link to={`/jobs/apply/${value.id}4`} className="menu-link px-3" target="_blank">
                                 Jobstreet Link
+                            </Link>
+                            <Link to={`${GET_JOB_PROFILE_PDF}/${value.id}`} className="menu-link px-3" target="_blank">
+                                Job Profile PDF
                             </Link>
                         </div>
                     </div>

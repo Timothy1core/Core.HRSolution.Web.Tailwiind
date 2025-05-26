@@ -52,4 +52,6 @@ public class CandidateDto
     public int ClientCompanyId { get; set; }
     public int ClientGroupId { get; set; }
     public int? JobOfferStatusId { get; set; }
+	public string ClientName { get; internal set; }
+	public string EncryptedId { get; internal set; }
 }

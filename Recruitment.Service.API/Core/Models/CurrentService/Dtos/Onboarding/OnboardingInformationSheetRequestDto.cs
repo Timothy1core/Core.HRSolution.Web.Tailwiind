@@ -60,4 +60,7 @@ public class OnboardingInformationSheetRequestDto
 	public string PhilhealthIdNo { get; set; }
 
 	public string PagibigIdNo { get; set; }
+	public DateTime? StartDate { get; set; }
+	public DateTime? OrientationDate { get; set; }
+	public int DepartmentId { get; set; }
 }

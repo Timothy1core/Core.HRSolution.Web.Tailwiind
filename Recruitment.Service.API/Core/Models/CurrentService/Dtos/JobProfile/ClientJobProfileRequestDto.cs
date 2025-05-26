@@ -24,5 +24,6 @@
         public bool ShowInCareerPage { get; set; }
         public IFormFile? MarketScanFile { get; set; }
         public string? MarketScanFileName { get; set; }
-    }
+		public string? EmploymentTypeName { get; set; }
+	}
 }

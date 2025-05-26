@@ -8,7 +8,7 @@ public class CandidateHistoryConfig : IEntityTypeConfiguration<CandidateHistory>
 {
     public void Configure(EntityTypeBuilder<CandidateHistory> builder)
     {
-		builder.Property(e => e.CreatedBy).HasMaxLength(50);
+		builder.Property(e => e.CreatedBy).HasMaxLength(50).IsRequired(false);
 		builder.Property(e => e.CreatedDate).HasColumnType("datetime");
 		builder.Property(e => e.Description).IsRequired();
 		builder.Property(e => e.Name)
@@ -22,5 +22,10 @@ public class CandidateHistoryConfig : IEntityTypeConfiguration<CandidateHistory>
 			.HasForeignKey(d => d.CandidateId)
 			.OnDelete(DeleteBehavior.ClientSetNull)
 			.HasConstraintName("FK_CandidateHistories_Candidates_Id");
+
+		builder.HasOne(e => e.CreatedByInfo)
+			.WithMany()
+			.HasForeignKey(e => e.CreatedBy)
+			.HasPrincipalKey(x => x.EmployeeId);
 	}
 }

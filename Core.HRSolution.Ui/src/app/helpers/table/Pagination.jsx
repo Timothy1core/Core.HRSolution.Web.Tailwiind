@@ -28,12 +28,12 @@ const Pagination = ({
   const endRecord = Math.min(totalRecords, (currentPage + 1) * pageSize);
 
   return (
-    <div className="flex justify-between gap-3 items-center m-3">
-      <div className="flex items-center gap-5 font-bold text-xs text-gray-700">
+    <div className="d-flex justify-content-between gap-3 align-items-center mt-3">
+      <div className="d-flex align-items-center gap-3">
       <select
           value={pageSize}
           onChange={handlePageSizeChange}
-          className="form-select form-select-sm"
+          className="form-select form-select-sm form-select-solid"
           style={{ width: 'auto' }}
         >
           <option value={10}>10</option>
@@ -48,11 +48,11 @@ const Pagination = ({
 
       <div>
         <button
-          className="btn btn-light btn-sm me-1 btn-clear"
+          className="btn btn-light btn-sm me-1"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 0}
         >
-          Previous
+          &lt;
         </button>
         {[...Array(totalPages).keys()].map((page) => (
           <button
@@ -66,11 +66,11 @@ const Pagination = ({
           </button>
         ))}
         <button
-          className="btn btn-light btn-sm me-1 btn-clear"
+          className="btn btn-light btn-sm me-1"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages - 1}
         >
-          Next
+          &gt;
         </button>
       </div>
 

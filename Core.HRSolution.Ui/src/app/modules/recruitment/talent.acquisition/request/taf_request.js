@@ -20,8 +20,8 @@ export function CreateNewTaf(formData) {
 });
 }
 
-export function SelectDashboardTaf(search, columns, sortColumnKey, sortDirection, page, size) {
-    return axios.post(GET_DASHBOARD_TAF_URL, qs.stringify({ search, start: (page * size), draw: (page + 1),  length: size, columns, sortDirection, sortColumnKey }),
+export function SelectDashboardTaf(search, groupId, departmentId, reasonId, status, columns, sortColumnKey, sortDirection, page, size) {
+    return axios.post(GET_DASHBOARD_TAF_URL, qs.stringify({ search, groupId, departmentId, reasonId, status, start: (page * size), draw: (page + 1),  length: size, columns, sortDirection, sortColumnKey }),
     {
         headers: {
         'Content-Type': 'application/x-www-form-urlencoded',

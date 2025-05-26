@@ -1,4 +1,5 @@
-﻿namespace HRSolutionDbLibrary.Core.Entities.Tables;
+﻿#nullable disable
+using HRSolutionDbLibrary.Core.Entities.Tables;
 
 public class EmployeeInformation
 {
@@ -131,4 +132,11 @@ public class EmployeeInformation
 	public int? TeamId { get; set; }
 
 	public int? LocationId { get; set; }
+
+	public string MedicardId { get; set; }
+	public DateTime? MedicardEffectivity { get; set; }
+	public virtual Department Department { get; set; }
+	public virtual EmployeeMilestone EmployeeMilestone { get; set; }
+	public virtual EmployeeDependent EmployeeDependent { get; set; }
+	public virtual ICollection<EmployeeDocument> EmployeeDocument { get; set; } = new List<EmployeeDocument>();
 }

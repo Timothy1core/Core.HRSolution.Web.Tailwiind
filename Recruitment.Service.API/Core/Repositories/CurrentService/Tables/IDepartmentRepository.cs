@@ -15,4 +15,5 @@ public interface IDepartmentRepository
 	Task CreateDepartmentIndividual(List<DepartmentIndividual> departmentProfile);
 	Task<List<DepartmentIndividualDto>> RetrieveDepartmentIndividuals(int companyId);
 	Task UpdateDepartmentIndividual(DepartmentIndividualDto departmentIndividual);
+	Task<DepartmentIndividualDto> RetrieveDepartmentIndividual(int id);
 }

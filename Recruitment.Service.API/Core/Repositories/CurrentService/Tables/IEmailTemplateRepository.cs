@@ -13,6 +13,7 @@ public interface IEmailTemplateRepository
 	Task<EmailTemplate> SelectEmailTemplateInformation(int id);
 
 	Task<List<DropDownValueDto>> SelectTemplateDropDown();
+	Task<List<DropDownValueDto>> SelectActionDropDown();
 
 	Task CreateEmailAutomation(EmailAutomation emailAutomation);
 	Task UpdateEmailAutomation(EmailAutomation emailAutomation);

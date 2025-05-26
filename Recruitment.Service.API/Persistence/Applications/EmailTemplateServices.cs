@@ -59,7 +59,8 @@ namespace Recruitment.Service.API.Persistence.Applications
 				{
 					Name = emailTemplateRequest.Name,
 					Subject = emailTemplateRequest.Subject,
-					EmailBody = emailTemplateRequest.EmailBody
+					EmailBody = emailTemplateRequest.EmailBody,
+					Cc = emailTemplateRequest.Cc 
 
 				};
 				await _uoWForCurrentService.EmailTemplateRepository.UpdateEmailTemplate(emailTemplateRequest);
@@ -177,6 +178,33 @@ namespace Recruitment.Service.API.Persistence.Applications
 				_logger.LogError($"Error occurred while retrieving email template drop down value: {e.Message}");
 
 				result = new JsonResult(new { success = false, responseText = $"Error occurred while retrieving email template drop down value: {e.Message}" })
+				{
+					StatusCode = 400
+				};
+				return result;
+
+			}
+		}
+
+		public async Task<JsonResult> SelectEmailActionDropDown()
+		{
+			JsonResult result;
+			try
+			{
+				var values = await _uoWForCurrentService.EmailTemplateRepository.SelectActionDropDown();
+
+				result = new JsonResult(new { values })
+				{
+					StatusCode = 200
+				};
+				return result;
+
+			}
+			catch (Exception e)
+			{
+				_logger.LogError($"Error occurred while retrieving email action drop down value: {e.Message}");
+
+				result = new JsonResult(new { success = false, responseText = $"Error occurred while retrieving email action drop down value: {e.Message}" })
 				{
 					StatusCode = 400
 				};

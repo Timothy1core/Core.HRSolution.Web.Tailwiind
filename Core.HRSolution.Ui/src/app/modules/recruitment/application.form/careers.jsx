@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; // Added useNavigate for navigation
 import { JobPostedList } from './core/application_form_request';
-import { toAbsoluteUrl } from '@/_metronic/utils';;
+import { toAbsoluteUrl } from '../../../../_metronic/helpers';
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);

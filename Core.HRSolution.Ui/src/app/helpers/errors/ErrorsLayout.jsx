@@ -1,21 +1,17 @@
 import { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
-// import { useThemeMode } from '../../../_metronic/partials'
-import { toAbsoluteUrl } from '@/_metronic/utils';
-// import { toAbsoluteUrl } from '@/_metronic/utils';
-import { useSettings } from '@/_metronic/providers';
+import { useThemeMode } from '../../../_metronic/partials'
+import { toAbsoluteUrl } from '../../../_metronic/helpers'
+
 const BODY_CLASSES = ['bgi-size-cover', 'bgi-position-center', 'bgi-no-repeat']
 
 const ErrorsLayout = () => {
-  // const { mode } = useThemeMode()
-  const {
-    getThemeMode
-  } = useSettings();
+  const { mode } = useThemeMode()
 
   useEffect(() => {
     BODY_CLASSES.forEach((c) => document.body.classList.add(c))
     document.body.style.backgroundImage =
-    getThemeMode === 'dark'
+      mode === 'dark'
         ? `url(${toAbsoluteUrl('media/auth/bg1-dark.jpg')})`
         : `url(${toAbsoluteUrl('media/auth/bg1-dark.jpg')})`
 
@@ -23,7 +19,7 @@ const ErrorsLayout = () => {
       BODY_CLASSES.forEach((c) => document.body.classList.remove(c))
       document.body.style.backgroundImage = 'none'
     }
-  }, [getThemeMode])
+  }, [mode])
 
   return (
     <div className='d-flex flex-column flex-root'>

@@ -1,7 +1,7 @@
 
 .funnel-wrapper {
   display: flex;
-  justify: center;
+  justify-content: center;
   align-items: center;
   gap: 20px;
 }
@@ -9,7 +9,7 @@
 .labels-container {
   display: flex;
   flex-direction: column;
-  justify: center;
+  justify-content: center;
   text-align: right;
 }
 

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-// import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
 import SignaturePad from 'signature_pad';
 
 const SigOptionComponentApprove = ({ onSave }) => {
@@ -54,8 +54,7 @@ const SigOptionComponentApprove = ({ onSave }) => {
 
   return (
     <>
-    1
-      {/* <Button onClick={() => setShow(true)} className='btn btn-sm btn-danger'>Approve</Button>
+      <Button onClick={() => setShow(true)} className='btn btn-sm btn-danger'>Approve</Button>
       <Modal show={show} onHide={() => setShow(false)} animation={false} dialogClassName="modal-dialog-centered modal-lg">
         <Modal.Header>
           <Modal.Title>Approve</Modal.Title>
@@ -71,7 +70,7 @@ const SigOptionComponentApprove = ({ onSave }) => {
           <Button className='btn btn-secondary' onClick={clearSignature}>Clear</Button>
           <Button className='btn btn-dark' onClick={saveSignature}>Save</Button>
         </Modal.Footer>
-      </Modal> */}
+      </Modal>
     </>
   );
 };

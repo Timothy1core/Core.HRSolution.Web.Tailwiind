@@ -1,4 +1,6 @@
 ﻿#nullable disable
+using HRSolutionDbLibrary.Core.Entities.Tables;
+
 public class OnboardingInformationSheet
     {
 	public int CandidateId { get; set; }
@@ -76,4 +78,8 @@ public class OnboardingInformationSheet
 	public string CompanyEmail { get; set; }
 
 	public virtual Candidate Candidate { get; set; }
+	public virtual OnboardingStatus OnboardingStatus { get; set; }
+	public int OnboardingStatusId { get; set; }
+	public DateTime CreatedDate { get; set; }
+	public int? TemporaryEmployeeId { get; set; }
 }

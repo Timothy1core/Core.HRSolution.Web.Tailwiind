@@ -15,6 +15,6 @@ public class CandidateHistory
     public string CreatedBy { get; set; }
     public int CandidateId { get; set; }
 
-    //public virtual EmployeeInformation? CreatedByInfo { get; set; }
+    public virtual EmployeeInformation? CreatedByInfo { get; set; }
     public virtual Candidate Candidate { get; set; }
 }

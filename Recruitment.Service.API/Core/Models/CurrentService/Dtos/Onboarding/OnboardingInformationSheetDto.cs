@@ -65,4 +65,12 @@ public class OnboardingInformationSheetDto
 	public bool? IsAcknowledged { get; internal set; }
 	public string CandidateName { get; internal set; }
 	public string Position { get; internal set; }
+	public string OnboardingStatusName { get; internal set; }
+	public int OnboardingStatusId { get; internal set; }
+	public DateTime CreatedDate { get; internal set; }
+	public int? TemporaryEmployeeId { get; set; }
+	public string DepartmentName { get; internal set; }
+	public int DepartmentId { get; internal set; }
+	public DateTime? StartDate { get; internal set; }
+	public DateTime? OrientationDate { get; internal set; }
 }

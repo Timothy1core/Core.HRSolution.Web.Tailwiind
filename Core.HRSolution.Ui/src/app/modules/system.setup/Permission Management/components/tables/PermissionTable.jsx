@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { KTIcon } from '@/_metronic/helpers';
+import { KTIcon } from '../../../../../../_metronic/helpers';
 import { listApiPermission, removeApiPermission } from '../../core/requests/_request';
-import TableWithPagination from '../../../../../../app/helpers/table/TableWithPagination';
+import TableWithPagination from '../../../core/helpers/Table Layout/TableWithPagination';
 import {CreateEditPermission} from '../modals/create-or-edit-permission/CreateEditPermission'
 import Swal from 'sweetalert2';
 import {
@@ -138,7 +138,7 @@ const PermissionTable = ({ className }) => {
     { Header: 'Api Permission Name', accessor: 'permissionName',sortable: true, },
     { Header: 'Role', accessor: 'role',sortable: true, },
     { Header: 'Actions', accessor: 'id', className: 'text-end',sortable: false, Cell: row => (
-      <div className='d-flex justify-end flex-shrink-0'>
+      <div className='d-flex justify-content-end flex-shrink-0'>
         <ActionComponent
             buttonPermission={'system.setup.retrieve.permission.info'}
             actionButton={ 

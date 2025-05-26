@@ -29,6 +29,7 @@ namespace Recruitment.Service.API.Persistence.UnitOfWork
         public IJobOfferRepository JobOfferRepository { get; } = new JobOfferRepository(context);
 		public IOnboardingRepository OnboardingRepository { get; } = new OnboardingRepository(context);
 		public IWorkFromHomeInformationRepository WorkFromHomeInformationRepository { get; } = new WorkFromHomeInformationRepository(context);
+		public IEmployeeRepository EmployeeRepository { get; } = new EmployeeRepository(context);
 		public void SaveChanges()
 		{
 			context.SaveChanges();

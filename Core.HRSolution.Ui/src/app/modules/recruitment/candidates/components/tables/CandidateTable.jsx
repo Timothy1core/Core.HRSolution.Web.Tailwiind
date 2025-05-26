@@ -1,19 +1,14 @@
-import React, { useState, useEffect,useRef  } from 'react';
-import { KTIcon } from '@/_metronic/helpers';
+import React, { useState, useEffect } from 'react';
+import { KTIcon } from '../../../../../../_metronic/helpers';
 import { listCandidate, SelectFilterDropdown } from '../../core/requests/_request';
-import TableWithPagination from '../../../../../helpers/table/TableWithPagination';
+import TableWithPagination from '../../../../system.setup/core/helpers/Table Layout/TableWithPagination';
 import {
-  useLoading,
-} from '../../../../../helpers/loading/loading_provider';
+  enableLoadingRequest,
+  disableLoadingRequest,
+} from '../../../../../helpers/loading_request';
 import ActionComponent from '../../../../../helpers/action_component';
-import { Menu, MenuItem, MenuToggle } from '@/_metronic/components';
-import { DropdownUser } from '@/_metronic/partials/dropdowns/user';
-import { toAbsoluteUrl } from '@/_metronic/utils';
-import { Link } from 'react-router-dom';
-import { DropdownCandidateFilter } from '../dorpdownFilter/DropdownCandidateFilter';
 
-const CandidateTable = ({ className }) => {
-  const itemUserRef = useRef(null);
+const CandidateTable = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [applicationProcessData, setAppProcessData] = useState([]);
   const [searchTerm, setSearchTerm] = useState(''); // search state
@@ -25,18 +20,19 @@ const CandidateTable = ({ className }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalRecords, setTotalRecords] = useState(0);
 
+  const [jobProfiles, setJobProfiles] = useState([]);
+  const [clients, setClients] = useState([]);
+  const [clientGroups, setClientGroups] = useState([]);
+  const [sources, setSources] = useState([]);
+
+  const [selectedClient, setSelectedClient] = useState(0); // State for selected client
+  const [selectedClientGroup, setSelectedClientGroup] = useState(0); // State for selected client
+  const [selectedJob, setSelectedJob] = useState(0); // State for selected job
+  const [selectedSource, setSelectedSource] = useState(0); // State for selected job
+  const [selectedQualification, setSelectedQualification] = useState(0); // State for selected job
+
   const [selectedProcess, setSelectedProcess] = useState(0); // State for selected job
-
-  const { enableLoadingRequest, disableLoadingRequest } = useLoading();
   
-  const [filters, setFilters] = useState({
-    selectedClient: 0,
-    selectedClientGroup: 0,
-    selectedJob: 0,
-    selectedSource: 0,
-    selectedQualification: 0,
-  });
-
   const fetchCandidates = (   
     searchValue = '',
    sortKey = '',
@@ -75,20 +71,35 @@ const CandidateTable = ({ className }) => {
         console.error("Error fetching permissions:", err);
       })
       .finally(() => {
-      disableLoadingRequest()
+              disableLoadingRequest()
       setTableLoading(false)
 
             });
   };
 
+  const fetchPipeline = ( ) => {
+
+
+    SelectFilterDropdown()
+      .then(response => {
+
+        setJobProfiles(response.data.job)
+        setClients(response.data.client)
+        setClientGroups(response.data.clientGroup)
+        setSources(response.data.source)
+      })
+      .catch(err => {
+        console.error("Error fetching permissions:", err);
+      })
+  };
 
   
 
     const handleSortChange = (key, direction) => {
        setSortConfig({ key, direction });
        fetchCandidates(searchTerm, key, direction, currentPage, pageSize,
-        filters.selectedClient,
-        filters.selectedClientGroup,
+        selectedClient,
+        selectedClientGroup,
         selectedJob,
         selectedProcess,
         selectedSource,
@@ -125,11 +136,11 @@ const CandidateTable = ({ className }) => {
         sortConfig.direction,
         currentPage,
         pageSize,
-        filters.selectedClient,
-        filters.selectedClientGroup,
-        filters.selectedJob,
-        filters.selectedQualification,
-        filters.selectedSource
+        selectedClient,
+        selectedClientGroup,
+        selectedJob,
+        selectedQualification,
+        selectedSource,
       );
     };
 
@@ -141,22 +152,23 @@ const CandidateTable = ({ className }) => {
         sortConfig.direction,
         currentPage,
         pageSize,
-        filters.selectedClient,
-        filters.selectedClientGroup,
-        filters.selectedJob,
-        filters.selectedSource,
-        filters.selectedQualification,
+        selectedClient,
+        selectedClientGroup,
+        selectedJob,
+        selectedQualification,
+        selectedSource,
         applicationProcessId // Pass the selected process ID
       );
     };
    
      useEffect(() => {
        fetchCandidates(searchTerm, sortConfig.key, sortConfig.direction, currentPage, pageSize,
-        filters.selectedClient,
-        filters.selectedClientGroup,
-        filters.selectedJob,
-        filters.selectedSource,
-        filters.selectedQualification);
+        selectedClient,
+        selectedClientGroup,
+        selectedJob,
+        selectedSource,
+        selectedQualification);
+       fetchPipeline();
      }, []);
    
    
@@ -172,38 +184,36 @@ const CandidateTable = ({ className }) => {
      
        debounceTimeout = setTimeout(() => {
          fetchCandidates(value , sortConfig.key, sortConfig.direction,currentPage, pageSize,
-          filters.selectedClient,
-          filters.selectedClientGroup,
-          filters.selectedJob,
-          filters.selectedProcess,
-          filters.selectedQualification); // Fetch roles with the current search term
+          selectedClient,
+          selectedClientGroup,
+          selectedJob,
+          selectedProcess,
+          selectedQualification); // Fetch roles with the current search term
        }, 300); // 300ms debounce delay
      };
 
      const handleResetFilters = () => {
       setSearchTerm('');
-      setFilters({
-        selectedClient: 0,
-        selectedClientGroup: 0,
-        selectedJob: 0,
-        selectedSource: 0,
-        selectedQualification: 0,
-      });
-      setSelectedProcess(0);
-      setCurrentPage(0); // Reset to first page
-      fetchCandidates(
-        '',
-        sortConfig.key,
-        sortConfig.direction,
-        0,
-        pageSize,
-        0, // Reset filters
-        0,
-        0,
-        0,
-        0 // Ensure "Qualified" is selected
-      );
-    };
+      
+      setSelectedClient(0);
+      setSelectedClientGroup(0);
+      setSelectedJob(0);
+      setSelectedSource(0);
+      setSelectedQualification(0); // Reset to Qualified
+    
+        fetchCandidates(
+          '',
+          sortConfig.key,
+          sortConfig.direction,
+          0,
+          pageSize,
+          0,
+          0,
+          0,
+          0,
+          0
+        );
+      };
 
   const columns = [
     { Header: 'Id', accessor: 'id', sortable: true, },
@@ -217,31 +227,25 @@ const CandidateTable = ({ className }) => {
     { Header: 'Stage', accessor: 'stageName', sortable: true, },
     { Header: 'Source', accessor: 'sourceName', sortable: true, },
   
-    { Header: 'Actions', accessor: 'id', className: 'text-right text-blue-600', Cell: row => (
-      <div className='d-flex justify-end flex-shrink-0'>
+    { Header: 'Actions', accessor: 'id', className: 'text-end', Cell: row => (
+      <div className='d-flex justify-content-end flex-shrink-0'>
         <ActionComponent
             buttonPermission={'recruitment.retrieve.candidate.info'}
             actionButton={ 
-        // <button className="btn btn-icon btn-primary btn-danger btn-xs"
-        //   href={`viewcandidate?id=${row.id}`}
-        //   // className='btn btn-icon btn-bg-light btn-active-color-danger btn-sm me-1'
-        //   data-id={row.id}
-        // >
-        //   {/* <KTIcon iconName='eye' className='text-md' /> */}
-        //   <i className="ki-outline  ki-eye"></i>
-        // </button>
-        <Link className="btn btn-icon btn-danger btn-outline btn-xs"
-                      to={`/recruitment/viewcandidate?id=${row.id}`}
-                  data-id={row.id}
-                >
-                  <KTIcon iconName='eye' />
-                </Link>
+        <a
+          href={`viewcandidate?id=${row.id}`}
+          className='btn btn-icon btn-bg-light btn-active-color-danger btn-sm me-1'
+          data-id={row.id}
+        >
+          <KTIcon iconName='eye' className='fs-3' />
+        </a>
         }/>
     </div>
       )
     },
   ];
   
+
   // useEffect(() => {
   //   fetchCandidates(searchTerm, sortConfig.key, sortConfig.direction, currentPage, pageSize);
   //   return () => {
@@ -250,115 +254,199 @@ const CandidateTable = ({ className }) => {
 
   return (
     <>
-    
-    <div className="flex flex-col lg:flex-row gap-2">
-      <div className="lg:basis-1/6 md:basis-1/3 basis-full ">
-        <div className="card">
-        <div className='card-header justify-center'>
-          <span className="text-sm font-bold">
-          Application Process
-          </span>   
-        </div>
-        <div className="card-body p-2">
-        <div className="d-flex flex flex-col gap-1">
-                  {applicationProcessData.map((process) => (
-                    <btn
+    <div className='d-flex flex-column flex-md-row gap-2'>
+      <div className="card flex-shrink-0 w-100 w-md-25">
+        <div className="card-body p-3">
+        <div className="d-flex flex-column gap-1">
+          <span className='text-center'>Application Status</span>
+          <div className="separator border-2 my-2"></div>
+                  {applicationProcessData.map((process) => {
+                    const isSelected = process.applicationProcessId === selectedProcess;
+                    return (
+                    <a
                       key={process.applicationProcessId}
-                      className="group btn btn-sm btn-danger btn-clear flex justify-between flex-column align-items-center"
+                      className={`btn btn-sm ${isSelected ? 'btn-danger' : 'btn-light-danger'} btn-clear d-flex justify-content-between align-items-center`}
                       onClick={() => handleApplicationProcessClick(process.applicationProcessId)}
                     >
-                      <span className='text-black group-hover:text-white'>{process.processName}</span><b>{process.candidateCount > 0 ? process.candidateCount : '0'}</b>
+                      <span className={`text-${isSelected ? 'white' : 'dark'}`}>{process.processName}</span><b>{process.candidateCount > 0 ? process.candidateCount : '0'}</b>
                       
-                    </btn>
-                  ))}
+                    </a>
+                  )
+                })}
         </div> 
         </div>
         
-        </div>
       </div>
-      <div className="lg:basis-5/6 md:basis-2/3 basis-full">
-        <div className={`card min-w-full ${className}`}>
-        <div className="card-header">
-          <h4 className="card-title">
-          {/* Candidate Dashboard */}
-          </h4>
-          <div className="card-toolbar">
-                  <div className='input-group rounded-md border'>
-                    <label className="input input-sm">
-                      <KTIcon iconName='magnifier' />
-                      <input type="text" placeholder="Search assessment" value={searchTerm} onChange={handleSearch} />
-                    </label>
-                    {/* <span className='btn btn-danger btn-outline btn-sm' ref={itemUserRef} toggle="dropdown" trigger="click" dropdownProps={{
-                            placement: 'bottom-start',
-                            modifiers: [{
-                              name: 'offset',
-                              options: {
-                                offset: [-20, 10] // [skid, distance]
-                              }
-                            }]
-                          }}>
-                      <MenuToggle>
-                        <KTIcon iconName='setting-4' />
-                      </MenuToggle>
-                        {DropdownUser({
-                              menuItemRef: itemUserRef
-                            })}
-                    </span> */}
-                    <Menu>
-                      <MenuItem ref={itemUserRef} toggle="dropdown" trigger="click" dropdownProps={{
-                      placement: 'bottom-start',
-                      modifiers: [{
-                        name: 'offset',
-                        options: {
-                          offset: [-20, 10] // [skid, distance]
-                        }
-                      }]
-                    }}>
-                        <MenuToggle className="btn btn-danger btn-outline btn-sm rounded-none  btn-clear ">
-                        <KTIcon iconName='setting-4' />
-                        </MenuToggle>
-                        {/* <DropdownCandidateFilter 
-                          menuItemRef={itemUserRef} 
-                          filters={filters} 
-                          setFilters={setFilters} 
-                          onApply={handleFilter}
-                        /> */}
-                         {DropdownCandidateFilter({
-                        menuItemRef: itemUserRef,
-                        filters: filters,
-                        setFilters: setFilters,
-                        onApply: handleFilter
-                      })}
-                      </MenuItem>
-                    </Menu>
-                    <div class="border-l-2 border-gray ..."></div>     
-                    <span
-                            type='reset'
-                            className='btn btn-sm btn-warning btn-outline btn-clear  border-warning'
-                            data-kt-menu-dismiss='true'
-                            onClick={handleResetFilters}
+      <div className="card flex-grow-1">
+              <div className='card-header flex-nowrap border-0 pt-5'>
+                <div className='card-title m-0'>
+                  {/* <input
+                    type='text'
+                    className='form-control form-control-sm me-2'
+                    placeholder='Search'
+                    value={searchTerm}
+                    onChange={handleSearch}
+                  /> */}
+                </div>
+        
+                <div className='card-title m-0'>
+                  <input
+                    type='text'
+                    className='form-control form-control-sm me-2'
+                    placeholder='Search'
+                    value={searchTerm}
+                    onChange={handleSearch}
+                  />
+                  <button
+                    type='button'
+                    className='btn btn-icon btn-light-danger btn-sm btn-active-light-danger px-3'
+                    data-kt-menu-trigger='click'
+                    data-kt-menu-placement='bottom-end'
+                    data-kt-menu-flip='top-end'
+                  >
+                    <KTIcon iconName='filter' className='fs-3 text-danger' />
+                  </button>
+                  <a
+                    href="#"
+                    className='btn btn-icon btn-light-danger btn-active-light-danger btn-sm ms-2 px-3'
+                    onClick={handleResetFilters}
+                  >
+                    <KTIcon iconName='arrows-circle' className='fs-3' />
+                  </a>
+        
+                  <div className='menu menu-sub menu-sub-dropdown w-250px w-md-300px mh-400px overflow-auto' data-kt-menu='true'>
+                    <div className='px-7 py-5'>
+                      <div className='fs-5 text-gray-900 fw-bolder'>Filter Options</div>
+                    </div>
+
+                    <div className='separator border-gray-200'></div>
+
+                    <div className='px-7 py-5'>
+                      <div className='mb-5'>
+                        <label className='form-label fw-bold'>Department:</label>
+                        <div>
+                          <select
+                            className='form-select form-select-solid'
+                            onChange={(e) => setSelectedClient(e.target.value)}
+                            value={selectedClient}
                           >
-                            <KTIcon iconName='arrows-loop' />
-                    </span>
+                            <option value='0' hidden>All</option>      
+                            {clients.map((client) => (
+                                <option key={client.id} value={client.id}>
+                                  {client.label}
+                                </option>
+                          ))}
+                          </select>   
+                        </div>
+                      </div>
+
+                      <div className='mb-5'>
+                        <label className='form-label fw-bold'>Department Group:</label>
+
+                        <div>
+                          <select
+                          value={selectedClientGroup}
+                            className='form-select form-select-solid'
+                            onChange={(e) => setSelectedClientGroup(e.target.value)}
+                          >
+                            <option value='0' hidden>All</option>      
+                            {clientGroups.map((clientGroup) => (
+                                <option key={clientGroup.id} value={clientGroup.id}>
+                                  {clientGroup.label}
+                                </option>
+                          ))}
+                          </select>   
+                        </div>
+                      </div>
+
+                      <div className='mb-5'>
+                        <label className='form-label fw-bold'>Job:</label>
+
+                        <div>
+                        <select
+                          className='form-select form-select-solid'
+                          onChange={(e) => setSelectedJob(e.target.value)}
+                          value={selectedJob}
+                        >
+                          <option value='0' hidden>All</option>
+                          {jobProfiles.map((job) => (
+                                <option key={job.id} value={job.id}>
+                                  {job.position}
+                                </option>
+                          ))}
+                        </select>  
+                        </div>
+                      </div>
+
+                      <div className='mb-5'>
+                        <label className='form-label fw-bold'>Source:</label>
+
+                        <div>
+                        <select
+                          className='form-select form-select-solid'
+                          onChange={(e) => setSelectedSource(e.target.value)}
+                          value={selectedSource}
+                        >
+                          <option value='0' hidden>All</option>
+                          {sources.map((source) => (
+                                <option key={source.id} value={source.id}>
+                                  {source.label}
+                                </option>
+                          ))}
+                        </select>  
+                        </div>
+                      </div>
+
+                      <div className='mb-5'>
+                        <label className='form-label fw-bold'>Qualification:</label>
+                        <div className="form-check form-check-custom form-check-solid form-check-danger form-check-sm mb-1">
+                          <input className="form-check-input" type="radio" name='1' value="0" checked={selectedQualification == 0} id="flexRadioLg2" onChange={(e) => setSelectedQualification(e.target.value)}/>
+                          <label className="form-check-label me-2" for="flexRadioLg2">
+                              Qualified
+                          </label>
+                        </div>
+                        <div className="form-check form-check-custom form-check-solid form-check-danger form-check-sm">
+                            <input className="form-check-input" type="radio" name='1' checked={selectedQualification == 1} value="1" id="flexRadioLg1" onChange={(e) => setSelectedQualification(e.target.value)}/>
+                            <label className="form-check-label me-2" for="flexRadioLg1">
+                                Disqualified
+                            </label>
+                        </div>
+                      </div>
+                      
+                      <div className='d-flex justify-content-end'>
+                        <button
+                          type='reset'
+                          className='btn btn-sm btn-light btn-active-light-primary me-2'
+                          data-kt-menu-dismiss='true'
+                          onClick={handleResetFilters}
+                        >
+                          Reset
+                        </button>
+
+                        <button type='submit' onClick={handleFilter} className='btn btn-sm btn-primary' data-kt-menu-dismiss='true'>
+                          Apply
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-        </div>
-        
-          <TableWithPagination 
-          data={filteredData} 
-          columns={columns} 
-          isLoadingValue={tableLoading}
-          totalRecords={totalRecords}
-          onSortChange={handleSortChange}
-          onPageChange={handlePageChange}
-          onPageSizeChange={handlePageSizeChange}
-          />
-        {/* </div> */}
+                
+              </div>
+
+      <div className='card-body py-3'>
+        <TableWithPagination 
+        data={filteredData} 
+        columns={columns} 
+        isLoadingValue={tableLoading}
+        totalRecords={totalRecords}
+        onSortChange={handleSortChange}
+        onPageChange={handlePageChange}
+        onPageSizeChange={handlePageSizeChange}
+        />
       </div>
       </div>
     </div>
-
-  </>
+    </>
   );
 };
 

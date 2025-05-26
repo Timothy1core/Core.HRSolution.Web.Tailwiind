@@ -123,8 +123,8 @@ const PipelinePage = () => {
           <h1 className="mb-4 text-center fw-bolder">Overall Sourcing Effort</h1>
           <div className="funnel-container">
             {pipelineData.map((item, index) => (
-              <div key={index} className={`d-flex w-100 justify-center align-items-center`}>
-                <span className="d-flex justify-end stage align-items-center">
+              <div key={index} className={`d-flex w-100 justify-content-center align-items-center`}>
+                <span className="d-flex justify-content-end stage align-items-center">
                   <div>
                     <div>{item.stage}</div>
                     <div className="fs-9">{item.leftNote}</div>
@@ -135,7 +135,7 @@ const PipelinePage = () => {
                   {item.count}
                 </div>
                 {item.rate && (
-                  <span className="d-flex justify-start rate align-items-center">
+                  <span className="d-flex justify-content-start rate align-items-center">
                     {item.rate !== " " && index !== 0 && <span className="arrow mx-5">←</span>}
                     <div>
                       <div>{item.rate}</div>

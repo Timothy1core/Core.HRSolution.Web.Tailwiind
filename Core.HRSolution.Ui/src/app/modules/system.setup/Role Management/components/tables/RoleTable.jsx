@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { listRole, removeRole } from '../../core/requests/_request';
 import { format } from 'date-fns';
 import Swal from 'sweetalert2';
-import TableWithPagination from '../../../../../../app/helpers/table/TableWithPagination';
+import TableWithPagination from '../../../core/helpers/Table Layout/TableWithPagination';
 import { CreateEditRole } from '../modals/create-or-edit-role/CreateEditRole';
 import ActionComponent from '../../../../../helpers/action_component';
-import { KTIcon } from '@/_metronic/helpers';
+import { KTIcon } from '../../../../../../_metronic/helpers';
 
 const RoleTable = ({ className }) => {
   const [filteredData, setFilteredData] = useState([]);
@@ -113,7 +113,7 @@ const RoleTable = ({ className }) => {
       className: 'text-end',
       sortable: false,
       Cell: (row) => (
-        <div className='d-flex justify-end flex-shrink-0'>
+        <div className='d-flex justify-content-end flex-shrink-0'>
           <ActionComponent
             buttonPermission={'system.setup.retrieve.role.info'}
             actionButton={ 

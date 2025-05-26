@@ -1,6 +1,6 @@
 
 import {Link} from 'react-router-dom'
-import {toAbsoluteUrl} from '@/_metronic/utils';
+import {toAbsoluteUrl} from '../../../../helpers'
 import {useLayout} from '../../../core'
 
 const MegaMenu = () => {

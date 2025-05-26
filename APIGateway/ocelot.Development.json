@@ -21,7 +21,22 @@
           "Host": "localhost",
           "Port": 7219
         }
-      ],      "UpstreamPathTemplate": "/recruitment/{service}/{everything}",
+      ],
+      "UpstreamPathTemplate": "/recruitment/{service}/{everything}",
+
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ]
+
+    },
+    {
+      "DownstreamPathTemplate": "/api/{service}/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7112
+        }
+      ],
+      "UpstreamPathTemplate": "/hris/{service}/{everything}",
 
       "UpstreamHttpMethod": [ "GET", "POST", "PUT" ]
 

@@ -68,9 +68,7 @@ public class AssessmentRepository(CurrentServiceDbContext context) : IAssessment
                 {
                     Id = x.Id,
                     Body = x.Body,
-                    Required = x.Required,
                     AssessmentId = x.AssessmentId,
-                    Marks = x.Marks,
                     AssessmentChoices = x.AssessmentChoices.Select(c => new AssessmentChoice()
                     {
                         Id = c.Id,
@@ -146,9 +144,6 @@ public class AssessmentRepository(CurrentServiceDbContext context) : IAssessment
         {
             question.Type = updateQuestion.Type;
             question.Body = updateQuestion.Body;
-            question.Required = updateQuestion.Required;
-            question.Marks = updateQuestion.Marks;
-
             // Update Answers
             foreach (var updatedAnswer in updateQuestion.AssessmentAnswers)
             {

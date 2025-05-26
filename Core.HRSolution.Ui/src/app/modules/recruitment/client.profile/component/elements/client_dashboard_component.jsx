@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { SelectCompanyDashboard, ApiGateWayUrl } from '../../core/request/clients_request';
+import { SelectCompanyDashboard,GET_DEPARTMENT_LOGO_URL } from '../../core/request/clients_request';
+
 import { ClientInfoCard } from './client_card_component';
 import TopBarProgress from 'react-topbar-progress-indicator';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +10,7 @@ function DataClientDashboardComponent({ searchValue, groupId,serviceId, statusId
   const [loading, setLoading] = useState(true);
   const [filteredData, setFilteredData] = useState([]); // New state for filtered data
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 9;
   const navigate = useNavigate();
 
   // Fetch data once on load or when parameters change
@@ -49,7 +50,7 @@ function DataClientDashboardComponent({ searchValue, groupId,serviceId, statusId
   if (!filteredData.length) {
     return (
       <div className="card card-flush h-md-100">
-        <div className="card-body d-flex flex-column justify-between mt-9">
+        <div className="card-body d-flex flex-column justify-content-between mt-9">
           <div className="fs-2hx fw-bold text-gray-800 text-center mb-13">
             <h2 className="text-gray-700 text-uppercase">No Data Available!</h2>
             <i className="fa-duotone fa-face-sad-tear fs-5tx"></i>
@@ -67,11 +68,12 @@ function DataClientDashboardComponent({ searchValue, groupId,serviceId, statusId
           <div className="col-md-6 col-xl-4" key={item.id}>
             <ClientInfoCard
               id={item.id}
-              logo={`${ApiGateWayUrl()}/recruitment/client/client_logo/${item.id}`}
+              logo={`${GET_DEPARTMENT_LOGO_URL}/${item.id}`}
               status={item.status}
               clientCompanyName={item.name}
               industry={item.industry}
               services={item.coreService}
+              comanyGroup={item.comanyGroup}
             />
           </div>
         ))}

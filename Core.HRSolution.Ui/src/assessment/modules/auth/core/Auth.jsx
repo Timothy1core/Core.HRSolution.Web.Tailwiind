@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { useState, useEffect, createContext, useContext } from 'react'
-// import { LayoutSplashScreen } from '../../../../_metronic/layout/core'
+import { LayoutSplashScreen } from '../../../../_metronic/layout/core'
 import * as authHelper from './helpers/AuthHelpers'
 import { getCandidateByToken } from './requests/_requests'
 
@@ -86,9 +86,7 @@ const AuthInit = ({ children }) => {
     // eslint-disable-next-line
   }, [])
 
-  return <>{children}</>
-
-  // return showSplashScreen ? <LayoutSplashScreen /> : <>{children}</>
+  return showSplashScreen ? <LayoutSplashScreen /> : <>{children}</>
 }
 
 export { AuthProvider, AuthInit, useAuth }

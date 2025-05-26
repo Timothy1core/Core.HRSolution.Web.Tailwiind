@@ -44,4 +44,6 @@ public class Department
 
 	public virtual ICollection<TalentAcquisitionForm> TalentAcquisitionForms { get; set; } = new List<TalentAcquisitionForm>();
 
+	public virtual ICollection<EmployeeInformation> EmployeeInformations { get; set; } = new List<EmployeeInformation>();
+
 }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Recruitment.Service.API.Core.Models.CurrentService.Dtos.Assessment;
 using Recruitment.Service.API.Core.Models.CurrentService.Dtos.EmailTemplate;
+using Recruitment.Service.API.Core.Models.CurrentService.Dtos.Onboarding;
 using Recruitment.Service.API.Core.Repositories.CurrentService.Tables;
 
 namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
@@ -22,6 +23,7 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
 				template.Name = emailTemplate.Name;
 				template.Subject = emailTemplate.Subject;
 				template.EmailBody = emailTemplate.EmailBody;
+				template.Cc = emailTemplate.Cc ?? null;
 			}
 		}
 
@@ -78,6 +80,21 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
 			}).ToList();
 
 			return dropDownValueDtos;
+
+		}
+
+		public async Task<List<DropDownValueDto>> SelectActionDropDown()
+		{
+			var actions = await context.EmailActions
+				.Where(w => w.IsActive == true)
+				.Select(s => new DropDownValueDto()
+				{
+					Id = s.Id,
+					Label = s.EmailAction1,
+					Value = s.Id.ToString(),
+				}).ToListAsync();
+
+			return actions;
 
 		}
 
@@ -149,9 +166,10 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
 
 
 			}
-			else if (type == 4)
+			else if ( type == 4)
 			{
 				data = automations.FirstOrDefault(w => w.JobId == jobId && w.ApplicationId == applicationId) ?? automations.FirstOrDefault(w => w.JobId == null && w.ApplicationId == applicationId);
+
 
 			}
 			else

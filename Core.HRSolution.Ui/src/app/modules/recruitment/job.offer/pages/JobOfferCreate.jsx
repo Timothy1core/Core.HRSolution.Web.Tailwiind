@@ -1,6 +1,5 @@
 import { Content } from '../../../../../_metronic/layout/components/content'
-import { toAbsoluteUrl } from '@/_metronic/utils';
-import { KTIcon} from '@/_metronic/helpers';
+import { KTIcon, toAbsoluteUrl } from '../../../../../_metronic/helpers';
 import React, { useState, useEffect } from 'react';
 import {useAuth} from '../../../../../app/modules/auth'
 
@@ -23,7 +22,7 @@ const JobOfferCreatePage = () => {
     {/* {!loading && 
       <div id="kt_app_toolbar" className="app-toolbar py-3 py-lg-6">
         <div id="kt_app_toolbar_container" className="app-container container-fluid d-flex flex-stack">
-          <div className="page-title d-flex flex-column justify-center flex-wrap me-3">
+          <div className="page-title d-flex flex-column justify-content-center flex-wrap me-3">
               <a href='candidates' className='btn btn-sm btn-light-danger'>
               <KTIcon iconName='entrance-right' className='fs-2' />
                 Go Back
@@ -64,18 +63,18 @@ const JobOfferCreatePage = () => {
                       </div>
                       <div className="tab-content" id="myTabContent">
                         <div className="tab-pane fade show active" id="tab_candidate_profile" role="tabpanel">
-                          <div className='d-flex justify-start my-7'>
+                          <div className='d-flex justify-content-start my-7'>
                             a
                             {/* <div>Position: <b>{candidateData.jobName}</b></div> */}
                           </div>
-                          <div className='d-flex justify-start my-7'>
+                          <div className='d-flex justify-content-start my-7'>
                           {/* <div>Application Status: <b>{candidateData.stageName}</b></div> */}
                           </div>
-                          <div className='row justify-start my-7'>
+                          <div className='row justify-content-start my-7'>
                             {/* <div className='col'>Current Employment Status: <b>{candidateData.currentEmploymentStatus}</b></div> */}
                             {/* <div className='col'>Notice Period: <b>{candidateData.noticePeriod}</b></div> */}
                           </div>
-                          <div className='row justify-start my-7'>
+                          <div className='row justify-content-start my-7'>
                             {/* <div className='col'>Expected Salary: <b>{new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(candidateData.currentSalary)}</b></div> */}
                             {/* <div className='col'> Expected Salary: <b>{new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(candidateData.expectedSalary)}</b></div> */}
                           </div>

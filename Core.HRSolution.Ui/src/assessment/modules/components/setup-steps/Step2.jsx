@@ -1,7 +1,6 @@
 import { useAuth } from '../../../../app/modules/auth'
 import { useState } from 'react';
-import { toAbsoluteUrl } from '@/_metronic/utils';
-import { KTIcon} from '@/_metronic/helpers';
+import { KTIcon, toAbsoluteUrl } from '../../../../_metronic/helpers';
 
 const Step2Div = ({handleNext}) => {
   const { currentUser } = useAuth()
@@ -34,7 +33,7 @@ const Step2Div = ({handleNext}) => {
                       {/* Timeline icon */}
                       <div className="timeline-icon border-2 border-danger">
                         <div
-                          className="rounded-circle  bg-light-danger d-flex align-items-center justify-center"
+                          className="rounded-circle  bg-light-danger d-flex align-items-center justify-content-center"
                           style={{ width: "25px", height: "25px" }}
                         >
                           <span className="fs-5 fw-bolder">{index + 1}</span>

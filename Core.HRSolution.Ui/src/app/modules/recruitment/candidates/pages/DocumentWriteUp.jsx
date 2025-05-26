@@ -1,10 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
-// import { Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
 import { Content } from '../../../../../_metronic/layout/components/content';
-import { KTIcon } from '@/_metronic/helpers';
-// import { toAbsoluteUrl } from '@/_metronic/utils';
-
+import { KTIcon, toAbsoluteUrl } from '../../../../../_metronic/helpers';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import { ClassicEditor, Bold, Essentials, Italic, Paragraph, List, Heading, Link, Table, Indent, IndentBlock, Image, ImageCaption, ImageResize, ImageStyle, ImageToolbar, ImageUpload, Base64UploadAdapter, FontSize } from 'ckeditor5';
 import { infoWriteUp } from '../core/requests/_request';
@@ -162,11 +160,11 @@ const DocumentWriteUpPage = () => {
         <div style="margin: 0px 10px 0px 10px; padding: 0px 10px 0px 10px; border-top: solid #bc2026 1px">
             <h3 style="margin: 10px 0px 0px 0px;"><b>ONE COREDEV IT INC.</b></h3>
 
-            <div style="display: flex; justify: space-between">
+            <div style="display: flex; justify-content: space-between">
                 <span><b style="color: #bc2026">Address: </b> <b>V Corporate Centre, 125 L.P Leviste Street,</b></span>
                 <span style="text-align:end;"><b style="color: #bc2026;">Email: </b> <b>info@onecoredevit.com</b></span>
             </div>
-            <div style="display: flex; justify: space-between; margin-bottom: 5px">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px">
                 <span><b>Salcedo, Village, Makati, 1227 Metro Manila, Philippines</b></span>
                 <span style="text-align:end;"><b style="color: #bc2026;">Office Number: </b><b>+ 632 8404-0164</b> </span>
             </div>
@@ -212,6 +210,8 @@ const DocumentWriteUpPage = () => {
   const params = new URLSearchParams(location.search);
   const candidateId = params.get('id');
 
+  const [candidate, setCandidate] = useState([]);
+
   const [writeUp, setWriteUps] = useState([]);
   const [filters, setFilters] = useState({
     profileOverview: true,
@@ -233,6 +233,7 @@ const DocumentWriteUpPage = () => {
       const response = await infoWriteUp(candidateId);
       if (response) {
         setWriteUps(response.data.writeUp[0]);
+        setCandidate(response.data.candidate);
       }
     } catch (error) {
       console.error(error);
@@ -241,6 +242,29 @@ const DocumentWriteUpPage = () => {
 
   const generateContent = () => {
     let content = "";
+
+    content += `<div class=" py-2">
+      <div class="d-flex justify-content-between">
+        <p class="mb-0">
+          Candidate Name:
+          <span class="fw-bold text-dark">${candidate.firstName} ${candidate.lastName}</span>
+        </p>
+        <p class="mb-0">
+          Department:
+          <span class="fw-bold text-dark">${candidate.clientName}</span>
+        </p>
+      </div>
+
+      <div class="d-flex justify-content-between mt-2">
+        <p class="mb-0">
+          Position:
+          <span class="fw-bold text-dark">${candidate.jobName}</span>
+        </p>
+      </div>
+
+      <hr class="border-dark my-5" />
+    </div>
+                `;
     if (filters.profileOverview && writeUp.profileOverview) {
         content += `<h3>Profile Overview</h3><p>${writeUp.profileOverview}</p>`;
         
@@ -282,7 +306,7 @@ const handlePrint = () => {
     <>
       <div id="kt_app_toolbar" className="app-toolbar py-3 py-lg-6">
         <div id="kt_app_toolbar_container" className="app-container container-fluid d-flex flex-stack">
-          <div className="page-title d-flex flex-column justify-center flex-wrap me-3">
+          <div className="page-title d-flex flex-column justify-content-center flex-wrap me-3">
             <a href={`viewcandidate?id=${candidateId}`} className='btn btn-sm btn-light-danger'>
               <KTIcon iconName='entrance-right' className='fs-2' />
               Go Back
@@ -296,7 +320,7 @@ const handlePrint = () => {
             <div className="col-2">
               <div className="card p-5">
                 <h3 className="card-title">Document Filter</h3>
-                {/* <Form>
+                <Form>
                   <Form.Check
                     type="checkbox"
                     id="profileOverview"
@@ -337,7 +361,7 @@ const handlePrint = () => {
                     checked={filters.others}
                     onChange={() => handleFilterChange('others')}
                   />
-                </Form> */}
+                </Form>
                 <div className="separator border border-dark my-2"></div>
 
                 <a onClick={handlePrint} className='btn btn-sm btn-light-danger mx-5'>
@@ -348,12 +372,12 @@ const handlePrint = () => {
             <div className='col-10'>
               <div className="card p-5"  >
                 <h3 className="card-title mb-8">Write Up Document</h3>
-                <div className='d-flex justify-between'>
-                  <p className='mb-0'>Candidate Name:</p>
-                  <p className='mb-0'>Department:</p>
+                <div className='d-flex justify-content-between'>
+                  <p className='mb-0'>Candidate Name: <span className='fw-bold'>{candidate.firstName} {candidate.lastName}</span></p>
+                  <p className='mb-0'>Department: <span className='fw-bold'>{candidate.clientName}</span></p>
                 </div>
-                <div className='d-flex justify-between'>
-                  <p>Position:</p>
+                <div className='d-flex justify-content-between'>
+                  <p>Position:<span className='fw-bold'> {candidate.jobName}</span></p>
                 </div>
                 <div className="separator border border-dark my-2"></div>
                 {filters.profileOverview && (

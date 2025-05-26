@@ -37,8 +37,6 @@ namespace Recruitment.Service.API.Persistence.Applications
                     {
                         Body = x.Body,
                         Type = x.Type,
-                        Required = x.Required,
-                        Marks = x.Marks,
                         IsActive = true,
                         AssessmentAnswers = x.Answers.Select(a => new AssessmentAnswer()
                         {
@@ -231,8 +229,6 @@ namespace Recruitment.Service.API.Persistence.Applications
                     AssessmentId = questionRequestDto.AssessmentId,
                     Body = questionRequestDto.Body,
                     Type = questionRequestDto.Type,
-                    Required = questionRequestDto.Required,
-                    Marks = questionRequestDto.Marks,
                     IsActive = true,
                     AssessmentAnswers = questionRequestDto.Answers.Select(a => new AssessmentAnswer()
                     {
@@ -284,8 +280,6 @@ namespace Recruitment.Service.API.Persistence.Applications
                     Id = questionId,
                     Body = questionRequestDto.Body,
                     Type = questionRequestDto.Type,
-                    Required = questionRequestDto.Required,
-                    Marks = questionRequestDto.Marks,
                     AssessmentAnswers = questionRequestDto.Answers.Select(a => new AssessmentAnswer()
                     {
                         Id = a.Id,

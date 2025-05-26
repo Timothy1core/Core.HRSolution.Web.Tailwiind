@@ -8,5 +8,6 @@
 
 		public string EmailBody { get; set; }
 		public string? EmailCc { get; set; }
+		public int EmailAction { get; set; }
 	}
 }

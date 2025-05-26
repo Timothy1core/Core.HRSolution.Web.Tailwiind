@@ -12,8 +12,8 @@ const DashboardPage = () => {
     <ToolbarWrapper title="GET STARTED" subtitle={`Hi ${currentUser?.loggedUser ? currentUser?.loggedUser.firstName.toUpperCase() : currentUser.loggedCandidate.firstName}`}  />
     {/* <div id="kt_app_toolbar" className="app-toolbar py-3 py-lg-6">
       <div id="kt_app_toolbar_container" className="app-container container-fluid d-flex flex-stack">
-        <div className="page-title d-flex flex-column justify-center flex-wrap me-3">
-          <h1 className="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-center my-0 text-uppercase">Get Started</h1>
+        <div className="page-title d-flex flex-column justify-content-center flex-wrap me-3">
+          <h1 className="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center my-0 text-uppercase">Get Started</h1>
           <ul className="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
             <li className="breadcrumb-item text-muted text-uppercase">
             Hi {currentUser?.loggedUser.fullName}

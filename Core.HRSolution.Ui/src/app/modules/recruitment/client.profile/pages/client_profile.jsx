@@ -2,8 +2,8 @@ import { ToolbarWrapper } from '../../../../../_metronic/layout/components/toolb
 import { Content } from '../../../../../_metronic/layout/components/content';
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { KTIcon } from '@/_metronic/helpers';
-import { SelectCompanyProfileInformation,ApiGateWayUrl } from '../core/request/clients_request';
+import { KTIcon } from '../../../../../_metronic/helpers';
+import { SelectCompanyProfileInformation, GET_DEPARTMENT_LOGO_URL } from '../core/request/clients_request';
 import { ClientUpdateModal } from '../component/modals/update_client';
 import { ClientIndividualCardList } from '../component/elements/client_individual_component';
 import { ClientJobProfileCardList } from '../component/elements/client_job_profile_component';
@@ -47,12 +47,12 @@ const ClientProfilePage = () => {
                     <div className='d-flex flex-wrap flex-sm-nowrap mb-3'>
                         <div className='me-7'>
                             <div className='symbol symbol-fixed position-relative bg-secondary p-8'>
-                                <img src={`${ApiGateWayUrl()}/recruitment/client/client_logo/${id}`} className='w-100' alt='Client Logo' />
+                                <img src={`${GET_DEPARTMENT_LOGO_URL}/${id}`} className='w-100' alt='Client Logo' />
                             </div>
                         </div>
 
                         <div className='flex-grow-1'>
-                            <div className='d-flex justify-between align-items-start flex-wrap mb-2'>
+                            <div className='d-flex justify-content-between align-items-start flex-wrap mb-2'>
                                 <div className='d-flex flex-column my-4'>
                                     <div className='d-flex align-items-center mb-1'>
                                         <h1 className='text-gray-800 fs-1 fw-bolder me-1'>
@@ -97,7 +97,7 @@ const ClientProfilePage = () => {
                                             <div className='separator border-gray-200'></div>
                                             <div className="menu-item px-3">
                                                 <ClientUpdateModal 
-                                                clientInfoData={data.profile} 
+                                                departmentInfoData={data.profile} 
                                                 onUpdate={handleRefresh}
                                                 >
                                                 </ClientUpdateModal>
@@ -148,6 +148,6 @@ const ClientProfilePage = () => {
     );
 };
 
-const ClientProfileWrapper = () => <ClientProfilePage />;
+const DepartmentProfileWrapper = () => <ClientProfilePage />;
 
-export { ClientProfileWrapper };
+export { DepartmentProfileWrapper };

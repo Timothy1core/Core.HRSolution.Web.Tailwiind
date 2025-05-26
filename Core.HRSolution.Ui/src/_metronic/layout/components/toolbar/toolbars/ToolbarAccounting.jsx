@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { KTIcon } from '@/_metronic/helpers';
+import { KTIcon } from '../../../../helpers';
 
 // Component definition
 const ToolbarAccounting = () => {

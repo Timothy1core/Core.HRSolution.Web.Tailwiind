@@ -132,68 +132,13 @@ const SelectWorkArrangementComponent = ({
     );
 };
 
-// const SelectClientIndividualsComponent = ({
-//   id,
-//   name,
-//   onChange,
-//   value,
-//   className,
-//   placeholder = 'Select option',
-//   clientId,
-// }) => {
-//   const [options, setOptions] = useState([]);
-//   const [loading, setLoading] = useState(false);
-
-//   useEffect(() => {
-//     if (!clientId) {
-//       setOptions([]); // Reset options if clientId is not provided
-//       return;
-//     }
-
-//     const fetchOptions = async () => {
-//       setLoading(true); // Start loading indicator
-//       try {
-//         const response = await SelectTafApproverDropDown(clientId);
-//         setOptions(response.data.values || []);
-//       } catch (error) {
-//         console.error('Error fetching options:', error);
-//         setOptions([]); // Reset options on error
-//       } finally {
-//         setLoading(false); // Stop loading indicator
-//       }
-//     };
-
-//     fetchOptions();
-//   }, [clientId]); // Add clientId as a dependency
-
-//   return (
-//     <select
-//       id={id}
-//       name={name}
-//       onChange={onChange}
-//       value={value}
-//       className={className}
-//     >
-//       <option value="">{placeholder}</option>
-//       {loading ? (
-//         <option disabled>Loading...</option>
-//       ) : (
-//         options.map((option) => (
-//           <option key={option.id} value={option.value}>
-//             {option.label}
-//           </option>
-//         ))
-//       )}
-//     </select>
-//   );
-// };
 const SelectClientIndividualsComponent = React.memo(
-    ({ id, name, onChange, value, className, placeholder = 'Select option', clientId }) => {
+    ({ id, name, onChange, value, className, placeholder = 'Select option', departmentId }) => {
       const [options, setOptions] = useState([]);
       const [loading, setLoading] = useState(false);
   
       useEffect(() => {
-        if (!clientId) {
+        if (!departmentId) {
           setOptions([]); // Reset options when clientId is not provided
           return;
         }
@@ -201,7 +146,7 @@ const SelectClientIndividualsComponent = React.memo(
         const fetchOptions = async () => {
           setLoading(true);
           try {
-            const response = await SelectTafApproverDropDown(clientId);
+            const response = await SelectTafApproverDropDown(departmentId);
             setOptions(response.data.values || []);
           } catch (error) {
             console.error('Error fetching options:', error);
@@ -212,7 +157,7 @@ const SelectClientIndividualsComponent = React.memo(
         };
   
         fetchOptions();
-      }, [clientId]); // Runs only when clientId changes
+      }, [departmentId]); // Runs only when clientId changes
   
       return (
         <select id={id} name={name} value={value} onChange={onChange} className={className}>
@@ -231,64 +176,23 @@ const SelectClientIndividualsComponent = React.memo(
     }
 );
 
-// const SelectClientJobProfilesComponent = ({
-//     id,
-//     name,
-//     onChange,
-//     value,
-//     className,
-//     placeholder,
-//     clientId,
-//     departmentid
-// }) => {
-//     const [options, setOptions] = useState([]);
-
-//     useEffect(() => {
-//         const fetchOptions = async () => {
-//             try {
-//                 const response = await SelectJobProfileDropDown(clientId,departmentid);
-//                 setOptions(response.data.values);
-//             } catch (error) {
-//                 console.error("Error fetching options:", error);
-//             }
-//         };
-
-//         fetchOptions();
-//     }, []);
-
-//     return (
-//         <select 
-//         name={name}
-//         onChange={onChange}
-//         value={value}
-//         id={id}
-//         className={className}
-//         >
-//             <option value=''>Select option</option>
-//             {options.map(option => (
-//                 <option key={option.id} value={option.value}>
-//                     {option.label}
-//                 </option>
-//             ))}
-//         </select>
-//     );
-// };
 
 const SelectClientJobProfilesComponent = React.memo(
-    ({ id, name, onChange, value, className, placeholder = 'Select option', clientId, departmentid}) => {
+    ({ id, name, onChange, value, className, placeholder = 'Select option', departmentId}) => {
       const [options, setOptions] = useState([]);
       const [loading, setLoading] = useState(false);
-  
       useEffect(() => {
-        if (!clientId) {
+        if (!departmentId) {
+          
           setOptions([]); // Reset options when clientId is not provided
           return;
         }
-  
+
+
         const fetchOptions = async () => {
           setLoading(true);
           try {
-            const response = await SelectJobProfileDropDown(clientId,departmentid);
+            const response = await SelectJobProfileDropDown(departmentId);
             setOptions(response.data.values || []);
           } catch (error) {
             console.error('Error fetching options:', error);
@@ -299,7 +203,7 @@ const SelectClientJobProfilesComponent = React.memo(
         };
   
         fetchOptions();
-      }, [clientId,departmentid]); // Runs only when clientId changes
+      }, [departmentId]); // Runs only when clientId changes
   
       return (
         <select id={id} name={name} value={value} onChange={onChange} className={className}>
@@ -319,12 +223,12 @@ const SelectClientJobProfilesComponent = React.memo(
 );
 
 const SelectMultipleClientJobProfilesComponent = React.memo(
-  ({ id, name, onChange, value, className, placeholder = 'Select option', clientId, departmentid }) => {
+  ({ id, name, onChange, value, className, placeholder = 'Select option', departmentId }) => {
     const [options, setOptions] = useState([]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-      if (!clientId) {
+      if (!departmentId) {
         setOptions([]); // Reset options when clientId is not provided
         return;
       }
@@ -332,7 +236,7 @@ const SelectMultipleClientJobProfilesComponent = React.memo(
       const fetchOptions = async () => {
         setLoading(true);
         try {
-          const response = await SelectTAFDropDown(clientId, departmentid);
+          const response = await SelectTAFDropDown(departmentId);
           setOptions(
             response.data.values.map((item) => ({
               value: item.id,
@@ -348,7 +252,7 @@ const SelectMultipleClientJobProfilesComponent = React.memo(
       };
 
       fetchOptions();
-    }, [clientId, departmentid]);
+    }, [departmentId]);
 
     return (
       <Select

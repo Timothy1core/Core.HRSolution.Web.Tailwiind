@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Swal from 'sweetalert2';
-// import { Modal, Button } from 'react-bootstrap';
-import { KTIcon } from '@/_metronic/helpers';
+import { Modal, Button } from 'react-bootstrap';
+import { KTIcon } from '../../../../../../_metronic/helpers';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { CreateCompanyProfile } from '../../core/request/clients_request';
@@ -11,14 +11,15 @@ const companyProfileValidationSchema = Yup.object().shape({
   logo: Yup.string().max(1000, 'Must be 1000 characters or less').required('Compan Logo is required'),
   name: Yup.string().max(1000, 'Must be 1000 characters or less').required('Company Name is required'),
   industry: Yup.string().max(1000, 'Must be 1000 characters or less').required('Industry is required'),
+  alias: Yup.string().max(5, 'Must be 5 characters or less').required('Alias is required'),
   website: Yup.string().max(1000, 'Must be 1000 characters or less').required('Website is required'),
   coreServiceId: Yup.string().required('CORE Service is required'),
-  clientStatusId: Yup.string().required('Status is required'),
+  departmentStatusId: Yup.string().required('Status is required'),
   timezone: Yup.string().required('Timezone is required'),
   timezoneOffset: Yup.string().required('Time Difference is required'),
   individuals: Yup.array().of(
     Yup.object().shape({
-      name: Yup.string().required('Client Name is required'),
+      name: Yup.string().required('Department Name is required'),
       position: Yup.string().required('Position is required'),
       email: Yup.string().email('Invalid email format').required('Email is required'),
     })
@@ -31,15 +32,15 @@ const FormRepeater = ({ entries, addEntry, removeEntry, handleEntryChange, error
       {entries.map((entry, index) => (
         <div key={index} className="row align-items-center mb-3 g-2">
           <div className="col-auto">
-            {/* <Button onClick={() => removeEntry(index)} className="btn btn-icon btn-sm btn-light-danger">
+            <Button onClick={() => removeEntry(index)} className="btn btn-icon btn-sm btn-light-danger">
               <KTIcon iconName="cross" className='fs-3' />
-            </Button> */}
+            </Button>
           </div>
           <div className="col">
             <input
               type="text"
               name={`individuals[${index}].name`}
-              placeholder="Client Name"
+              placeholder="Department Name"
               onChange={(e) => handleEntryChange(index, e)}
               value={entry.name}
               className="form-control"
@@ -76,9 +77,9 @@ const FormRepeater = ({ entries, addEntry, removeEntry, handleEntryChange, error
           </div>
         </div>
       ))}
-      {/* <Button variant="button" onClick={addEntry} className="mt-3 btn btn-primary btn-sm btn btn-light-primary">
+      <Button variant="button" onClick={addEntry} className="mt-3 btn btn-primary btn-sm btn btn-light-primary">
         + Add Item
-      </Button> */}
+      </Button>
     </div>
   );
 };
@@ -117,11 +118,12 @@ function MyModal({ onSubmitSuccess }) {
       logo: '',
       name: '',
       industry: '',
+      alias: '',
       website: '',
       timezone: '',
       timezoneOffset: '',
       coreServiceId: '',
-      clientStatusId: '',
+      departmentStatusId: '',
       individuals: entries,
     },
     validationSchema: companyProfileValidationSchema,
@@ -134,11 +136,12 @@ function MyModal({ onSubmitSuccess }) {
         formData.append('logo', values.logo);
         formData.append('name', values.name);
         formData.append('industry', values.industry);
+        formData.append('alias', values.alias);
         formData.append('website', values.website);
         formData.append('timezone', values.timezone);
         formData.append('timezoneOffset', values.timezoneOffset);
         formData.append('coreServiceId', values.coreServiceId);
-        formData.append('clientStatusId', values.clientStatusId);
+        formData.append('departmentStatusId', values.departmentStatusId);
 
         // Append repeater entries to FormData
         entries.forEach((entry, index) => {
@@ -176,14 +179,13 @@ function MyModal({ onSubmitSuccess }) {
 
   return (
     <>
-    1
-      {/* <Button className="btn btn-dark btn-sm" onClick={() => setShow(true)}>
-        New Client
+      <Button className="btn btn-dark btn-sm" onClick={() => setShow(true)}>
+        Create New Department
       </Button>
 
       <Modal show={show} onHide={() => setShow(false)} dialogClassName="modal-dialog-centered mw-900px">
         <Modal.Header>
-          <Modal.Title>CREATE NEW CLIENT PROFILE</Modal.Title>
+          <Modal.Title>CREATE NEW DEPARTMENT PROFILE</Modal.Title>
           <button className="btn btn-sm btn-icon btn-active-color-primary" onClick={() => setShow(false)}>
             <KTIcon iconName="cross" className="fs-1" />
           </button>
@@ -193,7 +195,7 @@ function MyModal({ onSubmitSuccess }) {
           <form onSubmit={formik.handleSubmit}>
             <div className='row g-4 mb-8'>
               <div className='col-md-6 fv-row'>
-                <label className="required fs-6 fw-semibold mb-2">Company Name</label>
+                <label className="required fs-6 fw-semibold mb-2">Department Name</label>
                 <input 
                   type="text" 
                   name="name"
@@ -206,7 +208,21 @@ function MyModal({ onSubmitSuccess }) {
                   <div className='text-danger mt-2'>{formik.errors.name}</div>
                 )}
               </div>
-              <div className='col-md-6 fv-row'>
+              <div className='col-md-3 fv-row'>
+                <label className="required fs-6 fw-semibold mb-2">Alias</label>
+                <input 
+                  type="text" 
+                  name="alias"
+                  onChange={formik.handleChange}
+                  value={formik.values.alias}
+                  className="form-control" 
+                  placeholder="Enter Alias"
+                />
+                {formik.touched.alias && formik.errors.alias && (
+                  <div className='text-danger mt-2'>{formik.errors.alias}</div>
+                )}
+              </div>
+              <div className='col-md-3 fv-row'>
                 <label className="required fs-6 fw-semibold mb-2">Industry</label>
                 <input 
                   type="text" 
@@ -293,19 +309,19 @@ function MyModal({ onSubmitSuccess }) {
               <div className='col-md-3 fv-row'>
                 <label className="required fs-6 fw-semibold mb-2">Status</label>
                 <SelectClientStatusComponent 
-                 name="clientStatusId"
+                 name="departmentStatusId"
                  onChange={formik.handleChange}
-                 value={formik.values.clientStatusId}
+                 value={formik.values.departmentStatusId}
                  className="form-select" 
                 ></SelectClientStatusComponent>
-                {formik.touched.clientStatusId && formik.errors.clientStatusId && (
-                  <div className='text-danger mt-2'>{formik.errors.clientStatusId}</div>
+                {formik.touched.departmentStatusId && formik.errors.departmentStatusId && (
+                  <div className='text-danger mt-2'>{formik.errors.departmentStatusId}</div>
                 )}
               </div>
             </div>
 
             <div className='separator separator-dashed my-5'></div>
-            <h4 className='text-gray-700 mb-3'>CLIENT INDIVIDUAL INFO</h4>
+            <h4 className='text-gray-700 mb-3'>DEPARTMENT INDIVIDUAL INFO</h4>
 
             <FormRepeater 
               entries={entries}
@@ -328,7 +344,7 @@ function MyModal({ onSubmitSuccess }) {
             {loading ? 'Submitting...' : 'Submit'}
           </Button>
         </Modal.Footer>
-      </Modal> */}
+      </Modal>
     </>
   );
 }

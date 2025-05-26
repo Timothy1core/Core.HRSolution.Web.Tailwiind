@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-// import { Modal, Button } from 'react-bootstrap';
-import { KTIcon } from '@/_metronic/helpers';
+import { Modal, Button } from 'react-bootstrap';
+import { KTIcon } from '../../../../../../_metronic/helpers';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
@@ -25,18 +25,19 @@ import {
 } from 'ckeditor5';
 import 'ckeditor5/ckeditor5.css';
 
-import {CreateEmailTemplate} from '../../request/email_template'
+import {CreateEmailTemplate,SelectEmailAction} from '../../request/email_template'
 
 const emailTemplateValidationSchema = Yup.object().shape({
     name: Yup.string().max(1000, 'Must be 1000 characters or less').required('Template Name is required'),
     subject: Yup.string().max(1000, 'Must be 1000 characters or less').required('Subject is required'),
     emailBody: Yup.string().required('Email Body is required'),
+    action: Yup.string().required('Email Action is required'),
 });
 
 function CreateEmailTemplateModal({ onUpdate }) {
     const [show, setShow] = useState(false);
     const [loading, setLoading] = useState(false);
-
+    const [actions, setActions] = useState([]);
     const CKEditorConfig = {
         plugins: [
             Essentials,
@@ -82,6 +83,8 @@ function CreateEmailTemplateModal({ onUpdate }) {
 
             const listView = new ListView(locale);
             const options = [
+                { label: '[client_fullname]', content: '[client_fullname]' },
+                { label: '[taf_link]', content: '[taf_link]' },
                 { label: '[candidate_full_name]', content: '[candidate_full_name]' },
                 { label: '[candidate_first_name]', content: '[candidate_first_name]' },
                 { label: '[candidate_email]', content: '[candidate_email]' },
@@ -92,6 +95,9 @@ function CreateEmailTemplateModal({ onUpdate }) {
                 { label: '[job_offer_link]', content: '[job_offer_link]' },
                 { label: '[onboarding_form_link]', content: '[onboarding_form_link]' },
                 { label: '[documents]', content: '[documents]' },
+                { label: '[hiring_manager_name]', content: '[hiring_manager_name]' },
+                { label: '[hiring_manager_email]', content: '[hiring_manager_email]' },
+                { label: '[approval_link]', content: '[approval_link]' },
             ];
 
             options.forEach((option) => {
@@ -123,6 +129,7 @@ function CreateEmailTemplateModal({ onUpdate }) {
 
     const formik = useFormik({
         initialValues: {
+            action:'',
             name: '',
             subject: '',
             emailBody: '',
@@ -133,6 +140,7 @@ function CreateEmailTemplateModal({ onUpdate }) {
             setLoading(true);
             try {
                 const formData = new FormData();
+                formData.append('EmailAction', values.action);
                 formData.append('EmailBody', values.emailBody);
                 formData.append('Name', values.name);
                 formData.append('Subject', values.subject);
@@ -164,13 +172,39 @@ function CreateEmailTemplateModal({ onUpdate }) {
         },
     });
 
+    const handleStageChange = (e) => {
+        const selectedActionId = e.target.value;
+        formik.setFieldValue('action', selectedActionId);
+    };  
+
+    const fetchEmailActions = async () => {
+        try {
+          const res = await SelectEmailAction();
+          if (res.status === 200 && res.data) {
+            setActions(res.data.values);
+          }
+        } catch (error) {
+          console.error('Error fetching email actions:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (!show) {
+            formik.resetForm();
+        }
+    }, [show]);
+
+    useEffect(() => {
+        fetchEmailActions();
+    }, []);
+
     return (
         <>
-            {/* <Button className="btn btn-dark btn-sm" onClick={() => setShow(true)}>
+            <Button className="btn btn-dark btn-sm" onClick={() => setShow(true)}>
                 Create Email Template
-            </Button> */}
+            </Button>
 
-            {/* <Modal show={show} onHide={() => setShow(false)} dialogClassName="modal-dialog-centered mw-800px">
+            <Modal show={show} onHide={() => setShow(false)} dialogClassName="modal-dialog-centered mw-800px">
                 <Modal.Header>
                     <Modal.Title>CREATE EMAIL TEMPLATE</Modal.Title>
                     <button
@@ -183,6 +217,26 @@ function CreateEmailTemplateModal({ onUpdate }) {
 
                 <Modal.Body>
                     <form onSubmit={formik.handleSubmit}>
+                    <div className="row g-4 mb-8">
+                            <div className="col-md-6 fv-row">
+                                <label className="required fs-6 fw-semibold mb-2">Template Action</label>
+                                <select
+                                    className='form-select form-select-solid'
+                                    {...formik.getFieldProps('action')}
+                                    onChange={handleStageChange}
+                                >
+                                    <option value='' hidden>Select Action</option>
+                                    {actions.map((action) => (
+                                    <option key={action.id} value={action.id}>
+                                        {action.label}
+                                    </option>
+                                    ))}
+                                </select>
+                                {formik.touched.action && formik.errors.action && (
+                                    <div className="text-danger mt-2">{formik.errors.action}</div>
+                                )}
+                            </div>
+                        </div>
                         <div className="row g-4 mb-8">
                             <div className="col-md-6 fv-row">
                                 <label className="required fs-6 fw-semibold mb-2">Template Name</label>
@@ -228,7 +282,7 @@ function CreateEmailTemplateModal({ onUpdate }) {
                         </div>
                         <div className="row g-4 mb-8">
                             <div className="col-md-12">
-                                <label className="required fs-6 fw-semibold mb-2">Email Cc: </label>
+                                <label className=" fs-6 fw-semibold mb-2">Email Cc: </label>
                                 <input
                                     type="text"
                                     name="emailCc"
@@ -255,8 +309,7 @@ function CreateEmailTemplateModal({ onUpdate }) {
                         {loading ? 'Submitting...' : 'Submit'}
                     </Button>
                 </Modal.Footer>
-            </Modal> */}
-            1
+            </Modal>
         </>
     );
 }

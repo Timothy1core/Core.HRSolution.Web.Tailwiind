@@ -63,7 +63,8 @@ builder.Services.AddScoped<IJobProfileServices, JobProfileServices>();
 builder.Services.AddScoped<ICandidateServices, CandidateServices>();
 builder.Services.AddScoped<IJobOfferServices, JobOfferServices>();
 builder.Services.AddScoped<IOnboardingServices, OnboardingServices>();
-
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddScoped<IEmployeeServices, EmployeeServices>();
 
 builder.Services.AddScoped<ITalentAcquisitionFormServices, TalentAcquisitionFormServices>();
 

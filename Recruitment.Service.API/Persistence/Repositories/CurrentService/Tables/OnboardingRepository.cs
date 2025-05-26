@@ -20,6 +20,8 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
 			var onboardingInfo = await context.OnboardingInformationSheets
 				.Include(x => x.Candidate)
 				.ThenInclude(i => i.Job)
+				.ThenInclude(i=>i.Department)
+				.Include(i => i.OnboardingStatus)
 				.Where(w => w.CandidateId == candidateId)
 				.Select(s => new OnboardingInformationSheetDto
 				{
@@ -57,6 +59,14 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
 					IsAcknowledged = s.IsAcknowledged,
 					CandidateName = s.Candidate.FirstName + " " + s.Candidate.LastName,
 					Position = s.Candidate.Job.Position,
+					OnboardingStatusName = s.OnboardingStatus.Status,
+					OnboardingStatusId = s.OnboardingStatusId,
+					CreatedDate = s.CreatedDate,
+					TemporaryEmployeeId = s.TemporaryEmployeeId,
+					DepartmentName = s.Candidate.Job.Department.Name,
+					DepartmentId = (int)(s.DepartmentId == null ? s.Candidate.Job.DepartmentId : s.DepartmentId),
+					StartDate = s.StartDate,
+					OrientationDate = s.OrientationDate
 				})
 				.FirstOrDefaultAsync();
 			return onboardingInfo!;
@@ -67,10 +77,9 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
 			var candidateOnboardingInfo = await context.OnboardingInformationSheets
 				.Include(x => x.Candidate)
 				.ThenInclude(i => i.Job)
-			//.Include(i => i.JobOfferStatus)
+				.Include(i => i.OnboardingStatus)
 			.ToListAsync();
 
-			//candidateOnboardingInfo = status == 0 ? candidateOnboardingInfo.ToList() : candidateOnboardingInfo.Where(x => x.JobOfferStatusId == status).ToList();
 
 			var candidateOnboardingInfoDtos = candidateOnboardingInfo.Select(s => new OnboardingInformationSheetDashboardDto()
 			{
@@ -106,12 +115,26 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
 				PagibigIdNo = s.PagibigIdNo,
 				CandidateName = s.Candidate.FirstName + " " + s.Candidate.LastName,
 				Position = s.Candidate.Job.Position,
+				OnboardingStatusId = s.OnboardingStatusId,
+				OnboardingStatusName = s.OnboardingStatus.Status
 			})
 				.ToList();
 			return candidateOnboardingInfoDtos;
 
 		}
+		public async Task<List<OnboardingStatusDto>> RetrieveOnboardingStatusList()
+		{
+			var statuses = await context.OnboardingStatuses
+				.Where(w => w.IsActive == true)
 
+				.Select(s => new OnboardingStatusDto()
+				{
+					Id = s.Id,
+					Status = s.Status
+				}).ToListAsync();
+			return statuses;
+
+		}
 		public async Task UpdateOnboardingInformation(OnboardingInformationSheet onboardingInformationDto)
 		{
 			var onboardingInformation = await context.OnboardingInformationSheets.FirstOrDefaultAsync(x => x.CandidateId == onboardingInformationDto.CandidateId);
@@ -148,6 +171,9 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
 				onboardingInformation.PhilhealthIdNo = onboardingInformationDto.PhilhealthIdNo;
 				onboardingInformation.PagibigIdNo = onboardingInformationDto.PagibigIdNo;
 				onboardingInformation.IsAcknowledged = onboardingInformationDto.IsAcknowledged;
+				onboardingInformation.StartDate = onboardingInformationDto.StartDate;
+				onboardingInformation.OrientationDate = onboardingInformationDto.OrientationDate;
+				onboardingInformation.DepartmentId = onboardingInformationDto.DepartmentId;
 			}
 		}
 
@@ -158,6 +184,26 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
 			if (onboardingInformation != null)
 			{
 				onboardingInformation.IsAcknowledged = isAcknowledged;
+			}
+		}
+
+		public async Task UpdateOnboardingStatus(OnboardingInformationSheet onboardingInformationSheetDto)
+		{
+			var onboardingInformation = await context.OnboardingInformationSheets.FirstOrDefaultAsync(x => x.CandidateId == onboardingInformationSheetDto.CandidateId);
+
+			if (onboardingInformation != null)
+			{
+				onboardingInformation.OnboardingStatusId = onboardingInformationSheetDto.OnboardingStatusId;
+			}
+		}
+
+		public async Task UpdateTemporaryEmployeeId(OnboardingInformationSheet onboardingInformationSheetDto)
+		{
+			var onboardingInformation = await context.OnboardingInformationSheets.FirstOrDefaultAsync(x => x.CandidateId == onboardingInformationSheetDto.CandidateId);
+
+			if (onboardingInformation != null)
+			{
+				onboardingInformation.TemporaryEmployeeId = onboardingInformationSheetDto.TemporaryEmployeeId;
 			}
 		}
 
@@ -290,6 +336,24 @@ namespace Recruitment.Service.API.Persistence.Repositories.CurrentService.Tables
 			{
 				onboardingInformation.CurrentStep = step;
 			}
+		}
+
+		public async Task<List<int?>> RetrieveExistingTemporaryIdList()
+		{
+			var candidateOnboardingInfo = await context.OnboardingInformationSheets
+				.Include(x => x.Candidate)
+				.ThenInclude(i => i.Job)
+				.Include(i => i.OnboardingStatus)
+			.ToListAsync();
+
+
+			var candidateTemporaryIds = candidateOnboardingInfo
+			.Select(s => s.TemporaryEmployeeId)
+			.ToList();
+
+
+			return candidateTemporaryIds;
+
 		}
 	}
 }

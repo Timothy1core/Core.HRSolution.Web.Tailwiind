@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /Recruitment.Service.API/client_profile
 /Recruitment.Service.API/candidate_profile
+/Recruitment.Service.API/employee_documents

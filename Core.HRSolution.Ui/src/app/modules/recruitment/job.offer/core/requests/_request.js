@@ -6,6 +6,8 @@ import config from '../../../../../../config'
 
 export const LIST_API_URL = `${config.API_URL}/recruitment/joboffer/list_for_job_offer`;
 export const INFO_CANDIDATE_URL = `${config.API_URL}/recruitment/joboffer/info_job_offer`;
+export const INFO_CANDIDATE_PUBLIC_URL = `${config.API_URL}/recruitment/joboffer/info_job_offer_public`;
+
 export const UPDATE_CANDIDATE_URL = `${config.API_URL}/recruitment/joboffer/update_job_offer_info`;
 export const SAVE_CANDIDATE_SIGNATURE_URL = `${config.API_URL}/recruitment/joboffer/job_offer_approved`;
 export const SALARY_DECLINED_URL = `${config.API_URL}/recruitment/joboffer/job_offer_salary_declined`;
@@ -16,6 +18,9 @@ export const CANDIDATE_JOBOFFER_DECLINED = `${config.API_URL}/recruitment/joboff
 export const EXPORT_EXCEL_URL = `${config.API_URL}/recruitment/joboffer/job_offer_export_excel`;
 export const INFO_EMAIL_CONTENT_URL = `${config.API_URL}/recruitment/joboffer/retrieve_email_body_content`;
 export const SEND_EMAIL_JOB_OFFER = `${config.API_URL}/recruitment/joboffer/send_email_job_offer`;
+export const SEND_SALARY_APPROVAL = `${config.API_URL}/recruitment/joboffer/send_salary_approval`;
+
+export const UPDATE_STATUS_URL = `${config.API_URL}/recruitment/joboffer/update_job_offer_status`;
 
 export function listCandidate(search, columns, sortColumnKey, sortDirection, page, size, status) {
   return axios.post(LIST_API_URL, qs.stringify({ search, start: (page * size), draw: (page + 1),  length: size, columns, sortDirection, sortColumnKey, status }),{
@@ -28,6 +33,11 @@ export function listCandidate(search, columns, sortColumnKey, sortDirection, pag
 export function getJobOfferInfo(id) {
   return axios.get(`${INFO_CANDIDATE_URL}/${id}`);
 }
+
+export function getJobOfferInfoPublic(id) {
+  return axios.get(`${INFO_CANDIDATE_PUBLIC_URL}/${id}`);
+}
+
 
 export function updateJobOfferInfo(id,formData) {
   return axios.put(`${UPDATE_CANDIDATE_URL}/${id}`,formData);
@@ -75,8 +85,21 @@ export function sendJobOffer(id) {
   return axios.get(`${SEND_EMAIL_JOB_OFFER}/${id}`);
 }
 
+export function sendSalaryApproval(id) {
+  return axios.get(`${SEND_SALARY_APPROVAL}/${id}`);
+}
+
+
 export function exportExcel(id) {
   return axios.get(`${EXPORT_EXCEL_URL}/${id}`, {
     responseType: 'blob', // This is important for handling Excel files
+  });
+}
+
+export function updateJobOfferStatus(id, jobOfferStatusId) {
+  return axios.put(`${UPDATE_STATUS_URL}/${id}`, qs.stringify({ jobOfferStatusId }),{
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
   });
 }

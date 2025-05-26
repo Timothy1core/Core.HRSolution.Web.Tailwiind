@@ -37,4 +37,6 @@ public class JobOfferInformation
 	public bool? IsApproved { get; set; }
 	public string ApproverNotes { get; set; }
 	public string CandidateSignature { get; set; }
+
+	public DateTime? OfferSentDate { get; set; }
 }

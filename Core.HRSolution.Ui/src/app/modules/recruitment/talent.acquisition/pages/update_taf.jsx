@@ -27,14 +27,14 @@ const UpdateTafPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [data, setData] = useState(null);
-  const [clientId, setClientId] = useState(null);
+  const [departmentIdValue, setDepartmentId] = useState(null);
 
   const fetchData = useCallback(async () => {
     try {
       const response = await SelectTafFormDetails(id);
       if (response?.data?.taf) {
         setData(response.data.taf);
-        setClientId(response.data.taf.clietId)
+        setDepartmentId(response.data.taf.departmentId)
       }
     } catch (err) {
       navigate(`/error/400`);
@@ -52,7 +52,7 @@ const UpdateTafPage = () => {
     headcount: Yup.number()
       .required('Headcount is required')
       .min(1, 'Headcount must be at least 1'),
-    clientId: Yup.string().required('Client is required'),
+    departmentId: Yup.string().required('Client is required'),
     jobId: Yup.string().required('Job profile is required'),
     negotiable: Yup.string().nullable(),
     nonNegotiable: Yup.string().nullable(),
@@ -112,8 +112,7 @@ const UpdateTafPage = () => {
             statusId: data.statusId || '',
             reasonId: data.reasonId || '',
             headcount: data.headcount || '',
-            clientId: data.clietId || '',
-            department: data.department || '',
+            departmentId: data.departmentId || '',
             jobId: data.jobId || '',
             negotiable: data.negotiable || '',
             nonNegotiable: data.nonNegotiable || '',
@@ -212,15 +211,15 @@ const UpdateTafPage = () => {
                       <div className="row g-4 mb-8">
                         <div className="col-md-12 fv-row">
                           <label className="required fs-6 fw-semibold mb-2 text-gray-700">
-                            Company/Client Name
+                            Company/Department Name
                           </label>
                           <Field
                             as={SelectClientComponent}
-                            name="clientId"
+                            name="departmentId"
                             className="form-select"
                             onChange={(e) => {
-                              setFieldValue('clientId', e.target.value);
-                              setClientId(e.target.value);
+                              setFieldValue('departmentId', e.target.value);
+                              setDepartmentId(e.target.value);
                             }}
                           />
                           <ErrorMessage
@@ -240,8 +239,7 @@ const UpdateTafPage = () => {
                             as={SelectClientJobProfilesComponent}
                             name="jobId"
                             className="form-select"
-                            clientId={clientId} 
-                            // departmentid={1}
+                            departmentId={departmentIdValue}
                           />
                           
                           <ErrorMessage
@@ -322,7 +320,7 @@ const UpdateTafPage = () => {
                             as={SelectClientIndividualsComponent}
                             name="hiringManager"
                             className="form-select"
-                            clientId={clientId} 
+                            departmentId={departmentIdValue}
                           />
                           <ErrorMessage
                             name="hiringManager"

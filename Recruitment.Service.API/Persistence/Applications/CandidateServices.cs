@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Recruitment.Service.API.Core.Models.CurrentService.Dtos.Assessment;
 using System.Security.Cryptography.X509Certificates;
 using Recruitment.Service.API.Core.Helpers;
+using NETCore.Encrypt;
+using System.Text;
 
 namespace Recruitment.Service.API.Persistence.Applications
 {
@@ -56,6 +58,8 @@ namespace Recruitment.Service.API.Persistence.Applications
 						ApplicationQuestionId = answer.QuestionId
 					}).ToList()
 				};
+				await _uoWForCurrentService.CandidateRepository.SaveApplicationForm(candidate);
+				await _uoWForCurrentService.CommitAsync();
 
 				var candidateHistory = new CandidateHistory()
 				{
@@ -66,7 +70,6 @@ namespace Recruitment.Service.API.Persistence.Applications
 					CreatedDate = DateTime.UtcNow.AddHours(8),
 				};
 
-				await _uoWForCurrentService.CandidateRepository.SaveApplicationForm(candidate);
 				await _uoWForCurrentService.CandidateRepository.SaveHistoryItem(candidateHistory);
 				await _uoWForCurrentService.CommitAsync();
 
@@ -101,7 +104,7 @@ namespace Recruitment.Service.API.Persistence.Applications
 			}
 		}
 
-		public async Task<JsonResult> RetrieveAllCandidateService(string? search, int start, int length, string draw,string sortColumnName, string sortDirection, int client,int clientGroup, int job,int qualification, int applicationProcess, int source) 
+		public async Task<JsonResult> RetrieveAllCandidateService(string? search, int start, int length, string draw, string sortColumnName, string sortDirection, int client, int clientGroup, int job, int qualification, int applicationProcess, int source)
 		{
 			JsonResult result;
 			try
@@ -370,8 +373,9 @@ namespace Recruitment.Service.API.Persistence.Applications
 			{
 
 				var writeUp = await _uoWForCurrentService.CandidateRepository.RetrieveWriteUpInfo(candidateId);
+				var candidate = await _uoWForCurrentService.CandidateRepository.RetrieveCandidateInfo(candidateId);
 				var hasWriteUp = writeUp.Count > 0 ? true : false;
-				result = new JsonResult(new { writeUp, hasWriteUp })
+				result = new JsonResult(new { writeUp, hasWriteUp, candidate })
 				{
 					StatusCode = 200
 				};
@@ -451,12 +455,7 @@ namespace Recruitment.Service.API.Persistence.Applications
 
 				await _uoWForCurrentService.CandidateRepository.SaveHistoryItem(candidateHistory);
 				await _uoWForCurrentService.CandidateRepository.UpdateStage(candidateId, stageId);
-				await _uoWForCurrentService.CommitAsync();
-				if(stageId == 5)
-				{
-					await _applicationProcess.SendEmailAppliedAutomation(candidateId, 3);
-				}
-				
+				await _uoWForCurrentService.CommitAsync();			
 
 
 				result = new JsonResult(new
@@ -774,7 +773,7 @@ namespace Recruitment.Service.API.Persistence.Applications
 				await _uoWForCurrentService.CandidateRepository.CreateCandidateCredential(candidate);
 				await _uoWForCurrentService.CandidateRepository.SaveHistoryItem(candidateHistory);
 				await _uoWForCurrentService.CommitAsync();
-				await _applicationProcess.SendEmailAppliedAutomation(candidateInfo.Id, 4);
+				await _applicationProcess.SendEmailAppliedAutomation(candidateInfo.Id, 3);
 
 
 				result = new JsonResult(new { success = true, responseText = "Successfully Saved " })
@@ -825,6 +824,40 @@ namespace Recruitment.Service.API.Persistence.Applications
 
 			}
 		}
+
+
+		public async Task<JsonResult> RetrieveCandidateAssessmentsService(string id)
+		{
+			JsonResult result;
+			try
+			{
+				var decrypted = EncryptProvider.Base64Decrypt(id, Encoding.Unicode);
+				var recordId = Convert.ToInt32(decrypted);
+
+				var candidateInfo = await _uoWForCurrentService.CandidateRepository.RetrieveCandidateInfo(recordId);
+				var assessmentInfo = await _uoWForCurrentService.CandidateRepository.RetrieveCandidateAssessmentDetails(candidateInfo.JobId, recordId);
+
+				result = new JsonResult(new { assessmentInfo, candidateName = $"{candidateInfo.FirstName} {candidateInfo.LastName}", jobName = candidateInfo.JobName })
+				{
+					StatusCode = 200
+				};
+				return result;
+
+			}
+			catch (Exception e)
+			{
+				_logger.LogError($"Error occurred while retrieving assessment details: {e.Message}");
+
+				result = new JsonResult(new
+				{ success = false, responseText = $"Error occurred while retrieving assessment details: {e.Message}" })
+				{
+					StatusCode = 400
+				};
+				return result;
+
+			}
+		}
+		
 
 		#region Job Offer
 

@@ -1,10 +1,10 @@
-import { KTIcon } from '@/_metronic/helpers';
+import { KTIcon } from '../../../../../../_metronic/helpers';
 import { updateStage } from '../../core/requests/_request';
 import { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import Swal from 'sweetalert2';
-// import { Offcanvas  } from 'react-bootstrap';
+import { Offcanvas  } from 'react-bootstrap';
 
 const stageSchema = Yup.object().shape({
   stage: Yup.string().required('Required'),
@@ -94,11 +94,11 @@ const MoveToStageWrapper = ({applicationProcessesData, currentStage, candidateId
     
 
   return (
-      // <Offcanvas show={handleShow} onHide={handleClose} placement="end">
-      // <Offcanvas.Header closeButton>
-      //     <Offcanvas.Title>Move To Stage</Offcanvas.Title>
-      //   </Offcanvas.Header>
-      //   <Offcanvas.Body>
+      <Offcanvas show={handleShow} onHide={handleClose} placement="end">
+      <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Move To Stage</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
         <form onSubmit={formik.handleSubmit}>
           <div className="card-body hover-scroll-overlay-y">
             <label className='form-label'>Application Stage</label>
@@ -137,8 +137,8 @@ const MoveToStageWrapper = ({applicationProcessesData, currentStage, candidateId
             </div>
           </div>
         </form>
-      //   </Offcanvas.Body>
-      // </Offcanvas>
+        </Offcanvas.Body>
+      </Offcanvas>
   );
 };
 

@@ -9,8 +9,9 @@ const CandidatePage = () => {
 
   return(
   <>
+    <ToolbarWrapper title="Candidate Dashboard" subtitle="Recruitment" />
     <Content>
-      <CandidateTable className='mb-5 mb-xl-8' />
+      <CandidateTable />
     </Content>
   </>
   )

@@ -1,6 +1,5 @@
 import { Content } from '../../../../../_metronic/layout/components/content'
-import { toAbsoluteUrl } from '@/_metronic/utils';
-import { KTIcon} from '@/_metronic/helpers';
+import { KTIcon, toAbsoluteUrl } from '../../../../../_metronic/helpers';
 import React, { useState, useEffect } from 'react';
 import {useAuth} from '../../../../../app/modules/auth'
 import { useFormik } from 'formik';
@@ -19,11 +18,11 @@ import {
 } from '../core/requests/_request';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { TimelinesWrapper } from '@/_metronic/partials/timelines/default/item';
+import { TimelinesWrapper } from '../../../../helpers/_TimelinesWrapper';
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
-// import { Form, Button, Alert,ButtonToolbar, ButtonGroup, Dropdown, Offcanvas  } from 'react-bootstrap';
+import { Form, Button, Alert,ButtonToolbar, ButtonGroup, Dropdown, Offcanvas  } from 'react-bootstrap';
 import { PDFViewer } from '../../../../helpers/react_pdf';
 import {
   enableLoadingRequest,
@@ -32,8 +31,7 @@ import {
 import { MoveToStageWrapper } from '../components/drawers/MoveToStageDrawer';
 import { MoveToJobWrapper } from '../components/drawers/MoveToJobDrawer';
 import { CopyToJobWrapper } from '../components/drawers/CopyToJobDrawer';
-// import { useThemeMode } from '../../../../../_metronic/partials';
-import { useSettings } from '@/_metronic/providers';
+import { useThemeMode } from '../../../../../_metronic/partials';
 import { WriteUpModal } from '../components/modals/WriteUpModal';
 import { AnswerCheckingModal } from '../components/modals/AnswerCheckingModal';
 
@@ -68,11 +66,8 @@ const ViewCandidatePage = () => {
 
     const [comment, setComment] = useState('');
     const [error, setError] = useState(false);
-    // const { mode } = useThemeMode();
-    const {
-      getThemeMode
-    } = useSettings();
-    const cardBg = getThemeMode === 'light' ? 'abstract-4-dark.svg' :'abstract-4.svg'
+    const { mode } = useThemeMode();
+    const cardBg = mode === 'light' ? 'abstract-4-dark.svg' :'abstract-4.svg'
 
     const [showComposeModal, setShowComposeModal] = useState(false);
 
@@ -154,10 +149,12 @@ const ViewCandidatePage = () => {
       }
     });
   };
-
-    const handleShowWriteUpModal = async () => {
+    const handleShowMoveToJobModal = async () => {
       setShowComposeModal(true);
     } 
+    const handleShowWriteUpModal = async () => {
+      setShowComposeModal(true);
+    }
     const handleCloseComposeModal = () => {
       setShowComposeModal(false)
     };
@@ -191,7 +188,6 @@ const ViewCandidatePage = () => {
     const handleOpenJobOfferModal = async () => {
       setShowJobOfferModal(true);
     } 
-
     const OpenCheckingModal = (assessmentId) => {
       setAssessmentId(assessmentId)
       handleShowAnswerCheckingModal()
@@ -269,6 +265,10 @@ const ViewCandidatePage = () => {
     const handleCloseCopyToJobDrawer = () => setshowCopyToJobDrawer(false);
     const handleShowCopyToJobDrawer = () => setshowCopyToJobDrawer(true);
 
+    const [showMoveToJobDrawer, setshowMoveToJobDrawer] = useState(false);
+    const handleCloseMoveToJobDrawer = () => setshowMoveToJobDrawer(false);
+    const handleShowMoveToJobDrawer = () => setshowMoveToJobDrawer(true);
+    
     const fetchCandidateInfo = async () => {
       enableLoadingRequest();
       setLoading(true)
@@ -390,7 +390,7 @@ const ViewCandidatePage = () => {
     {!loading && 
       <div id="kt_app_toolbar" className="app-toolbar py-3 py-lg-6">
         <div id="kt_app_toolbar_container" className="app-container container-fluid d-flex flex-stack">
-          <div className="page-title d-flex flex-column justify-center flex-wrap me-3">
+          <div className="page-title d-flex flex-column justify-content-center flex-wrap me-3">
               <a href='candidates' className='btn btn-sm btn-light-danger'>
               <KTIcon iconName='entrance-right' className='fs-2' />
                 Go Back
@@ -402,14 +402,14 @@ const ViewCandidatePage = () => {
       <div
         className="hero-bg text-start p-9 py-5 "
         style={{
-          backgroundImage: `url('${toAbsoluteUrl(`/media/svg/shapes/${cardBg}`)}')`,
+          backgroundImage: `url('${toAbsoluteUrl(`media/svg/shapes/${cardBg}`)}')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'repeat',
         }}
       >
         <div className="container-fluid">
-          <div className="d-flex justify-between">
+          <div className="d-flex justify-content-between">
             <div>
               <div className="d-flex align-items-center gap-2">
                   <h1 className="card-title mb-0 fw-bold">{candidateData.firstName + " " + candidateData.lastName}</h1>
@@ -427,8 +427,8 @@ const ViewCandidatePage = () => {
                 </div>
               </div>
               </div>
-              <div className="text-end align-items-end justify-center">
-                {/* <ButtonToolbar aria-label="Toolbar with button groups" className='text-end'>
+              <div className="text-end align-items-end justify-content-center">
+                <ButtonToolbar aria-label="Toolbar with button groups" className='text-end'>
                   <ButtonGroup size="sm" className="me-2 py-1" aria-label="First group">
                   <ActionComponent
                     buttonPermission={'recruitment.remove.candidate'}
@@ -468,12 +468,12 @@ const ViewCandidatePage = () => {
                   <ActionComponent
                     buttonPermission={'recruitment.update.candidate.job'}
                     actionButton={ 
-                    <Button variant='light' type="button" id="kt_drawer_move_to_job_button" className="btn-icon btn-icon-lg size-9 text-gray-500 hover-bg-primary-light hover-text-primary" >
+                    <Button variant='light' type="button" onClick={handleShowMoveToJobDrawer} className="btn-icon btn-icon-lg size-9 text-gray-500 hover-bg-primary-light hover-text-primary" >
                       <KTIcon iconName='arrow-up-right' className='fs-3' />
                     </Button>
                     }/>
                   </ButtonGroup>
-                  <ButtonGroup size="sm" className="me-2 py-1 pe-0" aria-label="First group">
+                  {/* <ButtonGroup size="sm" className="me-2 py-1 pe-0" aria-label="First group">
                   <ActionComponent
                     buttonPermission={'candidate.move.to.job'}
                     actionButton={ 
@@ -481,7 +481,7 @@ const ViewCandidatePage = () => {
                       <KTIcon iconName='sms' className='fs-3' />
                     </Button>
                     }/>
-                  </ButtonGroup>
+                  </ButtonGroup> */}
                   <ButtonGroup size="sm" className="me-2 py-1 pe-0" aria-label="First group">
                   <ActionComponent
                     buttonPermission={'recruitment.create.calendar.event'}
@@ -515,7 +515,7 @@ const ViewCandidatePage = () => {
                     </Button>
                      }/> 
                   </ButtonGroup>
-                </ButtonToolbar> */}
+                </ButtonToolbar>
               </div>
             
           </div>
@@ -567,21 +567,21 @@ const ViewCandidatePage = () => {
                       </div>  
                       <div className="tab-content" id="myTabContent">
                         <div className="tab-pane fade show active" id="tab_candidate_profile" role="tabpanel">
-                          <div className='d-flex justify-start my-7'>
+                          <div className='d-flex justify-content-start my-7'>
                             <div>Position: <b>{candidateData.jobName}</b></div>
                           </div>
-                          <div className='d-flex justify-start my-7'>
+                          <div className='d-flex justify-content-start my-7'>
                           <div>Application Status: <b>{candidateData.stageName}</b></div>
                           </div>
-                          <div className='row justify-start my-7'>
+                          <div className='row justify-content-start my-7'>
                             <div className='col'>Current Employment Status: <b>{candidateData.currentEmploymentStatus}</b></div>
                             <div className='col'>Notice Period: <b>{candidateData.noticePeriod}</b></div>
                           </div>
-                          <div className='row justify-start my-7'>
+                          <div className='row justify-content-start my-7'>
                             <div className='col'>Expected Salary: <b>{new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(candidateData.currentSalary)}</b></div>
                             <div className='col'> Expected Salary: <b>{new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(candidateData.expectedSalary)}</b></div>
                           </div>
-                          <div className='d-flex justify-start my-2'>
+                          <div className='d-flex justify-content-start my-2'>
                             <div>Resume:</div>
                           </div>
                           <div className='border p-2'>
@@ -728,8 +728,15 @@ const ViewCandidatePage = () => {
                           </div>
                         </div>
                         {candidateData.candidateCredentials != null && candidateData.candidateCredentials.isAssessmentFinished && <div className="tab-pane fade" id="tab_candidate_review" role="tabpanel">
+                         
+                         <div className='d-flex justify-content-end align-items-center'>
+                          Copy Link: 
+                          <Button variant='light' type="button"  onClick={() => handleCopy(`https://172.16.254.4/candidate/assessmentinfo/${candidateData.encryptedId}`)} className="btn-icon mb-2 ms-2 btn-light-danger" >
+                            <KTIcon iconName='size' className='fs-1' />
+                          </Button>
+                         </div>
                          {assessments.map((data, index) => (
-                            <div className="card d-flex justify-between border p-5 mb-2" key={index}>
+                            <div className="card d-flex justify-content-between border p-5 mb-2" key={index}>
                               <div className='card-body d-flex flex-column p-0'>
                                 <div className='d-flex flex-stack mb-2'>
                                 <div className='fw-bolder'>
@@ -772,7 +779,7 @@ const ViewCandidatePage = () => {
                         }
 
                         {candidateData.candidateCredentials != null && candidateData.candidateCredentials.isAssessmentStarted && <div className="tab-pane fade" id="tab_candidate_review" role="tabpanel">
-                            <div className="d-flex justify-center border p-5">
+                            <div className="d-flex justify-content-center border p-5">
                               <div>
                                 <span className="text-sm fs-1">
                                   {/* Correct Answers {data.correctCount}/{data.totalQuestions} */}
@@ -784,7 +791,7 @@ const ViewCandidatePage = () => {
                         }
 
                         {candidateData.candidateCredentials != null && !candidateData.candidateCredentials.isAssessmentStarted  && <div className="tab-pane fade" id="tab_candidate_review" role="tabpanel">
-                            <div className="d-flex justify-center border p-5">
+                            <div className="d-flex justify-content-center border p-5">
                               <div>
                                 <span className="text-sm fs-1">
                                   {/* Correct Answers {data.correctCount}/{data.totalQuestions} */}
@@ -828,9 +835,9 @@ const ViewCandidatePage = () => {
                             </div>
                         ))}
 
-                          {/* <Form id="commentForm" onSubmit={handleAddComment}>
+                          <Form id="commentForm" onSubmit={handleAddComment}>
                               <Form.Group controlId="exampleFormControlTextarea1">
-                                  <Form.Label>Enter your comment</Form.Label>
+                                  {/* <Form.Label>Enter your comment</Form.Label> */}
                                   <Form.Control 
                                       as="textarea" 
                                       rows={3} 
@@ -851,7 +858,7 @@ const ViewCandidatePage = () => {
                               >
                                   Add Comment
                               </Button>
-                          </Form> */}
+                          </Form>
 
                       </div>
                       </div>
@@ -877,7 +884,7 @@ const ViewCandidatePage = () => {
                     <TimelinesWrapper key={index} icon="slack" color={data.type} line={true}>
                       <div className="flex flex-col row">
                         <div className="text-sm text-gray-800 row">
-                          {data.description} <span className='text-gray-600 text-sm col-5 text-truncate'>{data.createdByName}</span>
+                          {data.description}&nbsp;<span className='text-gray-600 text-sm px-0 col-5 text-truncate'>{data.createdByName}</span>
                         </div>
                         <span className="text-xs text-gray-600">
                           {dayjs(data.createdDate).fromNow()}
@@ -892,7 +899,7 @@ const ViewCandidatePage = () => {
         </div>
       </div>
       <CopyToJobWrapper candidateData={candidateData} applicationProcessesData={applicationProcesses} jobData={jobProfiles} handleShow={showCopyToJobDrawer} handleClose={handleCloseCopyToJobDrawer} handleCloseWithRefresh={handleCloseCopyToJobDrawerWithRefresh}/>
-      <MoveToJobWrapper applicationProcessesData={applicationProcesses} jobData={jobProfiles} currentJob={candidateData.jobId} candidateId={candidateId} currentStage={candidateData.applicationStatusId} handleClose={handleCloseCopyToJobDrawer}/>
+      <MoveToJobWrapper applicationProcessesData={applicationProcesses} jobData={jobProfiles} currentJob={candidateData.jobId} handleShow={showMoveToJobDrawer} handleClose={handleCloseMoveToJobDrawer} candidateId={candidateId} currentStage={candidateData.applicationStatusId}/>
       <MoveToStageWrapper applicationProcessesData={applicationProcesses} currentStage={candidateData.applicationStatusId} candidateId={candidateId} handleShow={showMoveToStageDrawer} handleClose={handleCloseMoveToStageDrawer} handleCloseWithRefresh={handleCloseDrawerWithRefresh} handleOpenJobOfferModal={handleOpenJobOfferModal}/>
       <WriteUpModal show={showComposeModal} handleClose={handleCloseComposeModal} WriteUp={writeUps} candidateId={candidateId} hasWriteUp={hasWriteUp} handleCloseWithReload={handleCloseComposeModalWithReload}/>
       <AnswerCheckingModal show={showAnswerCheckingModal} handleClose={handleCloseCheckingModal} candidateId={candidateId} assessmentId={assessmentId}/>

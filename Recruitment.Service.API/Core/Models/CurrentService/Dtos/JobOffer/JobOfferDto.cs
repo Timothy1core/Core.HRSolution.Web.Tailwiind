@@ -32,4 +32,5 @@ public class JobOfferDto
 	public string CandidateEmail { get; internal set; }
 	public string CandidateSignature { get; internal set; }
 	public string CandidateNotes { get; internal set; }
+	public DateTime? AcceptedDate { get; set; }
 }

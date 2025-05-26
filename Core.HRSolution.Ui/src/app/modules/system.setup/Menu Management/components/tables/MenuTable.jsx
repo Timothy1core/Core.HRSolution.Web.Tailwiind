@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { KTIcon } from '@/_metronic/helpers';
+import { KTIcon } from '../../../../../../_metronic/helpers';
 import { listMenu, removeMenu, updateMenuHiddenStatus } from '../../core/requests/_request';
-import TableWithPagination from '../../../../../../app/helpers/table/TableWithPagination';
+import TableWithPagination from '../../../core/helpers/Table Layout/TableWithPagination';
 import {CreateEditMenu} from '../modals/create-or-edit-menu/CreateEditMenu';
 import Swal from 'sweetalert2';
 import  ActionComponent  from "../../../../../helpers/action_component";
@@ -259,7 +259,7 @@ const MenuTable = ({ className }) => {
       className: 'text-end',
       sortable: false,
       Cell: row => (
-        <div className='d-flex justify-end flex-shrink-0'>
+        <div className='d-flex justify-content-end flex-shrink-0'>
           
           <ActionComponent
             buttonPermission={'system.setup.update.user.menu'}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { useParams } from 'react-router-dom';
-import { KTIcon } from '@/_metronic/helpers';
+import { KTIcon } from '../../../../../../_metronic/helpers';
 import { CreateJobApplicationForm } from '../../core/request/job_profile_request';
 import {
   enableLoadingRequest,
@@ -248,7 +248,7 @@ const JobApplicationForm = ({ applicationQuestions }) => {
                 {questions.map((q, index) => (
                   <li
                     key={index}
-                    className="list-group-item d-flex justify-between align-items-center"
+                    className="list-group-item d-flex justify-content-between align-items-center"
                   >
                     <span>
                       <strong>{q.questionType}:</strong> {q.question}{' '}

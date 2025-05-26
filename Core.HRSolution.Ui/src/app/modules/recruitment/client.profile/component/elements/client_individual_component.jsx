@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { KTIcon } from '@/_metronic/helpers';
+import { KTIcon } from '../../../../../../_metronic/helpers';
 import { CreateClientIndividualModal } from '../modals/create_client_individual';
 import { UpdateClientIndividualModal } from '../modals/update_client_individual';
 import { SelectClientIndividuals } from '../../core/request/clients_request';
